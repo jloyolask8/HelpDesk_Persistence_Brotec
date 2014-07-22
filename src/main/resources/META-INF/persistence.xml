@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <!--persistence-unit name="helpdeskPU" transaction-type="RESOURCE_LOCAL"-->
+  <persistence-unit name="helpdeskPU" transaction-type="JTA">
+    <jta-data-source>${jta-data-source}</jta-data-source>
+    <class>com.itcs.helpdesk.persistence.entities.Funcion</class>
+    <class>com.itcs.helpdesk.persistence.entities.Area</class>
+    <class>com.itcs.helpdesk.persistence.entities.Categoria</class>
+    <class>com.itcs.helpdesk.persistence.entities.Item</class>
+    <class>com.itcs.helpdesk.persistence.entities.Nota</class>
+    <class>com.itcs.helpdesk.persistence.entities.Usuario</class>
+    <class>com.itcs.helpdesk.persistence.entities.EmailCliente</class>
+    <class>com.itcs.helpdesk.persistence.entities.TipoComparacion</class>
+    <class>com.itcs.helpdesk.persistence.entities.Archivo</class>
+    <class>com.itcs.helpdesk.persistence.entities.Attachment</class>
+    <class>com.itcs.helpdesk.persistence.entities.Grupo</class>
+    <class>com.itcs.helpdesk.persistence.entities.NombreAccion</class>
+    <class>com.itcs.helpdesk.persistence.entities.CampoCompCaso</class>
+    <class>com.itcs.helpdesk.persistence.entities.Prioridad</class>
+    <class>com.itcs.helpdesk.persistence.entities.ReglaTrigger</class>
+    <class>com.itcs.helpdesk.persistence.entities.TipoNota</class>
+    <class>com.itcs.helpdesk.persistence.entities.Sesiones</class>
+    <class>com.itcs.helpdesk.persistence.entities.AuditLog</class>
+    <class>com.itcs.helpdesk.persistence.entities.TipoAlerta</class>
+    <class>com.itcs.helpdesk.persistence.entities.Documento</class>
+    <class>com.itcs.helpdesk.persistence.entities.Canal</class>
+    <class>com.itcs.helpdesk.persistence.entities.Componente</class>
+    <class>com.itcs.helpdesk.persistence.entities.Cliente</class>
+    <class>com.itcs.helpdesk.persistence.entities.EstadoCaso</class>
+    <class>com.itcs.helpdesk.persistence.entities.Caso</class>
+    <class>com.itcs.helpdesk.persistence.entities.Producto</class>
+    <class>com.itcs.helpdesk.persistence.entities.SubComponente</class>
+    <class>com.itcs.helpdesk.persistence.entities.Rol</class>
+    <class>com.itcs.helpdesk.persistence.entities.SubEstadoCaso</class>
+    <class>com.itcs.helpdesk.persistence.entities.Condicion</class>
+    <class>com.itcs.helpdesk.persistence.entities.Accion</class>
+    <class>com.itcs.helpdesk.persistence.entities.EmailConfig</class>
+    <class>com.itcs.helpdesk.persistence.entities.ApplicationConfig</class>
+    <class>com.itcs.helpdesk.persistence.entities.FiltroVista</class>
+    <class>com.itcs.helpdesk.persistence.entities.Vista</class>
+    <class>com.itcs.helpdesk.persistence.entities.AppSetting</class>
+    <class>com.itcs.helpdesk.persistence.entities.Clipping</class>
+    <class>com.itcs.helpdesk.persistence.entities.CampoComparable</class>
+    <class>com.itcs.helpdesk.persistence.entities.Recinto</class>
+    <class>com.itcs.helpdesk.persistence.entities.TipoCanal</class>
+    <class>com.itcs.helpdesk.persistence.entities.CanalSetting</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>${shared-cache-mode}</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.logging.logger" value="JavaLogger"/>
+      <property name="eclipselink.logging.level.sql" value="${eclipselink.logging.level.sql}"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.logging.file" value="persistence_logging.log"/>
+      <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
+      <property name="eclipselink.create-ddl-jdbc-file-name" value="create.jdbc"/>
+      <property name="eclipselink.drop-ddl-jdbc-file-name" value="drop.jdbc"/>
+      <property name="eclipselink.ddl-generation.output-mode" value="both"/>
+      <!--property name="eclipselink.cache.coordination.protocol" value="rmi"/-->
+      <!--property name="eclipselink.cache.coordination.naming-service" value="rmi"/-->
+      <!--property name="eclipselink.cache.coordination.rmi.url" value="%%current-server-url%%" /-->
+    </properties>
+  </persistence-unit>
+</persistence>
