@@ -93,6 +93,14 @@ public class Item implements Serializable {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+    
+     public String getNombreFullPath() {
+        return this.toString();
+    }
+
+    public void setNombreFullPath(String nombre) {
+        
+    }
 
     public Integer getOrden() {
         return orden;
@@ -152,7 +160,7 @@ public class Item implements Serializable {
         if (this.getIdItemPadre() == null) {
             return getNombre();
         } else {
-            return getIdItemPadre().toString() + " /" + getNombre();
+            return getIdItemPadre().toString() + " > " + getNombre();
         }
     }
 

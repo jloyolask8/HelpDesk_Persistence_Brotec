@@ -205,7 +205,7 @@ public class Caso implements Serializable {
     @Column(name = "fecha_estimada_compra")
     @Temporal(TemporalType.DATE)
     private Date fechaEstimadaCompra;
-     @Column(name = "id_recinto")
+    @Column(name = "id_recinto")
     private String idRecinto;
     @JoinColumn(name = "id_item", referencedColumnName = "id_item")
     @ManyToOne
@@ -636,6 +636,17 @@ public class Caso implements Serializable {
 
     }
 
+    public boolean hasOpenSubCasos() {
+        if (this.getCasosHijosList() != null) {
+            for (Caso caso : this.getCasosHijosList()) {
+                if (caso.isOpen()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean isOpen() {
         if (this.getIdEstado() != null) {
             if (this.getIdEstado().equals(EnumEstadoCaso.ABIERTO.getEstado())) {
@@ -718,24 +729,20 @@ public class Caso implements Serializable {
     public void setFechaEstimadaCompra(Date fechaEstimadaCompra) {
         this.fechaEstimadaCompra = fechaEstimadaCompra;
     }
-    
-    public String getIdRecinto()
-    {
+
+    public String getIdRecinto() {
         return idRecinto;
     }
 
-    public void setIdRecinto(String idRecinto)
-    {
+    public void setIdRecinto(String idRecinto) {
         this.idRecinto = idRecinto;
     }
-    
-    public Item getIdItem()
-    {
+
+    public Item getIdItem() {
         return idItem;
     }
 
-    public void setIdItem(Item idItem)
-    {
+    public void setIdItem(Item idItem) {
         this.idItem = idItem;
     }
 }
