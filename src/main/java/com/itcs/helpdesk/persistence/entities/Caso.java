@@ -150,6 +150,10 @@ public class Caso implements Serializable {
     @JoinColumn(name = "email_cliente", referencedColumnName = "EMAIL_CLIENTE")
     @ManyToOne
     private EmailCliente emailCliente;
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Cliente", fieldIdFull = "idCliente.idCliente", fieldTypeFull = Integer.class)
+    @JoinColumn(name = "id_cliente", referencedColumnName = "ID_CLIENTE")
+    @ManyToOne
+    private Cliente idCliente;
     @JoinColumn(name = "ID_COMPONENTE", referencedColumnName = "ID_COMPONENTE")
     @ManyToOne
     private Componente idComponente;
@@ -744,5 +748,19 @@ public class Caso implements Serializable {
 
     public void setIdItem(Item idItem) {
         this.idItem = idItem;
+    }
+
+    /**
+     * @return the idCliente
+     */
+    public Cliente getIdCliente() {
+        return idCliente;
+    }
+
+    /**
+     * @param idCliente the idCliente to set
+     */
+    public void setIdCliente(Cliente idCliente) {
+        this.idCliente = idCliente;
     }
 }
