@@ -33,6 +33,13 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ScheduleEventReminder.findByReminderType", query = "SELECT s FROM ScheduleEventReminder s WHERE s.reminderType = :reminderType")
 })
 public class ScheduleEventReminder implements Serializable {
+    
+    public static final String EMAIL_TYPE = "EMAIL";
+    public static final String POPUP_TYPE = "POPUP";
+    public static final Integer WEEK = 10080;
+    public static final Integer DAY = 1440;
+    public static final Integer HOUR = 60;
+    public static final Integer MINUTE = 1;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -54,7 +61,7 @@ public class ScheduleEventReminder implements Serializable {
      * minutos:=1 horas:=60 dias:60*24=1440 semanas:60*24*7=10080
      */
     @Column(name = "unit_of_time_in_minutes")
-    private BigInteger unitOfTimeInMinutes;
+    private Integer unitOfTimeInMinutes = 1;
     @JoinColumn(name = "event_id", referencedColumnName = "event_id")
     @ManyToOne
     private ScheduleEvent eventId;
@@ -102,11 +109,11 @@ public class ScheduleEventReminder implements Serializable {
         this.quantityTime = quantityTime;
     }
 
-    public BigInteger getUnitOfTimeInMinutes() {
+    public Integer getUnitOfTimeInMinutes() {
         return unitOfTimeInMinutes;
     }
 
-    public void setUnitOfTimeInMinutes(BigInteger unitOfTimeInMinutes) {
+    public void setUnitOfTimeInMinutes(Integer unitOfTimeInMinutes) {
         this.unitOfTimeInMinutes = unitOfTimeInMinutes;
     }
 

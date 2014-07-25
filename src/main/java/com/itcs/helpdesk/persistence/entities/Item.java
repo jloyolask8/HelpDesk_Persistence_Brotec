@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -44,6 +45,8 @@ public class Item implements Serializable {
     private Integer idItem;
     @Size(max = 40)
     private String nombre;
+    @Transient
+    private String nombreFullPath;
     @NotNull
     private boolean editable;
 
@@ -93,13 +96,15 @@ public class Item implements Serializable {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
     
-     public String getNombreFullPath() {
-        return this.toString();
+    public String getNombreFullPath() {
+        this.nombreFullPath = this.toString();
+        return nombreFullPath;
     }
 
     public void setNombreFullPath(String nombre) {
-        
+        nombreFullPath = nombre;
     }
 
     public Integer getOrden() {

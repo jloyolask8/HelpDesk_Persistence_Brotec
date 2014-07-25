@@ -8,6 +8,7 @@ package com.itcs.helpdesk.persistence.entities;
 import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
 import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -198,7 +199,26 @@ public class ScheduleEvent implements Serializable {
         }
         final ScheduleEventReminder scheduleEventReminder = new ScheduleEventReminder(n);
         scheduleEventReminder.setEventId(this);
+
         scheduleEventReminderList.add(scheduleEventReminder);
+    }
+
+    public final void addNewScheduleEventReminderWithNoId() {
+        if (scheduleEventReminderList == null) {
+            scheduleEventReminderList = new LinkedList<ScheduleEventReminder>();
+        }
+
+        final ScheduleEventReminder scheduleEventReminder = new ScheduleEventReminder();
+        scheduleEventReminder.setEventId(this);
+
+        scheduleEventReminderList.add(scheduleEventReminder);
+    }
+
+    public final void addNewUsuarioInvited(Usuario user) {
+        if (usuariosInvitedList == null) {
+            usuariosInvitedList = new LinkedList<Usuario>();
+        }
+        usuariosInvitedList.add(user);
     }
 
     public Integer getEventId() {
