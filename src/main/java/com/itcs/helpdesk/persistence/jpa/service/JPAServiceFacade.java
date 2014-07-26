@@ -238,7 +238,7 @@ public class JPAServiceFacade extends AbstractJPAController {
         return q.count();
     }
 
-public Long countEntities(Vista vista, Usuario who) throws ClassNotFoundException {
+public Long countEntities(Vista vista, Usuario who) throws IllegalStateException, ClassNotFoundException {
         EntityManager em = getEntityManager();
         try {
             final Class<?> clazz = Class.forName(vista.getBaseEntityType());
@@ -254,12 +254,12 @@ public Long countEntities(Vista vista, Usuario who) throws ClassNotFoundExceptio
             }
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult());
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "countEntities by view " + vista, ex);
-            throw ex;
-        } catch (Exception e) {
-            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "countEntities by view " + vista, e);
-            return 0L;
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "countEntities by view " + vista, ex);
+//            throw ex;
+//        } catch (Exception e) {
+//            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "countEntities by view " + vista, e);
+//            return 0L;
         } finally {
             em.close();
         }
@@ -473,7 +473,7 @@ public Long countEntities(Vista vista, Usuario who) throws ClassNotFoundExceptio
 //        return getCasoJpa().findCasoCatFilter(cat, user, maxResults, firstResult);
 //    }
 
-    public List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, int maxResults, int firstResult, String orderBy) throws javax.resource.NotSupportedException, ClassNotFoundException {
+    public List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, int maxResults, int firstResult, String orderBy) throws IllegalStateException, javax.resource.NotSupportedException, ClassNotFoundException {
         return findCasoEntities(view, userWhoIsApplying, false, maxResults, firstResult, orderBy);
     }
 
