@@ -60,6 +60,8 @@ public class Cliente implements Serializable {
     private String dirComercial;
     @OneToMany(mappedBy = "cliente", fetch= FetchType.EAGER)
     private List<EmailCliente> emailClienteList;
+    @OneToMany(mappedBy = "idCliente", fetch = FetchType.EAGER)
+    private List<Caso> casoList;
     private String theme;
     @OneToMany(cascade = CascadeType.ALL, fetch= FetchType.EAGER, mappedBy = "cliente")
     private List<ProductoContratado> productoContratadoList;
