@@ -50,7 +50,7 @@ public class EmailCliente implements Serializable {
     @OneToMany(mappedBy = "emailCliente", fetch = FetchType.EAGER)
     private List<Caso> casoList;
     @JoinColumn(name = "ID_CLIENTE", referencedColumnName = "ID_CLIENTE")
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Cliente cliente;
     /*
      * Tipos:

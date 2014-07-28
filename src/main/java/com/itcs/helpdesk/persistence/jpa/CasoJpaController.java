@@ -120,9 +120,13 @@ public abstract class CasoJpaController extends AbstractJPAController implements
                 caso.setIdEstado(idEstado);
             }
             EmailCliente emailCliente = caso.getEmailCliente();
-            if (emailCliente != null) {
+            if (emailCliente != null && emailCliente.getEmailCliente() != null) {
                 emailCliente = em.getReference(emailCliente.getClass(), emailCliente.getEmailCliente());
                 caso.setEmailCliente(emailCliente);
+            }
+            else
+            {
+                caso.setEmailCliente(null);
             }
             Componente idComponente = caso.getIdComponente();
             if (idComponente != null) {

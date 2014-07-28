@@ -5,19 +5,28 @@
 package com.itcs.helpdesk.persistence.jpa;
 
 import com.itcs.helpdesk.persistence.entities.Cliente;
+import com.itcs.helpdesk.persistence.entities.Cliente_;
 import com.itcs.helpdesk.persistence.entities.EmailCliente;
+import com.itcs.helpdesk.persistence.entities.EmailCliente_;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.UserTransaction;
 
@@ -52,6 +61,82 @@ public class ClienteJpaController implements Serializable {
         } catch (Exception e) {
             return null;
         }
+    }
+    
+    public Long countSearchEntities(String searchPattern) throws ClassNotFoundException {
+        EntityManager em = getEntityManager();
+        em.setProperty("javax.persistence.cache.storeMode", javax.persistence.CacheRetrieveMode.USE);
+
+        try {
+//            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+//            CriteriaQuery<EmailCliente> criteriaQuery = criteriaBuilder.createQuery(EmailCliente.class);
+//            Root<EmailCliente> root = criteriaQuery.from(EmailCliente.class);
+
+            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+            CriteriaQuery criteriaQuery = em.getCriteriaBuilder().createQuery();
+//            Root root = criteriaBuilder.from(EmailCliente.class);
+            Root<Cliente> root = criteriaQuery.from(Cliente.class);
+
+            Predicate predicate = createSearchExpression(root, criteriaBuilder, searchPattern);
+
+            if (predicate != null) {
+                criteriaQuery.select(criteriaBuilder.count(root)).where(predicate).distinct(true);
+            } else {
+                criteriaQuery.select(criteriaBuilder.count(root));
+            }
+            Query q = em.createQuery(criteriaQuery);
+            q.setHint("eclipselink.query-results-cache", true);
+            return ((Long) q.getSingleResult());
+        } catch (Exception e) {
+            Logger.getLogger(ClienteJpaController.class.getName()).log(Level.SEVERE, "countSearchEntities " + searchPattern, e);
+            return 0L;
+        } finally {
+            em.close();
+        }
+    }
+
+    private Predicate createSearchExpression(Root<Cliente> root, CriteriaBuilder criteriaBuilder, String searchPattern) {
+        Expression<String> expresionNombre = root.get(Cliente_.nombres);
+        Expression<String> expresionApellido = root.get(Cliente_.apellidos);
+        Expression<String> expresionRut = root.get(Cliente_.rut);
+        Expression<String> expresionEmail =  root.joinList(Cliente_.emailClienteList.getName(), JoinType.LEFT).get("emailCliente");//root.get(Cliente_.emailClienteList).(EmailCliente_.emailCliente);
+        
+        Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT).get("subComponente").get("direccionMunicipal");
+        
+        Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.upper(expresionNombre), searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionApellido), searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionRut), searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionEmail), searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionM), "%" + searchPattern.toUpperCase() + "%"));
+        return predicate;
+    }
+
+    public List<Cliente> searchEntities(String searchPattern, boolean all, int maxResults, int firstResult) {
+        EntityManager em = getEntityManager();
+
+        try {
+
+//            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+//            CriteriaQuery<EmailCliente> criteriaQuery = criteriaBuilder.createQuery(EmailCliente.class);
+//            Root<EmailCliente> from = criteriaQuery.from(EmailCliente.class);
+            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+            CriteriaQuery criteriaQuery = em.getCriteriaBuilder().createQuery();
+//            Root root = criteriaBuilder.from(EmailCliente.class);
+            Root<Cliente> root = criteriaQuery.from(Cliente.class);
+            Predicate predicate = createSearchExpression(root, criteriaBuilder, searchPattern);
+            criteriaQuery.where(predicate);
+
+            Query q = em.createQuery(criteriaQuery);
+
+            if (!all) {
+                q.setMaxResults(maxResults);
+                q.setFirstResult(firstResult);
+            }
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+
     }
 
     /**

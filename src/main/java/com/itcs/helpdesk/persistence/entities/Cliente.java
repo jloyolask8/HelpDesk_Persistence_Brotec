@@ -235,4 +235,18 @@ public class Cliente implements Serializable {
         }
         return capitalName;
     }
+
+    /**
+     * @return the casoList
+     */
+    public List<Caso> getCasoList() {
+        return casoList;
+    }
+
+    /**
+     * @param casoList the casoList to set
+     */
+    public void setCasoList(List<Caso> casoList) {
+        this.casoList = casoList;
+    }
 }
