@@ -256,6 +256,9 @@ public class EmailClienteJpaController implements Serializable {
     }
 
     public EmailCliente findEmailCliente(String id) {
+        if(id == null){
+            return null;
+        }
         EntityManager em = getEntityManager();
         try {
             return em.find(EmailCliente.class, id);

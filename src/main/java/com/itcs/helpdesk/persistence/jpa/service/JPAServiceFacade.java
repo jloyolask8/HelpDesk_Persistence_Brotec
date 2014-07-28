@@ -88,6 +88,7 @@ import com.itcs.helpdesk.persistence.utils.vo.AuditLogVO;
 import com.itcs.jpautils.EasyCriteriaQuery;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -369,6 +370,38 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
         }
         return 0L;
     }
+    
+    /**
+     *
+     * @param idUsuario
+     * @return
+     */
+    
+    public List<Etiqueta> findEtiquetasByUsuario(String idUsuario) {
+
+        EntityManager em = getEntityManager();
+
+        try {
+
+            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+            CriteriaQuery<Etiqueta> criteriaQuery = criteriaBuilder.createQuery(Etiqueta.class);
+            Root<Etiqueta> root = criteriaQuery.from(Etiqueta.class);
+            Expression<String> exp = root.get("owner").get("idUsuario");
+
+            criteriaQuery = criteriaQuery.orderBy(criteriaBuilder.desc(root.get("tagId")));
+            Predicate predicate = criteriaBuilder.equal(exp, idUsuario);
+            criteriaQuery.where(predicate);
+            Query q = em.createQuery(criteriaQuery);
+            return q.getResultList();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.EMPTY_LIST;
+
+        } finally {
+            em.close();
+        }
+    }
 
     public List<Etiqueta> findEtiquetasLike(String etiquetaPattern) {
         EntityManager em = getEntityManager();
@@ -521,6 +554,12 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
             getCasoChangeListener().casoCreated(caso);
         }
 
+    }
+    
+    public Caso mergeCaso(Caso caso, AuditLog log) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
+        List<AuditLog> changeList = new LinkedList<AuditLog>();
+        changeList.add(log);
+        return mergeCaso(caso, changeList);
     }
 
     public Caso mergeCaso(Caso caso, List<AuditLog> changeList) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
