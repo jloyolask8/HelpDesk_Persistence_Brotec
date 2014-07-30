@@ -350,6 +350,11 @@ public class VistaJpaController implements Serializable {
     }
 
     public List<Vista> findVistaEntitiesVisibleForGroupsOfUser(Usuario user) {
+        if(user == null)
+        {
+            return null;
+        }
+        
         EntityManager em = getEntityManager();
         try {
             List<String> gruposUser = new ArrayList<String>();
@@ -380,6 +385,10 @@ public class VistaJpaController implements Serializable {
     }
 
     public List<Vista> findVistaEntitiesVisibleForAreasOfUser(Usuario user) {
+        if(user == null)
+        {
+            return null;
+        }
         EntityManager em = getEntityManager();
         try {
             List<String> areasUser = new ArrayList<String>();

@@ -379,6 +379,9 @@ public abstract class AbstractJPAController {
 //    }
     
     protected Predicate createPredicate(EntityManager em, CriteriaBuilder criteriaBuilder, Root<?> root, Vista vista, Usuario whoIsApplyingView) throws IllegalStateException, ClassNotFoundException {
+        if(null == whoIsApplyingView){
+            return null;
+        }
         Predicate predicate = null;
         if (vista == null) {
             throw new IllegalStateException("La vista no puede ser null!");

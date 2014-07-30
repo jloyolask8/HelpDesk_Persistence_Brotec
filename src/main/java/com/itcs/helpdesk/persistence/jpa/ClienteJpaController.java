@@ -63,18 +63,28 @@ public class ClienteJpaController implements Serializable {
         }
     }
     
+    private Predicate createSearchExpression(Root<Cliente> root, CriteriaBuilder criteriaBuilder, String searchPattern) {
+        Expression<String> expresionNombre = root.get(Cliente_.nombres);
+        Expression<String> expresionApellido = root.get(Cliente_.apellidos);
+        Expression<String> expresionRut = root.get(Cliente_.rut);
+        Expression<String> expresionEmail =  root.joinList(Cliente_.emailClienteList.getName(), JoinType.LEFT).get("emailCliente");//root.get(Cliente_.emailClienteList).(EmailCliente_.emailCliente);
+        Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT).join("subComponente", JoinType.LEFT).get("direccionMunicipal"); //.get("subComponente").get("direccionMunicipal");
+        
+        Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.upper(expresionNombre), searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionApellido), searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionRut), searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionEmail), searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionM), "%" + searchPattern.toUpperCase() + "%"));
+        return predicate;
+    }
+    
     public Long countSearchEntities(String searchPattern) throws ClassNotFoundException {
         EntityManager em = getEntityManager();
         em.setProperty("javax.persistence.cache.storeMode", javax.persistence.CacheRetrieveMode.USE);
 
         try {
-//            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-//            CriteriaQuery<EmailCliente> criteriaQuery = criteriaBuilder.createQuery(EmailCliente.class);
-//            Root<EmailCliente> root = criteriaQuery.from(EmailCliente.class);
-
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
             CriteriaQuery criteriaQuery = em.getCriteriaBuilder().createQuery();
-//            Root root = criteriaBuilder.from(EmailCliente.class);
             Root<Cliente> root = criteriaQuery.from(Cliente.class);
 
             Predicate predicate = createSearchExpression(root, criteriaBuilder, searchPattern);
@@ -95,39 +105,20 @@ public class ClienteJpaController implements Serializable {
         }
     }
 
-    private Predicate createSearchExpression(Root<Cliente> root, CriteriaBuilder criteriaBuilder, String searchPattern) {
-        Expression<String> expresionNombre = root.get(Cliente_.nombres);
-        Expression<String> expresionApellido = root.get(Cliente_.apellidos);
-        Expression<String> expresionRut = root.get(Cliente_.rut);
-        Expression<String> expresionEmail =  root.joinList(Cliente_.emailClienteList.getName(), JoinType.LEFT).get("emailCliente");//root.get(Cliente_.emailClienteList).(EmailCliente_.emailCliente);
-        
-        Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT).get("subComponente").get("direccionMunicipal");
-        
-        Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.upper(expresionNombre), searchPattern.toUpperCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.upper(expresionApellido), searchPattern.toUpperCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.upper(expresionRut), searchPattern.toUpperCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.upper(expresionEmail), searchPattern.toUpperCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionM), "%" + searchPattern.toUpperCase() + "%"));
-        return predicate;
-    }
-
     public List<Cliente> searchEntities(String searchPattern, boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
 
         try {
-
-//            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-//            CriteriaQuery<EmailCliente> criteriaQuery = criteriaBuilder.createQuery(EmailCliente.class);
-//            Root<EmailCliente> from = criteriaQuery.from(EmailCliente.class);
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
             CriteriaQuery criteriaQuery = em.getCriteriaBuilder().createQuery();
-//            Root root = criteriaBuilder.from(EmailCliente.class);
             Root<Cliente> root = criteriaQuery.from(Cliente.class);
+            
             Predicate predicate = createSearchExpression(root, criteriaBuilder, searchPattern);
-            criteriaQuery.where(predicate);
+            
+            criteriaQuery.where(predicate).distinct(true);
 
             Query q = em.createQuery(criteriaQuery);
-
+            q.setHint("eclipselink.query-results-cache", true);
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
