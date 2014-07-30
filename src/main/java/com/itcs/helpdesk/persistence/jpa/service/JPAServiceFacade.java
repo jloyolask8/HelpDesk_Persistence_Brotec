@@ -176,10 +176,9 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     public void persist(Object o) throws Exception {
-        EntityManager em = null;
+        EntityManager em = getEntityManager();
         try {
             utx.begin();
-            em = getEntityManager();
             em.persist(o);
             utx.commit();
         } catch (Exception ex) {
