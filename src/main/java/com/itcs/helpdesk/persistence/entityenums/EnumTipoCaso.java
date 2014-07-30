@@ -12,7 +12,7 @@ public enum EnumTipoCaso {
 //    PROBLEMA(new TipoCaso("Problema", "Problema", "Caso donde el cliente tiene un problema con el producto o servicio entregado.")),
 //    INCIDENTE(new TipoCaso("Incidente", "Incidente", "Caso donde el cliente tiene un incidente que impide el correcto funcionamiento del producto o servicio entregado.")),
 //    TAREA(new TipoCaso("Tarea", "Tarea", "Caso que representa una tarea a realizar por el agente.")),
-    INTERNO(new TipoCaso("interno", "Interno", "Caso Interno.")),
+    INTERNO(new TipoCaso("interno", "Colaboración Interna", "Caso Interno.")),//TODO delete this tipo caso, use Colab instead
     COTIZACION(new TipoCaso("cotizacion", "Cotización", "Caso donde el cliente solicita una Cotización de productos.")),
     PREVENTA(new TipoCaso("preventa", "Pre Venta", "Caso donde el cliente solicita una Cotización de productos y se inicia el proceso de venta.")),
     REPARACION_ITEM(new TipoCaso("Reparación de Item", "Reparación de Item", "Caso especifico para la Reparación de un Item")),

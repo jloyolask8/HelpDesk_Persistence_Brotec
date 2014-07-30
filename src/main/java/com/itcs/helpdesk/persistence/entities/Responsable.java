@@ -45,6 +45,13 @@ public class Responsable implements Serializable {
     public Responsable() {
     }
 
+    public Responsable(Integer idResponsable, String nombreResponsable) {
+        this.idResponsable = idResponsable;
+        this.nombreResponsable = nombreResponsable;
+    }
+
+  
+    
     public Responsable(Integer idResponsable) {
         this.idResponsable = idResponsable;
     }
