@@ -214,6 +214,12 @@ public class Caso implements Serializable {
     @JoinColumn(name = "id_item", referencedColumnName = "id_item")
     @ManyToOne
     private Item idItem;
+    @Column(name = "servicio_tecnico")
+    private Boolean servicioTecnico;
+    
+    @JoinColumn(name = "id_responsable", referencedColumnName = "id_responsable")
+    @ManyToOne
+    private Responsable idResponsable;
 
     public Caso() {
     }
@@ -762,5 +768,27 @@ public class Caso implements Serializable {
      */
     public void setIdCliente(Cliente idCliente) {
         this.idCliente = idCliente;
+    }
+    
+    public Responsable getIdResponsable() {
+        return idResponsable;
+    }
+
+    public void setIdResponsable(Responsable idResponsable) {
+        this.idResponsable = idResponsable;
+    }
+
+    /**
+     * @return the servicioTecnico
+     */
+    public Boolean getServicioTecnico() {
+        return servicioTecnico;
+    }
+
+    /**
+     * @param servicioTecnico the servicioTecnico to set
+     */
+    public void setServicioTecnico(Boolean servicioTecnico) {
+        this.servicioTecnico = servicioTecnico;
     }
 }

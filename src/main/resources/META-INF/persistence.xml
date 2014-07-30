@@ -44,6 +44,8 @@
     <class>com.itcs.helpdesk.persistence.entities.Recinto</class>
     <class>com.itcs.helpdesk.persistence.entities.TipoCanal</class>
     <class>com.itcs.helpdesk.persistence.entities.CanalSetting</class>
+    <class>com.itcs.helpdesk.persistence.entities.Responsable</class>
+    <class>com.itcs.helpdesk.persistence.entities.Caso_1</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>${shared-cache-mode}</shared-cache-mode>
     <properties>
