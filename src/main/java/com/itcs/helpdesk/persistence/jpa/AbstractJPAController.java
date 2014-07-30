@@ -378,10 +378,19 @@ public abstract class AbstractJPAController {
 //        return predicate;
 //    }
     
+    /**
+     * 
+     * @param em
+     * @param criteriaBuilder
+     * @param root
+     * @param vista
+     * @param whoIsApplyingView THIS CAN BE NULL. when filtering being used outside user context.
+     * @return
+     * @throws IllegalStateException
+     * @throws ClassNotFoundException 
+     */
     protected Predicate createPredicate(EntityManager em, CriteriaBuilder criteriaBuilder, Root<?> root, Vista vista, Usuario whoIsApplyingView) throws IllegalStateException, ClassNotFoundException {
-        if(null == whoIsApplyingView){
-            return null;
-        }
+
         Predicate predicate = null;
         if (vista == null) {
             throw new IllegalStateException("La vista no puede ser null!");
@@ -549,7 +558,8 @@ public abstract class AbstractJPAController {
                         //Owner has a special place holder that others entities do not have
                         if (comparableField.getTipo().equals(Usuario.class)
                                 //                        if (filtro.getIdCampo().equals(EnumCampoCompCaso.OWNER.getCampoCompCaso().getIdCampo())
-                                && PLACE_HOLDER_CURRENT_USER.equalsIgnoreCase(valorAttributo)) {
+                                && PLACE_HOLDER_CURRENT_USER.equalsIgnoreCase(valorAttributo)
+                                && (whoIsApplyingView != null)) {
                             if (operador.equals(EnumTipoComparacion.EQ.getTipoComparacion())) {
                                 localPredicate = criteriaBuilder.equal(expresion, em.find(comparableField.getTipo(), whoIsApplyingView.getIdUsuario()));
                             } else if (operador.equals(EnumTipoComparacion.NE.getTipoComparacion())) {
