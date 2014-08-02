@@ -49,18 +49,18 @@ public class Usuario implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
+    @Size(min = 1, max = 40)
     @Column(name = "id_usuario")
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Nombre de Usuario", fieldIdFull = "idUsuario", fieldTypeFull = String.class)
     private String idUsuario;
-    @Size(max = 40)
+    @Size(max = 100)
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Nombres", fieldIdFull = "nombres", fieldTypeFull = String.class)
     private String nombres;
-    @Size(max = 40)
+    @Size(max = 100)
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Apellidos", fieldIdFull = "apellidos", fieldTypeFull = String.class)
     private String apellidos;
     @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @Size(max = 40)
+    @Size(max = 100)
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Email", fieldIdFull = "email", fieldTypeFull = String.class)
     private String email;
     @Size(max = 40)
