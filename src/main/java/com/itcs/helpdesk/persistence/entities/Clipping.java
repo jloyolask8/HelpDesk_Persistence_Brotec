@@ -4,6 +4,8 @@
  */
 package com.itcs.helpdesk.persistence.entities;
 
+import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
+import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -44,18 +46,22 @@ public class Clipping implements Serializable {
     @Basic(optional = false)
     @Column(name = "id_clipping", nullable = false)
     private Integer idClipping;
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Nombre", fieldIdFull = "nombre", fieldTypeFull = String.class)
     @Basic(optional = false)
     @NotNull
     @Size(min = 6, max = 64)
     @Column(name = "nombre", nullable = false, length = 64)
     private String nombre;
+    @FilterField(fieldTypeId = EnumFieldType.TEXTAREA, label = "Texto", fieldIdFull = "texto", fieldTypeFull = String.class)
     @Lob
     @Size(max = 2147483647)
     private String texto;
+    @FilterField(fieldTypeId = EnumFieldType.CHECKBOX, label = "Visible Por todos", fieldIdFull = "visibleToAll", fieldTypeFull = Boolean.class)
     @Basic(optional = false)
     @NotNull
     @Column(name = "visible_to_all", nullable = false)
     private boolean visibleToAll;
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Grupo", fieldIdFull = "idGrupo.idGrupo", fieldTypeFull = String.class)
     @JoinColumn(name = "id_grupo", referencedColumnName = "id_grupo")
     @ManyToOne
     private Grupo idGrupo;
@@ -64,11 +70,13 @@ public class Clipping implements Serializable {
     @JoinColumn(name = "id_clipping_padre", referencedColumnName = "id_clipping")
     @ManyToOne
     private Clipping idClippingPadre;
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Area", fieldIdFull = "idArea.idArea", fieldTypeFull = String.class)
     @JoinColumn(name = "id_area", referencedColumnName = "id_area")
     @ManyToOne
     private Area idArea;
 //    private Integer orden;
 //    private boolean folder;
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Autor", fieldIdFull = "idUsuarioCreadaPor.idUsuario", fieldTypeFull = String.class)
     @JoinColumn(name = "creada_por", referencedColumnName = "id_usuario", nullable = false)
     @ManyToOne(optional = false)
     private Usuario idUsuarioCreadaPor;
@@ -177,8 +185,6 @@ public class Clipping implements Serializable {
         return "" + nombre;
     }
 
-
-
     /**
      * @return the idUsuarioCreadaPor
      */
@@ -193,5 +199,4 @@ public class Clipping implements Serializable {
         this.idUsuarioCreadaPor = idUsuarioCreadaPor;
     }
 
-  
 }

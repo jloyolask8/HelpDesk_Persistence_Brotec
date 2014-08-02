@@ -107,6 +107,7 @@ import javax.resource.NotSupportedException;
 import javax.transaction.UserTransaction;
 
 public class JPAServiceFacade extends AbstractJPAController {
+
     public static final String CASE_CUSTOM_FIELD = "case";
     public static final String CLIENT_CUSTOM_FIELD = "client";
 
@@ -166,13 +167,13 @@ public class JPAServiceFacade extends AbstractJPAController {
     public <T extends Object> T find(Class<T> entityClass, Object id) {
         return getEntityManager().find(entityClass, id);
     }
-    
-    public <T extends Object> T getReference(Class<T> entityClass, Object id) throws EntityNotFoundException{
-         return getEntityManager().getReference(entityClass, id);
+
+    public <T extends Object> T getReference(Class<T> entityClass, Object id) throws EntityNotFoundException {
+        return getEntityManager().getReference(entityClass, id);
     }
-    
-    public void refresh(Object o){
-          getEntityManager().refresh(o);
+
+    public void refresh(Object o) {
+        getEntityManager().refresh(o);
     }
 
     public void persist(Object o) throws Exception {
@@ -191,7 +192,7 @@ public class JPAServiceFacade extends AbstractJPAController {
         }
 
     }
-    
+
     public void remove(Class clazz, Object o) throws Exception {
         EntityManager em = null;
         try {
@@ -210,7 +211,7 @@ public class JPAServiceFacade extends AbstractJPAController {
         }
 
     }
-    
+
     public void merge(Object o) throws Exception {
         EntityManager em = null;
         try {
@@ -238,7 +239,7 @@ public class JPAServiceFacade extends AbstractJPAController {
         return q.count();
     }
 
-public Long countEntities(Vista vista, Usuario who) throws IllegalStateException, ClassNotFoundException {
+    public Long countEntities(Vista vista, Usuario who) throws ClassNotFoundException {
         EntityManager em = getEntityManager();
         try {
             final Class<?> clazz = Class.forName(vista.getBaseEntityType());
@@ -254,31 +255,29 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
             }
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult());
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "countEntities by view " + vista, ex);
-//            throw ex;
-//        } catch (Exception e) {
-//            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "countEntities by view " + vista, e);
-//            return 0L;
+        } catch (ClassNotFoundException e) {
+            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "ClassNotFoundException countEntities by view of class " + vista.getBaseEntityType(), e);
+            throw e;
+        } catch (IllegalStateException e) {
+            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "countEntities by view " + vista, e);
+            return 0L;
         } finally {
             em.close();
         }
     }
-    
-    public List<?> findAllEntities(Class entityClass, Vista vista, String orderBy, Usuario who) throws NotSupportedException, ClassNotFoundException {
+
+    public List<?> findAllEntities(Class entityClass, Vista vista, String orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
         return findEntities(entityClass, vista, true, -1, -1, orderBy, who);
     }
-    
-   
 
-    public List<?> findEntities(Class entityClass, Vista vista, int maxResults, int firstResult, String orderBy, Usuario who) throws NotSupportedException, ClassNotFoundException {
+    public List<?> findEntities(Class entityClass, Vista vista, int maxResults, int firstResult, String orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
         return findEntities(entityClass, vista, false, maxResults, firstResult, orderBy, who);
     }
 
     private List<?> findEntities(Class entityClass, Vista vista, boolean all, int maxResults, int firstResult, String orderBy, Usuario who) throws IllegalStateException, ClassNotFoundException {
         EntityManager em = getEntityManager();
         try {
-       
+
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
             CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(entityClass);
             Root root = criteriaQuery.from(entityClass);
@@ -288,18 +287,23 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
             if (predicate != null) {
                 criteriaQuery.where(predicate).distinct(true);
             }
-            if(orderBy != null && !orderBy.isEmpty()){
-                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get(orderBy)));
+            if (orderBy != null && !orderBy.isEmpty()) {
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get(orderBy)));
             }
             Query q = em.createQuery(criteriaQuery);
-           
-            
+
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
 
+        } catch (IllegalStateException ex) {
+            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "IllegalStateException at findEntities", ex);
+            throw ex;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "ClassNotFoundException at findEntities", ex);
+            throw ex;
         } finally {
             em.close();
         }
@@ -369,13 +373,12 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
         }
         return 0L;
     }
-    
+
     /**
      *
      * @param idUsuario
      * @return
      */
-    
     public List<Etiqueta> findEtiquetasByUsuario(String idUsuario) {
 
         EntityManager em = getEntityManager();
@@ -440,7 +443,7 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
 
         return q.count();
     }
-  
+
 //
 //    public Object persist(Object entity) {
 //        return (Object) throws PreexistingEntityException, RollbackFailureException, Exception(entity);
@@ -471,7 +474,6 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
 //        }
 //        return query.getResultList();
 //    }
-
     public List queryByRange(Class entityClazz, int maxResults, int firstResult) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -504,7 +506,6 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
 //    public List<Caso> findCasoByCatFilter(Categoria cat, Usuario user, int maxResults, int firstResult) {
 //        return getCasoJpa().findCasoCatFilter(cat, user, maxResults, firstResult);
 //    }
-
     public List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, int maxResults, int firstResult, String orderBy) throws IllegalStateException, javax.resource.NotSupportedException, ClassNotFoundException {
         return findCasoEntities(view, userWhoIsApplying, false, maxResults, firstResult, orderBy);
     }
@@ -518,8 +519,8 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     }
 
     private List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, boolean all, int maxResults, int firstResult, String orderBy) throws IllegalStateException, ClassNotFoundException {
-        return (List<Caso>)findEntities(Caso.class, view, all, maxResults, firstResult, orderBy, userWhoIsApplying);
-                
+        return (List<Caso>) findEntities(Caso.class, view, all, maxResults, firstResult, orderBy, userWhoIsApplying);
+
     }
 
     public int getCasoCount(Usuario usuario, TipoAlerta tipo_alerta) {
@@ -554,7 +555,7 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
         }
 
     }
-    
+
     public Caso mergeCaso(Caso caso, AuditLog log) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         List<AuditLog> changeList = new LinkedList<AuditLog>();
         changeList.add(log);
@@ -562,7 +563,7 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     }
 
     public Caso mergeCaso(Caso caso, List<AuditLog> changeList) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
-       // caso.setFechaModif(new Date());
+        // caso.setFechaModif(new Date());
         merge(caso);
         if (changeList != null) {
             for (AuditLog auditLog : changeList) {
@@ -571,7 +572,7 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
         }
         if (getCasoChangeListener() != null) {
             getCasoChangeListener().casoChanged(caso, changeList);
-        }else{
+        } else {
             System.out.println("***ERROR*** NO getCasoChangeListener configured!");
         }
 
@@ -691,11 +692,6 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 String id = usuario.getIdUsuario();
-
-
-
-
-
 
                 if (em.find(Usuario.class, id) == null) {
                     throw new NonexistentEntityException(
@@ -838,11 +834,10 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     }
 
     /**
-     * @deprecated 
-     * @param nota
+     * @deprecated @param nota
      * @throws PreexistingEntityException
      * @throws RollbackFailureException
-     * @throws Exception 
+     * @throws Exception
      */
     public void persistNota(Nota nota) throws PreexistingEntityException, RollbackFailureException, Exception {
         getNotaJpaController().create(nota);
@@ -855,7 +850,6 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
 //    public void removeNota(Nota nota) throws NonexistentEntityException, RollbackFailureException, Exception {
 //        getNotaJpaController().destroy(nota.getIdNota());
 //    }
-
     /**
      * <
      * code>SELECT n FROM Nota n WHERE n.idNota = :idNota</code>
@@ -867,7 +861,7 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     public List<Nota> getNotaFindByIdCaso(Caso idCaso) {
         return getNotaJpaController().getEntityManager().createNamedQuery("Nota.findByIdCaso").setParameter("idCaso", idCaso).getResultList();
     }
-    
+
     public List<Nota> getNotasPublicasFindByIdCaso(Caso idCaso) {
         return getNotaJpaController().getEntityManager().createNamedQuery("Nota.findByIdCasoPublic").setParameter("idCaso", idCaso)
                 .setParameter("visible", Boolean.TRUE).getResultList();
@@ -1044,11 +1038,10 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     public TipoAlerta getTipoAlertaFindByIdTipoAlerta(Integer idalerta) {
         return getTipoAlertaJpaController().findTipoAlerta(idalerta);
     }
-    
-     public Long nextVal(String seq) throws PreexistingEntityException, RollbackFailureException, Exception {
-        return (Long)getArchivoJpaController().getEntityManager().createNativeQuery("select nextval('"+seq+"')").getSingleResult();
+
+    public Long nextVal(String seq) throws PreexistingEntityException, RollbackFailureException, Exception {
+        return (Long) getArchivoJpaController().getEntityManager().createNativeQuery("select nextval('" + seq + "')").getSingleResult();
     }
-    
 
     public void persistArchivo(Archivo archivo) throws PreexistingEntityException, RollbackFailureException, Exception {
         getArchivoJpaController().create(archivo);
@@ -1150,15 +1143,14 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     public List<SubEstadoCaso> getSubEstadoCasofindByIdEstado(String idEstado) {
         return getEntityManager().createNamedQuery("SubEstadoCaso.findByIdEstado").setParameter("idEstado", idEstado).getResultList();
     }
-    
+
     public List<SubEstadoCaso> getSubEstadoCasofindByIdEstadoAndTipoCaso(EstadoCaso idEstado, TipoCaso tipo) {
         return getEntityManager().createNamedQuery("SubEstadoCaso.findByIdEstadoTipoCaso").setParameter("idEstado", idEstado).setParameter("tipoCaso", tipo).getResultList();
     }
-    
+
 //    public List<Prioridad> findPrioridadByTipoCaso(TipoCaso tipo) {
 //        return getEntityManager().createNamedQuery("Prioridad.findByTipoCaso").setParameter("tipoCaso", tipo).getResultList();
 //    }
-
     public void persistProducto(Producto producto) throws PreexistingEntityException, RollbackFailureException, Exception {
         getProductoJpaController().create(producto);
     }
@@ -1346,11 +1338,10 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     public List<ReglaTrigger> getReglaTriggerFindByEvento(String event) {
         return getEntityManager().createNamedQuery("ReglaTrigger.findByEvento").setParameter("evento", event).getResultList();
     }
-    
+
 //   public List<ReglaTrigger> getReglaTriggerFindByEvento(String event, Area idArea) {
 //        return getEntityManager().createNamedQuery("ReglaTrigger.findByEventoArea").setParameter("evento", event).setParameter("idArea", idArea).getResultList();
 //    }
-
     public void persistSesiones(Sesiones sesiones) throws PreexistingEntityException, RollbackFailureException, Exception {
         getSesionesJpaController().create(sesiones);
     }
@@ -1516,7 +1507,7 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     public List<Accion> getAccionFindAll() {
         return getAccionJpaController().findAccionEntities();
     }
-    
+
     public List<Item> getItemFindAll() {
         return getItemJpaController().findItemEntities();
     }
@@ -1581,16 +1572,16 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     public void persistRol(Rol rol) throws PreexistingEntityException, RollbackFailureException, Exception {
         getRolJpaController().create(rol);
     }
-    
-    public void persistRecinto(Recinto recinto) throws PreexistingEntityException, RollbackFailureException, Exception{
+
+    public void persistRecinto(Recinto recinto) throws PreexistingEntityException, RollbackFailureException, Exception {
         getRecintoJpaController().create(recinto);
     }
-    
-    public void mergeRecinto(Recinto recinto) throws PreexistingEntityException, RollbackFailureException, Exception{
+
+    public void mergeRecinto(Recinto recinto) throws PreexistingEntityException, RollbackFailureException, Exception {
         getRecintoJpaController().edit(recinto);
     }
-    
-    public void removeRecinto(Recinto recinto) throws PreexistingEntityException, RollbackFailureException, Exception{
+
+    public void removeRecinto(Recinto recinto) throws PreexistingEntityException, RollbackFailureException, Exception {
         getRecintoJpaController().destroy(recinto.getIdRecinto());
     }
 
@@ -1634,7 +1625,7 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     public void mergeCategoria(Categoria current) throws NonexistentEntityException, RollbackFailureException, Exception {
         getCategoriaJpaController().edit(current);
     }
-    
+
     public void removeCategoria(Categoria current) throws NonexistentEntityException, RollbackFailureException, Exception {
         getCategoriaJpaController().destroy(current.getIdCategoria());
     }
@@ -1642,7 +1633,7 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     public List<Categoria> getCategoriaFindByNombreLike(String nombre) {
         return getEntityManager().createNamedQuery("Categoria.findByNombreLike").setParameter("nombre", "%" + nombre + "%").getResultList();
     }
-    
+
     public void persistItem(Item current) throws PreexistingEntityException, RollbackFailureException, Exception {
         getItemJpaController().create(current);
     }
@@ -1650,14 +1641,14 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     public void mergeItem(Item current) throws NonexistentEntityException, RollbackFailureException, Exception {
         getItemJpaController().edit(current);
     }
-    
+
     public void removeItem(Item current) throws NonexistentEntityException, RollbackFailureException, Exception {
         getItemJpaController().destroy(current.getIdItem());
     }
 
     public List<Item> getItemFindByNombreLike(String nombre) {
         EasyCriteriaQuery<Item> ecq = new EasyCriteriaQuery<Item>(emf, Item.class);
-        ecq.addLikePredicate(Item_.nombre.getName(), '%'+nombre+'%');
+        ecq.addLikePredicate(Item_.nombre.getName(), '%' + nombre + '%');
         return ecq.getAllResultList();
 //        return getEntityManager().createNamedQuery("Item.findByNombreLike").setParameter("nombre", "%" + nombre + "%").getResultList();
     }
@@ -1678,7 +1669,7 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
         return getCategoriaJpaController().findCategoria(idCategoria);
 //        return getEntityManager().createNamedQuery("Categoria.findByIdCategoria").setParameter("idCategoria", idCategoria).getResultList();
     }
-    
+
     public Item getItemFindByIdItem(Integer idItem) {
         return getItemJpaController().findItem(idItem);
 //        return getEntityManager().createNamedQuery("Categoria.findByIdCategoria").setParameter("idCategoria", idCategoria).getResultList();
@@ -1730,9 +1721,8 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     public EmailCliente getEmailClienteFindByEmail(String id) throws NoResultException {
         return getEmailClienteJpaController().findEmailCliente(id);
     }
-    
-    public Caso getCasoFindByEmailCreationTimeAndType(String email, Date creationTime, TipoCaso tipoCaso)
-    {
+
+    public Caso getCasoFindByEmailCreationTimeAndType(String email, Date creationTime, TipoCaso tipoCaso) {
         EasyCriteriaQuery<Caso> ecq = new EasyCriteriaQuery<Caso>(emf, Caso.class);
         ecq.addLikePredicate("emailCliente.emailCliente", email);
         ecq.addEqualPredicate(Caso_.fechaCreacion.getName(), creationTime);
@@ -1764,11 +1754,11 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     public TipoNota getTipoNotaFindById(Integer idTipoNota) {
         return getTipoNotaJpaController().findTipoNota(idTipoNota);
     }
-    
+
     public List<FieldType> getCustomFieldTypes() {
         return getUsuarioJpaController().getEntityManager().createNamedQuery("FieldType.findByIsCustomField").setParameter("isCustomField", Boolean.TRUE).getResultList();
     }
-    
+
 //    public List<CustomField> getCustomFieldsForCaso() {
 //        return getUsuarioJpaController().getEntityManager().createNamedQuery("CustomField.findByEntity").setParameter("entity", CASE_CUSTOM_FIELD).getResultList();
 //    }
@@ -1785,7 +1775,6 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
 //    public List<CustomField> getClientsCustomFieldsForClient() {
 //        return getUsuarioJpaController().getEntityManager().createNamedQuery("CustomField.findByEntityForCustomers").setParameter("entity", CLIENT_CUSTOM_FIELD).getResultList();
 //    }
-
     /**
      * @return the usuarioJpaController
      */
@@ -1805,10 +1794,9 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
         }
         return rolJpaController;
     }
-    
-    public RecintoJpaController getRecintoJpaController(){
-        if(null == recintoJpaController)
-        {
+
+    public RecintoJpaController getRecintoJpaController() {
+        if (null == recintoJpaController) {
             recintoJpaController = new RecintoJpaController(utx, emf);
         }
         return recintoJpaController;
@@ -1863,7 +1851,7 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
         }
         return grupoJpaController;
     }
-    
+
     /**
      * @return the categoriaJpaController
      */
@@ -1893,7 +1881,7 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
         }
         return areaJpaController;
     }
-    
+
     /**
      * @return the areaJpaController
      */
@@ -2155,7 +2143,6 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
         }
         return usuarioJpaCustomController;
     }
-    
 
     @Override
     protected Predicate createSpecialPredicate(FiltroVista filtro) {
@@ -2166,9 +2153,9 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
     protected boolean isThereSpecialFiltering(FiltroVista filtro) {
         return false;
     }
-    
-     public List<Usuario> findUsuariosEntitiesLike(String searchPart, boolean all, int maxResults, int firstResult) {
-        EntityManager em =  getEntityManager();
+
+    public List<Usuario> findUsuariosEntitiesLike(String searchPart, boolean all, int maxResults, int firstResult) {
+        EntityManager em = getEntityManager();
 
         try {
 
@@ -2198,7 +2185,7 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
             em.close();
         }
     }
-    
+
     public List<Resource> findResourcesEntitiesLike(String searchPart, boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
 
@@ -2211,7 +2198,6 @@ public Long countEntities(Vista vista, Usuario who) throws IllegalStateException
 
             Expression<String> literal = criteriaBuilder.upper(criteriaBuilder.literal("%" + (String) searchPart + "%"));
             Predicate predicate1 = criteriaBuilder.like(criteriaBuilder.upper(exp1), literal);
-           
 
             criteriaQuery.where(criteriaBuilder.or(predicate1));
 
