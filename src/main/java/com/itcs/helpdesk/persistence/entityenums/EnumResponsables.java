@@ -15,7 +15,7 @@ import com.itcs.helpdesk.persistence.entities.Responsable;
 public enum EnumResponsables {
     
       INMOBILIARIA(new Responsable(1, "Inmobiliaria")),
-      CONSTRUCTORA(new Responsable(1, "Constructora"));
+      CONSTRUCTORA(new Responsable(2, "Constructora"));
     
     private final Responsable responsable;
     
