@@ -38,29 +38,14 @@ public class TipoAlertaJpaController implements Serializable {
     }
 
     public void create(TipoAlerta tipoAlerta) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (tipoAlerta.getCasoList() == null) {
-            tipoAlerta.setCasoList(new ArrayList<Caso>());
-        }
+        
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            List<Caso> attachedCasoList = new ArrayList<Caso>();
-            for (Caso casoListCasoToAttach : tipoAlerta.getCasoList()) {
-                casoListCasoToAttach = em.getReference(casoListCasoToAttach.getClass(), casoListCasoToAttach.getIdCaso());
-                attachedCasoList.add(casoListCasoToAttach);
-            }
-            tipoAlerta.setCasoList(attachedCasoList);
+            
             em.persist(tipoAlerta);
-            for (Caso casoListCaso : tipoAlerta.getCasoList()) {
-                TipoAlerta oldEstadoAlertaOfCasoListCaso = casoListCaso.getEstadoAlerta();
-                casoListCaso.setEstadoAlerta(tipoAlerta);
-                casoListCaso = em.merge(casoListCaso);
-                if (oldEstadoAlertaOfCasoListCaso != null) {
-                    oldEstadoAlertaOfCasoListCaso.getCasoList().remove(casoListCaso);
-                    oldEstadoAlertaOfCasoListCaso = em.merge(oldEstadoAlertaOfCasoListCaso);
-                }
-            }
+            
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -84,34 +69,9 @@ public class TipoAlertaJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            TipoAlerta persistentTipoAlerta = em.find(TipoAlerta.class, tipoAlerta.getIdalerta());
-            List<Caso> casoListOld = persistentTipoAlerta.getCasoList();
-            List<Caso> casoListNew = tipoAlerta.getCasoList();
-            List<Caso> attachedCasoListNew = new ArrayList<Caso>();
-            for (Caso casoListNewCasoToAttach : casoListNew) {
-                casoListNewCasoToAttach = em.getReference(casoListNewCasoToAttach.getClass(), casoListNewCasoToAttach.getIdCaso());
-                attachedCasoListNew.add(casoListNewCasoToAttach);
-            }
-            casoListNew = attachedCasoListNew;
-            tipoAlerta.setCasoList(casoListNew);
+            
             tipoAlerta = em.merge(tipoAlerta);
-            for (Caso casoListOldCaso : casoListOld) {
-                if (!casoListNew.contains(casoListOldCaso)) {
-                    casoListOldCaso.setEstadoAlerta(null);
-                    casoListOldCaso = em.merge(casoListOldCaso);
-                }
-            }
-            for (Caso casoListNewCaso : casoListNew) {
-                if (!casoListOld.contains(casoListNewCaso)) {
-                    TipoAlerta oldEstadoAlertaOfCasoListNewCaso = casoListNewCaso.getEstadoAlerta();
-                    casoListNewCaso.setEstadoAlerta(tipoAlerta);
-                    casoListNewCaso = em.merge(casoListNewCaso);
-                    if (oldEstadoAlertaOfCasoListNewCaso != null && !oldEstadoAlertaOfCasoListNewCaso.equals(tipoAlerta)) {
-                        oldEstadoAlertaOfCasoListNewCaso.getCasoList().remove(casoListNewCaso);
-                        oldEstadoAlertaOfCasoListNewCaso = em.merge(oldEstadoAlertaOfCasoListNewCaso);
-                    }
-                }
-            }
+            
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -145,11 +105,6 @@ public class TipoAlertaJpaController implements Serializable {
                 tipoAlerta.getIdalerta();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The tipoAlerta with id " + id + " no longer exists.", enfe);
-            }
-            List<Caso> casoList = tipoAlerta.getCasoList();
-            for (Caso casoListCaso : casoList) {
-                casoListCaso.setEstadoAlerta(null);
-                casoListCaso = em.merge(casoListCaso);
             }
             em.remove(tipoAlerta);
             utx.commit();

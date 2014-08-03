@@ -66,10 +66,10 @@ public class NotaJpaController implements Serializable {
                 creadaPor.getNotaList().add(nota);
                 creadaPor = em.merge(creadaPor);
             }
-            if (idTipoNota != null) {
-                idTipoNota.getNotaList().add(nota);
-                idTipoNota = em.merge(idTipoNota);
-            }
+//            if (idTipoNota != null) {
+//                idTipoNota.getNotaList().add(nota);
+//                idTipoNota = em.merge(idTipoNota);
+//            }
 //            if (idCaso != null) {
 //                idCaso.getNotaList().add(nota);
 //                idCaso = em.merge(idCaso);
@@ -153,14 +153,14 @@ public class NotaJpaController implements Serializable {
                 creadaPorNew.getNotaList().add(nota);
                 creadaPorNew = em.merge(creadaPorNew);
             }
-            if (idTipoNotaOld != null && !idTipoNotaOld.equals(idTipoNotaNew)) {
-                idTipoNotaOld.getNotaList().remove(nota);
-                idTipoNotaOld = em.merge(idTipoNotaOld);
-            }
-            if (idTipoNotaNew != null && !idTipoNotaNew.equals(idTipoNotaOld)) {
-                idTipoNotaNew.getNotaList().add(nota);
-                idTipoNotaNew = em.merge(idTipoNotaNew);
-            }
+//            if (idTipoNotaOld != null && !idTipoNotaOld.equals(idTipoNotaNew)) {
+//                idTipoNotaOld.getNotaList().remove(nota);
+//                idTipoNotaOld = em.merge(idTipoNotaOld);
+//            }
+//            if (idTipoNotaNew != null && !idTipoNotaNew.equals(idTipoNotaOld)) {
+//                idTipoNotaNew.getNotaList().add(nota);
+//                idTipoNotaNew = em.merge(idTipoNotaNew);
+//            }
             if (idCasoOld != null && !idCasoOld.equals(idCasoNew)) {
                 idCasoOld.getNotaList().remove(nota);
                 idCasoOld = em.merge(idCasoOld);
@@ -208,11 +208,11 @@ public class NotaJpaController implements Serializable {
                 creadaPor.getNotaList().remove(nota);
                 creadaPor = em.merge(creadaPor);
             }
-            TipoNota idTipoNota = nota.getTipoNota();
-            if (idTipoNota != null) {
-                idTipoNota.getNotaList().remove(nota);
-                idTipoNota = em.merge(idTipoNota);
-            }
+//            TipoNota idTipoNota = nota.getTipoNota();
+//            if (idTipoNota != null) {
+//                idTipoNota.getNotaList().remove(nota);
+//                idTipoNota = em.merge(idTipoNota);
+//            }
             Caso idCaso = nota.getIdCaso();
             if (idCaso != null) {
                 idCaso.getNotaList().remove(nota);

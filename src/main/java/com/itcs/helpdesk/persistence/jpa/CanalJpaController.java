@@ -40,29 +40,11 @@ public class CanalJpaController implements Serializable {
     }
 
     public void create(Canal canal) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (canal.getCasoList() == null) {
-            canal.setCasoList(new ArrayList<Caso>());
-        }
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            List<Caso> attachedCasoList = new ArrayList<Caso>();
-            for (Caso casoListCasoToAttach : canal.getCasoList()) {
-                casoListCasoToAttach = em.getReference(casoListCasoToAttach.getClass(), casoListCasoToAttach.getIdCaso());
-                attachedCasoList.add(casoListCasoToAttach);
-            }
-            canal.setCasoList(attachedCasoList);
             em.persist(canal);
-            for (Caso casoListCaso : canal.getCasoList()) {
-                Canal oldIdCanalOfCasoListCaso = casoListCaso.getIdCanal();
-                casoListCaso.setIdCanal(canal);
-                casoListCaso = em.merge(casoListCaso);
-                if (oldIdCanalOfCasoListCaso != null) {
-                    oldIdCanalOfCasoListCaso.getCasoList().remove(casoListCaso);
-                    oldIdCanalOfCasoListCaso = em.merge(oldIdCanalOfCasoListCaso);
-                }
-            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -86,34 +68,7 @@ public class CanalJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            Canal persistentCanal = em.find(Canal.class, canal.getIdCanal());
-            List<Caso> casoListOld = persistentCanal.getCasoList();
-            List<Caso> casoListNew = canal.getCasoList();
-            List<Caso> attachedCasoListNew = new ArrayList<Caso>();
-            for (Caso casoListNewCasoToAttach : casoListNew) {
-                casoListNewCasoToAttach = em.getReference(casoListNewCasoToAttach.getClass(), casoListNewCasoToAttach.getIdCaso());
-                attachedCasoListNew.add(casoListNewCasoToAttach);
-            }
-            casoListNew = attachedCasoListNew;
-            canal.setCasoList(casoListNew);
             canal = em.merge(canal);
-            for (Caso casoListOldCaso : casoListOld) {
-                if (!casoListNew.contains(casoListOldCaso)) {
-                    casoListOldCaso.setIdCanal(null);
-                    casoListOldCaso = em.merge(casoListOldCaso);
-                }
-            }
-            for (Caso casoListNewCaso : casoListNew) {
-                if (!casoListOld.contains(casoListNewCaso)) {
-                    Canal oldIdCanalOfCasoListNewCaso = casoListNewCaso.getIdCanal();
-                    casoListNewCaso.setIdCanal(canal);
-                    casoListNewCaso = em.merge(casoListNewCaso);
-                    if (oldIdCanalOfCasoListNewCaso != null && !oldIdCanalOfCasoListNewCaso.equals(canal)) {
-                        oldIdCanalOfCasoListNewCaso.getCasoList().remove(casoListNewCaso);
-                        oldIdCanalOfCasoListNewCaso = em.merge(oldIdCanalOfCasoListNewCaso);
-                    }
-                }
-            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -148,11 +103,7 @@ public class CanalJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The canal with id " + id + " no longer exists.", enfe);
             }
-            List<Caso> casoList = canal.getCasoList();
-            for (Caso casoListCaso : casoList) {
-                casoListCaso.setIdCanal(null);
-                casoListCaso = em.merge(casoListCaso);
-            }
+            
             em.remove(canal);
             utx.commit();
         } catch (Exception ex) {

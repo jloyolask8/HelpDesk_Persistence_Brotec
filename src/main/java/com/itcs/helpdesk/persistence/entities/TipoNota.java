@@ -44,8 +44,8 @@ public class TipoNota implements Serializable {
     private String nombre;
     @Size(max = 200)
     private String descripcion;
-    @OneToMany(mappedBy = "idTipoNota")
-    private List<Nota> notaList;
+//    @OneToMany(mappedBy = "idTipoNota")
+//    private List<Nota> notaList;
 
     public TipoNota() {
     }
@@ -83,14 +83,14 @@ public class TipoNota implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @XmlTransient
-    public List<Nota> getNotaList() {
-        return notaList;
-    }
-
-    public void setNotaList(List<Nota> notaList) {
-        this.notaList = notaList;
-    }
+//    @XmlTransient
+//    public List<Nota> getNotaList() {
+//        return notaList;
+//    }
+//
+//    public void setNotaList(List<Nota> notaList) {
+//        this.notaList = notaList;
+//    }
 
     @Override
     public int hashCode() {

@@ -54,8 +54,8 @@ public class SubComponente implements Serializable {
     private String nombre;
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Descripcion", fieldIdFull = "descripcion", fieldTypeFull = String.class)
     private String descripcion;
-    @OneToMany(mappedBy = "idSubComponente")
-    private List<Caso> casoList;
+//    @OneToMany(mappedBy = "idSubComponente")
+//    private List<Caso> casoList;
     @JoinColumn(name = "ID_COMPONENTE", referencedColumnName = "ID_COMPONENTE")
     @ManyToOne(optional = false)
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Componente", fieldIdFull = "idComponente.idComponente", fieldTypeFull = String.class)
@@ -127,14 +127,14 @@ public class SubComponente implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @XmlTransient
-    public List<Caso> getCasoList() {
-        return casoList;
-    }
-
-    public void setCasoList(List<Caso> casoList) {
-        this.casoList = casoList;
-    }
+//    @XmlTransient
+//    public List<Caso> getCasoList() {
+//        return casoList;
+//    }
+//
+//    public void setCasoList(List<Caso> casoList) {
+//        this.casoList = casoList;
+//    }
 
     public Componente getIdComponente() {
         return idComponente;

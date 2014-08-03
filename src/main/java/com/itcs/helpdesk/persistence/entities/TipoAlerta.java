@@ -41,8 +41,8 @@ public class TipoAlerta implements Serializable {
     @Lob
     @Size(max = 2147483647)
     private String descripcion;
-    @OneToMany(mappedBy = "estadoAlerta")
-    private List<Caso> casoList;
+//    @OneToMany(mappedBy = "estadoAlerta")
+//    private List<Caso> casoList;
 
     public TipoAlerta() {
     }
@@ -81,14 +81,14 @@ public class TipoAlerta implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @XmlTransient
-    public List<Caso> getCasoList() {
-        return casoList;
-    }
-
-    public void setCasoList(List<Caso> casoList) {
-        this.casoList = casoList;
-    }
+//    @XmlTransient
+//    public List<Caso> getCasoList() {
+//        return casoList;
+//    }
+//
+//    public void setCasoList(List<Caso> casoList) {
+//        this.casoList = casoList;
+//    }
 
     @Override
     public int hashCode() {

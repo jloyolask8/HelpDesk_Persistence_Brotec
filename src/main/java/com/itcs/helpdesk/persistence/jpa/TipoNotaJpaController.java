@@ -38,29 +38,12 @@ public class TipoNotaJpaController implements Serializable {
     }
 
     public void create(TipoNota tipoNota) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (tipoNota.getNotaList() == null) {
-            tipoNota.setNotaList(new ArrayList<Nota>());
-        }
+        
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            List<Nota> attachedNotaList = new ArrayList<Nota>();
-            for (Nota notaListNotaToAttach : tipoNota.getNotaList()) {
-                notaListNotaToAttach = em.getReference(notaListNotaToAttach.getClass(), notaListNotaToAttach.getIdNota());
-                attachedNotaList.add(notaListNotaToAttach);
-            }
-            tipoNota.setNotaList(attachedNotaList);
             em.persist(tipoNota);
-            for (Nota notaListNota : tipoNota.getNotaList()) {
-                TipoNota oldIdTipoNotaOfNotaListNota = notaListNota.getTipoNota();
-                notaListNota.setTipoNota(tipoNota);
-                notaListNota = em.merge(notaListNota);
-                if (oldIdTipoNotaOfNotaListNota != null) {
-                    oldIdTipoNotaOfNotaListNota.getNotaList().remove(notaListNota);
-                    oldIdTipoNotaOfNotaListNota = em.merge(oldIdTipoNotaOfNotaListNota);
-                }
-            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -84,42 +67,7 @@ public class TipoNotaJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            TipoNota persistentTipoNota = em.find(TipoNota.class, tipoNota.getIdTipoNota());
-            List<Nota> notaListOld = persistentTipoNota.getNotaList();
-            List<Nota> notaListNew = tipoNota.getNotaList();
-            List<Nota> attachedNotaListNew = new ArrayList<Nota>();
-            if (notaListNew != null) {
-                for (Nota notaListNewNotaToAttach : notaListNew) {
-                    notaListNewNotaToAttach = em.getReference(notaListNewNotaToAttach.getClass(), notaListNewNotaToAttach.getIdNota());
-                    attachedNotaListNew.add(notaListNewNotaToAttach);
-                }
-                notaListNew = attachedNotaListNew;
-                tipoNota.setNotaList(notaListNew);
-            }
-
-
             tipoNota = em.merge(tipoNota);
-
-            if (notaListOld != null && notaListNew != null) {
-                for (Nota notaListOldNota : notaListOld) {
-                    if (!notaListNew.contains(notaListOldNota)) {
-                        notaListOldNota.setTipoNota(null);
-                        notaListOldNota = em.merge(notaListOldNota);
-                    }
-                }
-                for (Nota notaListNewNota : notaListNew) {
-                    if (!notaListOld.contains(notaListNewNota)) {
-                        TipoNota oldIdTipoNotaOfNotaListNewNota = notaListNewNota.getTipoNota();
-                        notaListNewNota.setTipoNota(tipoNota);
-                        notaListNewNota = em.merge(notaListNewNota);
-                        if (oldIdTipoNotaOfNotaListNewNota != null && !oldIdTipoNotaOfNotaListNewNota.equals(tipoNota)) {
-                            oldIdTipoNotaOfNotaListNewNota.getNotaList().remove(notaListNewNota);
-                            oldIdTipoNotaOfNotaListNewNota = em.merge(oldIdTipoNotaOfNotaListNewNota);
-                        }
-                    }
-                }
-            }
-
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -153,11 +101,6 @@ public class TipoNotaJpaController implements Serializable {
                 tipoNota.getIdTipoNota();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The tipoNota with id " + id + " no longer exists.", enfe);
-            }
-            List<Nota> notaList = tipoNota.getNotaList();
-            for (Nota notaListNota : notaList) {
-                notaListNota.setTipoNota(null);
-                notaListNota = em.merge(notaListNota);
             }
             em.remove(tipoNota);
             utx.commit();

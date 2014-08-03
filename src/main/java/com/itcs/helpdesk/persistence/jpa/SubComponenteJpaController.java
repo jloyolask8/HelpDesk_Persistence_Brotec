@@ -39,9 +39,9 @@ public class SubComponenteJpaController implements Serializable {
     }
 
     public void create(SubComponente subComponente) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (subComponente.getCasoList() == null) {
-            subComponente.setCasoList(new ArrayList<Caso>());
-        }
+//        if (subComponente.getCasoList() == null) {
+//            subComponente.setCasoList(new ArrayList<Caso>());
+//        }
         EntityManager em = null;
         try {
             utx.begin();
@@ -51,26 +51,26 @@ public class SubComponenteJpaController implements Serializable {
                 idComponente = em.getReference(idComponente.getClass(), idComponente.getIdComponente());
                 subComponente.setIdComponente(idComponente);
             }
-            List<Caso> attachedCasoList = new ArrayList<Caso>();
-            for (Caso casoListCasoToAttach : subComponente.getCasoList()) {
-                casoListCasoToAttach = em.getReference(casoListCasoToAttach.getClass(), casoListCasoToAttach.getIdCaso());
-                attachedCasoList.add(casoListCasoToAttach);
-            }
-            subComponente.setCasoList(attachedCasoList);
+//            List<Caso> attachedCasoList = new ArrayList<Caso>();
+//            for (Caso casoListCasoToAttach : subComponente.getCasoList()) {
+//                casoListCasoToAttach = em.getReference(casoListCasoToAttach.getClass(), casoListCasoToAttach.getIdCaso());
+//                attachedCasoList.add(casoListCasoToAttach);
+//            }
+//            subComponente.setCasoList(attachedCasoList);
             em.persist(subComponente);
             if (idComponente != null) {
                 idComponente.getSubComponenteList().add(subComponente);
                 idComponente = em.merge(idComponente);
             }
-            for (Caso casoListCaso : subComponente.getCasoList()) {
-                SubComponente oldIdSubComponenteOfCasoListCaso = casoListCaso.getIdSubComponente();
-                casoListCaso.setIdSubComponente(subComponente);
-                casoListCaso = em.merge(casoListCaso);
-                if (oldIdSubComponenteOfCasoListCaso != null) {
-                    oldIdSubComponenteOfCasoListCaso.getCasoList().remove(casoListCaso);
-                    oldIdSubComponenteOfCasoListCaso = em.merge(oldIdSubComponenteOfCasoListCaso);
-                }
-            }
+//            for (Caso casoListCaso : subComponente.getCasoList()) {
+//                SubComponente oldIdSubComponenteOfCasoListCaso = casoListCaso.getIdSubComponente();
+//                casoListCaso.setIdSubComponente(subComponente);
+//                casoListCaso = em.merge(casoListCaso);
+//                if (oldIdSubComponenteOfCasoListCaso != null) {
+//                    oldIdSubComponenteOfCasoListCaso.getCasoList().remove(casoListCaso);
+//                    oldIdSubComponenteOfCasoListCaso = em.merge(oldIdSubComponenteOfCasoListCaso);
+//                }
+//            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -97,19 +97,19 @@ public class SubComponenteJpaController implements Serializable {
             SubComponente persistentSubComponente = em.find(SubComponente.class, subComponente.getIdSubComponente());
             Componente idComponenteOld = persistentSubComponente.getIdComponente();
             Componente idComponenteNew = subComponente.getIdComponente();
-            List<Caso> casoListOld = persistentSubComponente.getCasoList();
-            List<Caso> casoListNew = subComponente.getCasoList();
+//            List<Caso> casoListOld = persistentSubComponente.getCasoList();
+//            List<Caso> casoListNew = subComponente.getCasoList();
             if (idComponenteNew != null) {
                 idComponenteNew = em.getReference(idComponenteNew.getClass(), idComponenteNew.getIdComponente());
                 subComponente.setIdComponente(idComponenteNew);
             }
-            List<Caso> attachedCasoListNew = new ArrayList<Caso>();
-            for (Caso casoListNewCasoToAttach : casoListNew) {
-                casoListNewCasoToAttach = em.getReference(casoListNewCasoToAttach.getClass(), casoListNewCasoToAttach.getIdCaso());
-                attachedCasoListNew.add(casoListNewCasoToAttach);
-            }
-            casoListNew = attachedCasoListNew;
-            subComponente.setCasoList(casoListNew);
+//            List<Caso> attachedCasoListNew = new ArrayList<Caso>();
+//            for (Caso casoListNewCasoToAttach : casoListNew) {
+//                casoListNewCasoToAttach = em.getReference(casoListNewCasoToAttach.getClass(), casoListNewCasoToAttach.getIdCaso());
+//                attachedCasoListNew.add(casoListNewCasoToAttach);
+//            }
+//            casoListNew = attachedCasoListNew;
+//            subComponente.setCasoList(casoListNew);
             subComponente = em.merge(subComponente);
             if (idComponenteOld != null && !idComponenteOld.equals(idComponenteNew)) {
                 idComponenteOld.getSubComponenteList().remove(subComponente);
@@ -119,23 +119,23 @@ public class SubComponenteJpaController implements Serializable {
                 idComponenteNew.getSubComponenteList().add(subComponente);
                 idComponenteNew = em.merge(idComponenteNew);
             }
-            for (Caso casoListOldCaso : casoListOld) {
-                if (!casoListNew.contains(casoListOldCaso)) {
-                    casoListOldCaso.setIdSubComponente(null);
-                    casoListOldCaso = em.merge(casoListOldCaso);
-                }
-            }
-            for (Caso casoListNewCaso : casoListNew) {
-                if (!casoListOld.contains(casoListNewCaso)) {
-                    SubComponente oldIdSubComponenteOfCasoListNewCaso = casoListNewCaso.getIdSubComponente();
-                    casoListNewCaso.setIdSubComponente(subComponente);
-                    casoListNewCaso = em.merge(casoListNewCaso);
-                    if (oldIdSubComponenteOfCasoListNewCaso != null && !oldIdSubComponenteOfCasoListNewCaso.equals(subComponente)) {
-                        oldIdSubComponenteOfCasoListNewCaso.getCasoList().remove(casoListNewCaso);
-                        oldIdSubComponenteOfCasoListNewCaso = em.merge(oldIdSubComponenteOfCasoListNewCaso);
-                    }
-                }
-            }
+//            for (Caso casoListOldCaso : casoListOld) {
+//                if (!casoListNew.contains(casoListOldCaso)) {
+//                    casoListOldCaso.setIdSubComponente(null);
+//                    casoListOldCaso = em.merge(casoListOldCaso);
+//                }
+//            }
+//            for (Caso casoListNewCaso : casoListNew) {
+//                if (!casoListOld.contains(casoListNewCaso)) {
+//                    SubComponente oldIdSubComponenteOfCasoListNewCaso = casoListNewCaso.getIdSubComponente();
+//                    casoListNewCaso.setIdSubComponente(subComponente);
+//                    casoListNewCaso = em.merge(casoListNewCaso);
+//                    if (oldIdSubComponenteOfCasoListNewCaso != null && !oldIdSubComponenteOfCasoListNewCaso.equals(subComponente)) {
+//                        oldIdSubComponenteOfCasoListNewCaso.getCasoList().remove(casoListNewCaso);
+//                        oldIdSubComponenteOfCasoListNewCaso = em.merge(oldIdSubComponenteOfCasoListNewCaso);
+//                    }
+//                }
+//            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -175,11 +175,11 @@ public class SubComponenteJpaController implements Serializable {
                 idComponente.getSubComponenteList().remove(subComponente);
                 idComponente = em.merge(idComponente);
             }
-            List<Caso> casoList = subComponente.getCasoList();
-            for (Caso casoListCaso : casoList) {
-                casoListCaso.setIdSubComponente(null);
-                casoListCaso = em.merge(casoListCaso);
-            }
+//            List<Caso> casoList = subComponente.getCasoList();
+//            for (Caso casoListCaso : casoList) {
+//                casoListCaso.setIdSubComponente(null);
+//                casoListCaso = em.merge(casoListCaso);
+//            }
             em.remove(subComponente);
             utx.commit();
         } catch (Exception ex) {

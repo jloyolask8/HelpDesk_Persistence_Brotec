@@ -41,8 +41,8 @@ public class TipoCaso implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "descripcion")
     private String descripcion;
-    @OneToMany(mappedBy = "tipoCaso")
-    private List<Caso> casoList;
+//    @OneToMany(mappedBy = "tipoCaso")
+//    private List<Caso> casoList;
     @OneToMany(mappedBy = "tipoCaso")
     private List<SubEstadoCaso> subEstadoCasoList;
 //    @OneToMany(mappedBy = "tipoCaso")
@@ -90,14 +90,14 @@ public class TipoCaso implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @XmlTransient
-    public List<Caso> getCasoList() {
-        return casoList;
-    }
-
-    public void setCasoList(List<Caso> casoList) {
-        this.casoList = casoList;
-    }
+//    @XmlTransient
+//    public List<Caso> getCasoList() {
+//        return casoList;
+//    }
+//
+//    public void setCasoList(List<Caso> casoList) {
+//        this.casoList = casoList;
+//    }
 
     @Override
     public int hashCode() {

@@ -39,9 +39,9 @@ public class EstadoCasoJpaController implements Serializable {
     }
 
     public void create(EstadoCaso estadoCaso) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (estadoCaso.getCasoList() == null) {
-            estadoCaso.setCasoList(new ArrayList<Caso>());
-        }
+//        if (estadoCaso.getCasoList() == null) {
+//            estadoCaso.setCasoList(new ArrayList<Caso>());
+//        }
         if (estadoCaso.getSubEstadoCasoList() == null) {
             estadoCaso.setSubEstadoCasoList(new ArrayList<SubEstadoCaso>());
         }
@@ -49,28 +49,28 @@ public class EstadoCasoJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            List<Caso> attachedCasoList = new ArrayList<Caso>();
-            for (Caso casoListCasoToAttach : estadoCaso.getCasoList()) {
-                casoListCasoToAttach = em.getReference(casoListCasoToAttach.getClass(), casoListCasoToAttach.getIdCaso());
-                attachedCasoList.add(casoListCasoToAttach);
-            }
-            estadoCaso.setCasoList(attachedCasoList);
-            List<SubEstadoCaso> attachedSubEstadoCasoList = new ArrayList<SubEstadoCaso>();
-            for (SubEstadoCaso subEstadoCasoListSubEstadoCasoToAttach : estadoCaso.getSubEstadoCasoList()) {
-                subEstadoCasoListSubEstadoCasoToAttach = em.getReference(subEstadoCasoListSubEstadoCasoToAttach.getClass(), subEstadoCasoListSubEstadoCasoToAttach.getIdSubEstado());
-                attachedSubEstadoCasoList.add(subEstadoCasoListSubEstadoCasoToAttach);
-            }
-            estadoCaso.setSubEstadoCasoList(attachedSubEstadoCasoList);
+//            List<Caso> attachedCasoList = new ArrayList<Caso>();
+//            for (Caso casoListCasoToAttach : estadoCaso.getCasoList()) {
+//                casoListCasoToAttach = em.getReference(casoListCasoToAttach.getClass(), casoListCasoToAttach.getIdCaso());
+//                attachedCasoList.add(casoListCasoToAttach);
+//            }
+//            estadoCaso.setCasoList(attachedCasoList);
+//            List<SubEstadoCaso> attachedSubEstadoCasoList = new ArrayList<SubEstadoCaso>();
+//            for (SubEstadoCaso subEstadoCasoListSubEstadoCasoToAttach : estadoCaso.getSubEstadoCasoList()) {
+//                subEstadoCasoListSubEstadoCasoToAttach = em.getReference(subEstadoCasoListSubEstadoCasoToAttach.getClass(), subEstadoCasoListSubEstadoCasoToAttach.getIdSubEstado());
+//                attachedSubEstadoCasoList.add(subEstadoCasoListSubEstadoCasoToAttach);
+//            }
+//            estadoCaso.setSubEstadoCasoList(attachedSubEstadoCasoList);
             em.persist(estadoCaso);
-            for (Caso casoListCaso : estadoCaso.getCasoList()) {
-                EstadoCaso oldIdEstadoOfCasoListCaso = casoListCaso.getIdEstado();
-                casoListCaso.setIdEstado(estadoCaso);
-                casoListCaso = em.merge(casoListCaso);
-                if (oldIdEstadoOfCasoListCaso != null) {
-                    oldIdEstadoOfCasoListCaso.getCasoList().remove(casoListCaso);
-                    oldIdEstadoOfCasoListCaso = em.merge(oldIdEstadoOfCasoListCaso);
-                }
-            }
+//            for (Caso casoListCaso : estadoCaso.getCasoList()) {
+//                EstadoCaso oldIdEstadoOfCasoListCaso = casoListCaso.getIdEstado();
+//                casoListCaso.setIdEstado(estadoCaso);
+//                casoListCaso = em.merge(casoListCaso);
+//                if (oldIdEstadoOfCasoListCaso != null) {
+//                    oldIdEstadoOfCasoListCaso.getCasoList().remove(casoListCaso);
+//                    oldIdEstadoOfCasoListCaso = em.merge(oldIdEstadoOfCasoListCaso);
+//                }
+//            }
             for (SubEstadoCaso subEstadoCasoListSubEstadoCaso : estadoCaso.getSubEstadoCasoList()) {
                 EstadoCaso oldIdEstadoOfSubEstadoCasoListSubEstadoCaso = subEstadoCasoListSubEstadoCaso.getIdEstado();
                 subEstadoCasoListSubEstadoCaso.setIdEstado(estadoCaso);
@@ -104,17 +104,17 @@ public class EstadoCasoJpaController implements Serializable {
             utx.begin();
             em = getEntityManager();
             EstadoCaso persistentEstadoCaso = em.find(EstadoCaso.class, estadoCaso.getIdEstado());
-            List<Caso> casoListOld = persistentEstadoCaso.getCasoList();
-            List<Caso> casoListNew = estadoCaso.getCasoList();
+//            List<Caso> casoListOld = persistentEstadoCaso.getCasoList();
+//            List<Caso> casoListNew = estadoCaso.getCasoList();
             List<SubEstadoCaso> subEstadoCasoListOld = persistentEstadoCaso.getSubEstadoCasoList();
             List<SubEstadoCaso> subEstadoCasoListNew = estadoCaso.getSubEstadoCasoList();
             List<Caso> attachedCasoListNew = new ArrayList<Caso>();
-            for (Caso casoListNewCasoToAttach : casoListNew) {
-                casoListNewCasoToAttach = em.getReference(casoListNewCasoToAttach.getClass(), casoListNewCasoToAttach.getIdCaso());
-                attachedCasoListNew.add(casoListNewCasoToAttach);
-            }
-            casoListNew = attachedCasoListNew;
-            estadoCaso.setCasoList(casoListNew);
+//            for (Caso casoListNewCasoToAttach : casoListNew) {
+//                casoListNewCasoToAttach = em.getReference(casoListNewCasoToAttach.getClass(), casoListNewCasoToAttach.getIdCaso());
+//                attachedCasoListNew.add(casoListNewCasoToAttach);
+//            }
+//            casoListNew = attachedCasoListNew;
+//            estadoCaso.setCasoList(casoListNew);
             List<SubEstadoCaso> attachedSubEstadoCasoListNew = new ArrayList<SubEstadoCaso>();
             for (SubEstadoCaso subEstadoCasoListNewSubEstadoCasoToAttach : subEstadoCasoListNew) {
                 subEstadoCasoListNewSubEstadoCasoToAttach = em.getReference(subEstadoCasoListNewSubEstadoCasoToAttach.getClass(), subEstadoCasoListNewSubEstadoCasoToAttach.getIdSubEstado());
@@ -123,23 +123,23 @@ public class EstadoCasoJpaController implements Serializable {
             subEstadoCasoListNew = attachedSubEstadoCasoListNew;
             estadoCaso.setSubEstadoCasoList(subEstadoCasoListNew);
             estadoCaso = em.merge(estadoCaso);
-            for (Caso casoListOldCaso : casoListOld) {
-                if (!casoListNew.contains(casoListOldCaso)) {
-                    casoListOldCaso.setIdEstado(null);
-                    casoListOldCaso = em.merge(casoListOldCaso);
-                }
-            }
-            for (Caso casoListNewCaso : casoListNew) {
-                if (!casoListOld.contains(casoListNewCaso)) {
-                    EstadoCaso oldIdEstadoOfCasoListNewCaso = casoListNewCaso.getIdEstado();
-                    casoListNewCaso.setIdEstado(estadoCaso);
-                    casoListNewCaso = em.merge(casoListNewCaso);
-                    if (oldIdEstadoOfCasoListNewCaso != null && !oldIdEstadoOfCasoListNewCaso.equals(estadoCaso)) {
-                        oldIdEstadoOfCasoListNewCaso.getCasoList().remove(casoListNewCaso);
-                        oldIdEstadoOfCasoListNewCaso = em.merge(oldIdEstadoOfCasoListNewCaso);
-                    }
-                }
-            }
+//            for (Caso casoListOldCaso : casoListOld) {
+//                if (!casoListNew.contains(casoListOldCaso)) {
+//                    casoListOldCaso.setIdEstado(null);
+//                    casoListOldCaso = em.merge(casoListOldCaso);
+//                }
+//            }
+//            for (Caso casoListNewCaso : casoListNew) {
+//                if (!casoListOld.contains(casoListNewCaso)) {
+//                    EstadoCaso oldIdEstadoOfCasoListNewCaso = casoListNewCaso.getIdEstado();
+//                    casoListNewCaso.setIdEstado(estadoCaso);
+//                    casoListNewCaso = em.merge(casoListNewCaso);
+//                    if (oldIdEstadoOfCasoListNewCaso != null && !oldIdEstadoOfCasoListNewCaso.equals(estadoCaso)) {
+//                        oldIdEstadoOfCasoListNewCaso.getCasoList().remove(casoListNewCaso);
+//                        oldIdEstadoOfCasoListNewCaso = em.merge(oldIdEstadoOfCasoListNewCaso);
+//                    }
+//                }
+//            }
             for (SubEstadoCaso subEstadoCasoListOldSubEstadoCaso : subEstadoCasoListOld) {
                 if (!subEstadoCasoListNew.contains(subEstadoCasoListOldSubEstadoCaso)) {
                     subEstadoCasoListOldSubEstadoCaso.setIdEstado(null);
@@ -191,11 +191,11 @@ public class EstadoCasoJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The estadoCaso with id " + id + " no longer exists.", enfe);
             }
-            List<Caso> casoList = estadoCaso.getCasoList();
-            for (Caso casoListCaso : casoList) {
-                casoListCaso.setIdEstado(null);
-                casoListCaso = em.merge(casoListCaso);
-            }
+//            List<Caso> casoList = estadoCaso.getCasoList();
+//            for (Caso casoListCaso : casoList) {
+//                casoListCaso.setIdEstado(null);
+//                casoListCaso = em.merge(casoListCaso);
+//            }
             List<SubEstadoCaso> subEstadoCasoList = estadoCaso.getSubEstadoCasoList();
             for (SubEstadoCaso subEstadoCasoListSubEstadoCaso : subEstadoCasoList) {
                 subEstadoCasoListSubEstadoCaso.setIdEstado(null);

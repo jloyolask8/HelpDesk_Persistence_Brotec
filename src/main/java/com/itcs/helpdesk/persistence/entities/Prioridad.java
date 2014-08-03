@@ -51,8 +51,8 @@ public class Prioridad implements Serializable {
     private String descripcion;
     @Column(name = "sla_horas")
     private Integer slaHoras;
-    @OneToMany(mappedBy = "idPrioridad")
-    private List<Caso> casoList;
+//    @OneToMany(mappedBy = "idPrioridad")
+//    private List<Caso> casoList;
 //    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Tipo", fieldIdFull = "tipoCaso.idTipoCaso")
 //    @JoinColumn(name = "id_tipo_caso", referencedColumnName = "id_tipo_caso")
 //    @ManyToOne
@@ -105,14 +105,14 @@ public class Prioridad implements Serializable {
         this.slaHoras = slaHoras;
     }
 
-    @XmlTransient
-    public List<Caso> getCasoList() {
-        return casoList;
-    }
-
-    public void setCasoList(List<Caso> casoList) {
-        this.casoList = casoList;
-    }
+//    @XmlTransient
+//    public List<Caso> getCasoList() {
+//        return casoList;
+//    }
+//
+//    public void setCasoList(List<Caso> casoList) {
+//        this.casoList = casoList;
+//    }
 
     @Override
     public int hashCode() {

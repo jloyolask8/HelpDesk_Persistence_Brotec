@@ -56,8 +56,8 @@ public class Canal implements Serializable {
     @Transient
     private Map<String, String> propertieSettings;
     
-    @OneToMany(mappedBy = "idCanal")
-    private List<Caso> casoList;
+//    @OneToMany(mappedBy = "idCanal")
+//    private List<Caso> casoList;
 
     public Canal() {
     }
@@ -121,14 +121,14 @@ public class Canal implements Serializable {
         this.idTipoCanal = idTipoCanal;
     }
 
-    @XmlTransient
-    public List<Caso> getCasoList() {
-        return casoList;
-    }
-
-    public void setCasoList(List<Caso> casoList) {
-        this.casoList = casoList;
-    }
+//    @XmlTransient
+//    public List<Caso> getCasoList() {
+//        return casoList;
+//    }
+//
+//    public void setCasoList(List<Caso> casoList) {
+//        this.casoList = casoList;
+//    }
 
     @Override
     public int hashCode() {

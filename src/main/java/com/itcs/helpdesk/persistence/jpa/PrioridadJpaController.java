@@ -38,29 +38,29 @@ public class PrioridadJpaController implements Serializable {
     }
 
     public void create(Prioridad prioridad) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (prioridad.getCasoList() == null) {
-            prioridad.setCasoList(new ArrayList<Caso>());
-        }
+//        if (prioridad.getCasoList() == null) {
+//            prioridad.setCasoList(new ArrayList<Caso>());
+//        }
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
             List<Caso> attachedCasoList = new ArrayList<Caso>();
-            for (Caso casoListCasoToAttach : prioridad.getCasoList()) {
-                casoListCasoToAttach = em.getReference(casoListCasoToAttach.getClass(), casoListCasoToAttach.getIdCaso());
-                attachedCasoList.add(casoListCasoToAttach);
-            }
-            prioridad.setCasoList(attachedCasoList);
+//            for (Caso casoListCasoToAttach : prioridad.getCasoList()) {
+//                casoListCasoToAttach = em.getReference(casoListCasoToAttach.getClass(), casoListCasoToAttach.getIdCaso());
+//                attachedCasoList.add(casoListCasoToAttach);
+//            }
+//            prioridad.setCasoList(attachedCasoList);
             em.persist(prioridad);
-            for (Caso casoListCaso : prioridad.getCasoList()) {
-                Prioridad oldIdPrioridadOfCasoListCaso = casoListCaso.getIdPrioridad();
-                casoListCaso.setIdPrioridad(prioridad);
-                casoListCaso = em.merge(casoListCaso);
-                if (oldIdPrioridadOfCasoListCaso != null) {
-                    oldIdPrioridadOfCasoListCaso.getCasoList().remove(casoListCaso);
-                    oldIdPrioridadOfCasoListCaso = em.merge(oldIdPrioridadOfCasoListCaso);
-                }
-            }
+//            for (Caso casoListCaso : prioridad.getCasoList()) {
+//                Prioridad oldIdPrioridadOfCasoListCaso = casoListCaso.getIdPrioridad();
+//                casoListCaso.setIdPrioridad(prioridad);
+//                casoListCaso = em.merge(casoListCaso);
+//                if (oldIdPrioridadOfCasoListCaso != null) {
+//                    oldIdPrioridadOfCasoListCaso.getCasoList().remove(casoListCaso);
+//                    oldIdPrioridadOfCasoListCaso = em.merge(oldIdPrioridadOfCasoListCaso);
+//                }
+//            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -85,33 +85,33 @@ public class PrioridadJpaController implements Serializable {
             utx.begin();
             em = getEntityManager();
             Prioridad persistentPrioridad = em.find(Prioridad.class, prioridad.getIdPrioridad());
-            List<Caso> casoListOld = persistentPrioridad.getCasoList();
-            List<Caso> casoListNew = prioridad.getCasoList();
-            List<Caso> attachedCasoListNew = new ArrayList<Caso>();
-            for (Caso casoListNewCasoToAttach : casoListNew) {
-                casoListNewCasoToAttach = em.getReference(casoListNewCasoToAttach.getClass(), casoListNewCasoToAttach.getIdCaso());
-                attachedCasoListNew.add(casoListNewCasoToAttach);
-            }
-            casoListNew = attachedCasoListNew;
-            prioridad.setCasoList(casoListNew);
+//            List<Caso> casoListOld = persistentPrioridad.getCasoList();
+//            List<Caso> casoListNew = prioridad.getCasoList();
+//            List<Caso> attachedCasoListNew = new ArrayList<Caso>();
+//            for (Caso casoListNewCasoToAttach : casoListNew) {
+//                casoListNewCasoToAttach = em.getReference(casoListNewCasoToAttach.getClass(), casoListNewCasoToAttach.getIdCaso());
+//                attachedCasoListNew.add(casoListNewCasoToAttach);
+//            }
+//            casoListNew = attachedCasoListNew;
+//            prioridad.setCasoList(casoListNew);
             prioridad = em.merge(prioridad);
-            for (Caso casoListOldCaso : casoListOld) {
-                if (!casoListNew.contains(casoListOldCaso)) {
-                    casoListOldCaso.setIdPrioridad(null);
-                    casoListOldCaso = em.merge(casoListOldCaso);
-                }
-            }
-            for (Caso casoListNewCaso : casoListNew) {
-                if (!casoListOld.contains(casoListNewCaso)) {
-                    Prioridad oldIdPrioridadOfCasoListNewCaso = casoListNewCaso.getIdPrioridad();
-                    casoListNewCaso.setIdPrioridad(prioridad);
-                    casoListNewCaso = em.merge(casoListNewCaso);
-                    if (oldIdPrioridadOfCasoListNewCaso != null && !oldIdPrioridadOfCasoListNewCaso.equals(prioridad)) {
-                        oldIdPrioridadOfCasoListNewCaso.getCasoList().remove(casoListNewCaso);
-                        oldIdPrioridadOfCasoListNewCaso = em.merge(oldIdPrioridadOfCasoListNewCaso);
-                    }
-                }
-            }
+//            for (Caso casoListOldCaso : casoListOld) {
+//                if (!casoListNew.contains(casoListOldCaso)) {
+//                    casoListOldCaso.setIdPrioridad(null);
+//                    casoListOldCaso = em.merge(casoListOldCaso);
+//                }
+//            }
+//            for (Caso casoListNewCaso : casoListNew) {
+//                if (!casoListOld.contains(casoListNewCaso)) {
+//                    Prioridad oldIdPrioridadOfCasoListNewCaso = casoListNewCaso.getIdPrioridad();
+//                    casoListNewCaso.setIdPrioridad(prioridad);
+//                    casoListNewCaso = em.merge(casoListNewCaso);
+//                    if (oldIdPrioridadOfCasoListNewCaso != null && !oldIdPrioridadOfCasoListNewCaso.equals(prioridad)) {
+//                        oldIdPrioridadOfCasoListNewCaso.getCasoList().remove(casoListNewCaso);
+//                        oldIdPrioridadOfCasoListNewCaso = em.merge(oldIdPrioridadOfCasoListNewCaso);
+//                    }
+//                }
+//            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -146,11 +146,11 @@ public class PrioridadJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The prioridad with id " + id + " no longer exists.", enfe);
             }
-            List<Caso> casoList = prioridad.getCasoList();
-            for (Caso casoListCaso : casoList) {
-                casoListCaso.setIdPrioridad(null);
-                casoListCaso = em.merge(casoListCaso);
-            }
+//            List<Caso> casoList = prioridad.getCasoList();
+//            for (Caso casoListCaso : casoList) {
+//                casoListCaso.setIdPrioridad(null);
+//                casoListCaso = em.merge(casoListCaso);
+//            }
             em.remove(prioridad);
             utx.commit();
         } catch (Exception ex) {

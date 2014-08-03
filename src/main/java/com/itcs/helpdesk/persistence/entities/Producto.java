@@ -50,8 +50,8 @@ public class Producto implements Serializable {
     @Lob
     @Size(max = 2147483647)
     private String descripcion;
-    @OneToMany(mappedBy = "idProducto")
-    private List<Caso> casoList;
+//    @OneToMany(mappedBy = "idProducto")
+//    private List<Caso> casoList;
     @OneToMany(mappedBy = "idProducto", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Componente> componenteList;
     @OneToMany(mappedBy = "producto")
@@ -100,14 +100,14 @@ public class Producto implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @XmlTransient
-    public List<Caso> getCasoList() {
-        return casoList;
-    }
-
-    public void setCasoList(List<Caso> casoList) {
-        this.casoList = casoList;
-    }
+//    @XmlTransient
+//    public List<Caso> getCasoList() {
+//        return casoList;
+//    }
+//
+//    public void setCasoList(List<Caso> casoList) {
+//        this.casoList = casoList;
+//    }
 
     @XmlTransient
     public List<Componente> getComponenteList() {

@@ -45,8 +45,8 @@ public class EstadoCaso implements Serializable, Comparable<EstadoCaso> {
     private String nombre;
     @Size(max = 200)
     private String descripcion;
-    @OneToMany(mappedBy = "idEstado")
-    private List<Caso> casoList;
+//    @OneToMany(mappedBy = "idEstado")
+//    private List<Caso> casoList;
     @OneToMany(mappedBy = "idEstado")
     private List<SubEstadoCaso> subEstadoCasoList;
 
@@ -92,14 +92,14 @@ public class EstadoCaso implements Serializable, Comparable<EstadoCaso> {
         this.descripcion = descripcion;
     }
 
-    @XmlTransient
-    public List<Caso> getCasoList() {
-        return casoList;
-    }
-
-    public void setCasoList(List<Caso> casoList) {
-        this.casoList = casoList;
-    }
+//    @XmlTransient
+//    public List<Caso> getCasoList() {
+//        return casoList;
+//    }
+//
+//    public void setCasoList(List<Caso> casoList) {
+//        this.casoList = casoList;
+//    }
 
     @XmlTransient
     public List<SubEstadoCaso> getSubEstadoCasoList() {

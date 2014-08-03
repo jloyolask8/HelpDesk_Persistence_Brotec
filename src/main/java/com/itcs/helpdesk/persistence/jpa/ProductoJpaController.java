@@ -40,9 +40,9 @@ public class ProductoJpaController implements Serializable {
     }
 
     public void createOrMerge(Producto producto) throws RollbackFailureException, Exception {
-        if (producto.getCasoList() == null) {
-            producto.setCasoList(new ArrayList<Caso>());
-        }
+//        if (producto.getCasoList() == null) {
+//            producto.setCasoList(new ArrayList<Caso>());
+//        }
         if (producto.getComponenteList() == null) {
             producto.setComponenteList(new ArrayList<Componente>());
         }
@@ -97,9 +97,9 @@ public class ProductoJpaController implements Serializable {
     }
     
     public void create(Producto producto) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (producto.getCasoList() == null) {
-            producto.setCasoList(new ArrayList<Caso>());
-        }
+//        if (producto.getCasoList() == null) {
+//            producto.setCasoList(new ArrayList<Caso>());
+//        }
         if (producto.getComponenteList() == null) {
             producto.setComponenteList(new ArrayList<Componente>());
         }
@@ -108,11 +108,11 @@ public class ProductoJpaController implements Serializable {
             utx.begin();
             em = getEntityManager();
             List<Caso> attachedCasoList = new ArrayList<Caso>();
-            for (Caso casoListCasoToAttach : producto.getCasoList()) {
-                casoListCasoToAttach = em.getReference(casoListCasoToAttach.getClass(), casoListCasoToAttach.getIdCaso());
-                attachedCasoList.add(casoListCasoToAttach);
-            }
-            producto.setCasoList(attachedCasoList);
+//            for (Caso casoListCasoToAttach : producto.getCasoList()) {
+//                casoListCasoToAttach = em.getReference(casoListCasoToAttach.getClass(), casoListCasoToAttach.getIdCaso());
+//                attachedCasoList.add(casoListCasoToAttach);
+//            }
+//            producto.setCasoList(attachedCasoList);
             List<Componente> attachedComponenteList = new ArrayList<Componente>();
             for (Componente componenteListComponenteToAttach : producto.getComponenteList()) {
                 componenteListComponenteToAttach = em.getReference(componenteListComponenteToAttach.getClass(), componenteListComponenteToAttach.getIdComponente());
@@ -120,15 +120,15 @@ public class ProductoJpaController implements Serializable {
             }
             producto.setComponenteList(attachedComponenteList);
             em.persist(producto);
-            for (Caso casoListCaso : producto.getCasoList()) {
-                Producto oldIdProductoOfCasoListCaso = casoListCaso.getIdProducto();
-                casoListCaso.setIdProducto(producto);
-                casoListCaso = em.merge(casoListCaso);
-                if (oldIdProductoOfCasoListCaso != null) {
-                    oldIdProductoOfCasoListCaso.getCasoList().remove(casoListCaso);
-                    oldIdProductoOfCasoListCaso = em.merge(oldIdProductoOfCasoListCaso);
-                }
-            }
+//            for (Caso casoListCaso : producto.getCasoList()) {
+//                Producto oldIdProductoOfCasoListCaso = casoListCaso.getIdProducto();
+//                casoListCaso.setIdProducto(producto);
+//                casoListCaso = em.merge(casoListCaso);
+//                if (oldIdProductoOfCasoListCaso != null) {
+//                    oldIdProductoOfCasoListCaso.getCasoList().remove(casoListCaso);
+//                    oldIdProductoOfCasoListCaso = em.merge(oldIdProductoOfCasoListCaso);
+//                }
+//            }
             for (Componente componenteListComponente : producto.getComponenteList()) {
                 Producto oldIdProductoOfComponenteListComponente = componenteListComponente.getIdProducto();
                 componenteListComponente.setIdProducto(producto);
@@ -162,17 +162,17 @@ public class ProductoJpaController implements Serializable {
             utx.begin();
             em = getEntityManager();
             Producto persistentProducto = em.find(Producto.class, producto.getIdProducto());
-            List<Caso> casoListOld = persistentProducto.getCasoList();
-            List<Caso> casoListNew = producto.getCasoList();
+//            List<Caso> casoListOld = persistentProducto.getCasoList();
+//            List<Caso> casoListNew = producto.getCasoList();
             List<Componente> componenteListOld = persistentProducto.getComponenteList();
             List<Componente> componenteListNew = producto.getComponenteList();
             List<Caso> attachedCasoListNew = new ArrayList<Caso>();
-            for (Caso casoListNewCasoToAttach : casoListNew) {
-                casoListNewCasoToAttach = em.getReference(casoListNewCasoToAttach.getClass(), casoListNewCasoToAttach.getIdCaso());
-                attachedCasoListNew.add(casoListNewCasoToAttach);
-            }
-            casoListNew = attachedCasoListNew;
-            producto.setCasoList(casoListNew);
+//            for (Caso casoListNewCasoToAttach : casoListNew) {
+//                casoListNewCasoToAttach = em.getReference(casoListNewCasoToAttach.getClass(), casoListNewCasoToAttach.getIdCaso());
+//                attachedCasoListNew.add(casoListNewCasoToAttach);
+//            }
+//            casoListNew = attachedCasoListNew;
+//            producto.setCasoList(casoListNew);
             List<Componente> attachedComponenteListNew = new ArrayList<Componente>();
             for (Componente componenteListNewComponenteToAttach : componenteListNew) {
                 componenteListNewComponenteToAttach = em.getReference(componenteListNewComponenteToAttach.getClass(), componenteListNewComponenteToAttach.getIdComponente());
@@ -181,23 +181,23 @@ public class ProductoJpaController implements Serializable {
             componenteListNew = attachedComponenteListNew;
             producto.setComponenteList(componenteListNew);
             producto = em.merge(producto);
-            for (Caso casoListOldCaso : casoListOld) {
-                if (!casoListNew.contains(casoListOldCaso)) {
-                    casoListOldCaso.setIdProducto(null);
-                    casoListOldCaso = em.merge(casoListOldCaso);
-                }
-            }
-            for (Caso casoListNewCaso : casoListNew) {
-                if (!casoListOld.contains(casoListNewCaso)) {
-                    Producto oldIdProductoOfCasoListNewCaso = casoListNewCaso.getIdProducto();
-                    casoListNewCaso.setIdProducto(producto);
-                    casoListNewCaso = em.merge(casoListNewCaso);
-                    if (oldIdProductoOfCasoListNewCaso != null && !oldIdProductoOfCasoListNewCaso.equals(producto)) {
-                        oldIdProductoOfCasoListNewCaso.getCasoList().remove(casoListNewCaso);
-                        oldIdProductoOfCasoListNewCaso = em.merge(oldIdProductoOfCasoListNewCaso);
-                    }
-                }
-            }
+//            for (Caso casoListOldCaso : casoListOld) {
+//                if (!casoListNew.contains(casoListOldCaso)) {
+//                    casoListOldCaso.setIdProducto(null);
+//                    casoListOldCaso = em.merge(casoListOldCaso);
+//                }
+//            }
+//            for (Caso casoListNewCaso : casoListNew) {
+//                if (!casoListOld.contains(casoListNewCaso)) {
+//                    Producto oldIdProductoOfCasoListNewCaso = casoListNewCaso.getIdProducto();
+//                    casoListNewCaso.setIdProducto(producto);
+//                    casoListNewCaso = em.merge(casoListNewCaso);
+//                    if (oldIdProductoOfCasoListNewCaso != null && !oldIdProductoOfCasoListNewCaso.equals(producto)) {
+//                        oldIdProductoOfCasoListNewCaso.getCasoList().remove(casoListNewCaso);
+//                        oldIdProductoOfCasoListNewCaso = em.merge(oldIdProductoOfCasoListNewCaso);
+//                    }
+//                }
+//            }
             for (Componente componenteListOldComponente : componenteListOld) {
                 if (!componenteListNew.contains(componenteListOldComponente)) {
                     componenteListOldComponente.setIdProducto(null);
@@ -249,11 +249,11 @@ public class ProductoJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The producto with id " + id + " no longer exists.", enfe);
             }
-            List<Caso> casoList = producto.getCasoList();
-            for (Caso casoListCaso : casoList) {
-                casoListCaso.setIdProducto(null);
-                casoListCaso = em.merge(casoListCaso);
-            }
+//            List<Caso> casoList = producto.getCasoList();
+//            for (Caso casoListCaso : casoList) {
+//                casoListCaso.setIdProducto(null);
+//                casoListCaso = em.merge(casoListCaso);
+//            }
             List<Componente> componenteList = producto.getComponenteList();
             for (Componente componenteListComponente : componenteList) {
                 componenteListComponente.setIdProducto(null);

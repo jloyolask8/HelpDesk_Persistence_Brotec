@@ -755,36 +755,36 @@ public abstract class CasoJpaController extends AbstractJPAController implements
                 owner.getCasoList().remove(caso);
                 owner = em.merge(owner);
             }
-            TipoAlerta estadoAlerta = caso.getEstadoAlerta();
-            if (estadoAlerta != null) {
-                estadoAlerta.getCasoList().remove(caso);
-                estadoAlerta = em.merge(estadoAlerta);
-            }
-            SubEstadoCaso idSubEstado = caso.getIdSubEstado();
-            if (idSubEstado != null) {
-                idSubEstado.getCasoList().remove(caso);
-                idSubEstado = em.merge(idSubEstado);
-            }
-            SubComponente idSubComponente = caso.getIdSubComponente();
-            if (idSubComponente != null) {
-                idSubComponente.getCasoList().remove(caso);
-                idSubComponente = em.merge(idSubComponente);
-            }
-            Producto idProducto = caso.getIdProducto();
-            if (idProducto != null) {
-                idProducto.getCasoList().remove(caso);
-                idProducto = em.merge(idProducto);
-            }
-            Prioridad idPrioridad = caso.getIdPrioridad();
-            if (idPrioridad != null) {
-                idPrioridad.getCasoList().remove(caso);
-                idPrioridad = em.merge(idPrioridad);
-            }
-            EstadoCaso idEstado = caso.getIdEstado();
-            if (idEstado != null) {
-                idEstado.getCasoList().remove(caso);
-                idEstado = em.merge(idEstado);
-            }
+//            TipoAlerta estadoAlerta = caso.getEstadoAlerta();
+//            if (estadoAlerta != null) {
+//                estadoAlerta.getCasoList().remove(caso);
+//                estadoAlerta = em.merge(estadoAlerta);
+//            }
+//            SubEstadoCaso idSubEstado = caso.getIdSubEstado();
+//            if (idSubEstado != null) {
+//                idSubEstado.getCasoList().remove(caso);
+//                idSubEstado = em.merge(idSubEstado);
+//            }
+//            SubComponente idSubComponente = caso.getIdSubComponente();
+//            if (idSubComponente != null) {
+//                idSubComponente.getCasoList().remove(caso);
+//                idSubComponente = em.merge(idSubComponente);
+//            }
+//            Producto idProducto = caso.getIdProducto();
+//            if (idProducto != null) {
+//                idProducto.getCasoList().remove(caso);
+//                idProducto = em.merge(idProducto);
+//            }
+//            Prioridad idPrioridad = caso.getIdPrioridad();
+//            if (idPrioridad != null) {
+//                idPrioridad.getCasoList().remove(caso);
+//                idPrioridad = em.merge(idPrioridad);
+//            }
+//            EstadoCaso idEstado = caso.getIdEstado();
+//            if (idEstado != null) {
+//                idEstado.getCasoList().remove(caso);
+//                idEstado = em.merge(idEstado);
+//            }
             EmailCliente emailCliente = caso.getEmailCliente();
             if (emailCliente != null) {
                 emailCliente.getCasoList().remove(caso);
@@ -805,11 +805,11 @@ public abstract class CasoJpaController extends AbstractJPAController implements
                 idCasoPadre.getCasosRelacionadosList().remove(caso);
                 idCasoPadre = em.merge(idCasoPadre);
             }
-            Canal idCanal = caso.getIdCanal();
-            if (idCanal != null) {
-                idCanal.getCasoList().remove(caso);
-                idCanal = em.merge(idCanal);
-            }
+//            Canal idCanal = caso.getIdCanal();
+//            if (idCanal != null) {
+//                idCanal.getCasoList().remove(caso);
+//                idCanal = em.merge(idCanal);
+//            }
             List<Caso> casoList = caso.getCasosRelacionadosList();
             for (Caso casoListCaso : casoList) {
                 casoListCaso.getCasosRelacionadosList().remove(caso);

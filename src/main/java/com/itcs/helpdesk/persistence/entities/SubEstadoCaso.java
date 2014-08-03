@@ -54,8 +54,8 @@ public class SubEstadoCaso implements Serializable {
     private String descripcion;
 //    @ManyToMany(mappedBy = "subEstadoCasoList")
 //    private List<Categoria> categoriaList;
-    @OneToMany(mappedBy = "idSubEstado")
-    private List<Caso> casoList;
+//    @OneToMany(mappedBy = "idSubEstado")
+//    private List<Caso> casoList;
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Estado", fieldIdFull = "idEstado.idEstado", fieldTypeFull = String.class)
     @JoinColumn(name = "id_estado", referencedColumnName = "id_estado")
     @ManyToOne
@@ -136,14 +136,14 @@ public class SubEstadoCaso implements Serializable {
 //    public void setCategoriaList(List<Categoria> categoriaList) {
 //        this.categoriaList = categoriaList;
 //    }
-    @XmlTransient
-    public List<Caso> getCasoList() {
-        return casoList;
-    }
-
-    public void setCasoList(List<Caso> casoList) {
-        this.casoList = casoList;
-    }
+//    @XmlTransient
+//    public List<Caso> getCasoList() {
+//        return casoList;
+//    }
+//
+//    public void setCasoList(List<Caso> casoList) {
+//        this.casoList = casoList;
+//    }
 
     public EstadoCaso getIdEstado() {
         return idEstado;
