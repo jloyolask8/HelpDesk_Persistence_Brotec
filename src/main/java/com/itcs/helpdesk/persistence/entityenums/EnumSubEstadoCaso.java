@@ -60,7 +60,7 @@ public enum EnumSubEstadoCaso {
     
     PREVENTIVO_ITEM_NUEVO(new SubEstadoCaso(EnumTipoCaso.PREVENTIVO.getTipoCaso(), "PREVENTIVO_NUEVO", "Nuevo", EnumEstadoCaso.ABIERTO.getEstado(), "Estado inicial de un caso de visita preventiva cuando ha sido creado.", false, "FFFFFF", "00aeed", true)),
     PREVENTIVO_ITEM_EN_PROCESO(new SubEstadoCaso(EnumTipoCaso.PREVENTIVO.getTipoCaso(), "PREVENTIVO_EN_PROCESO", "En Proceso", EnumEstadoCaso.ABIERTO.getEstado(), "Se están realizando los trabajos necesarios para solucionar el caso de reparacion.", false, "FFFFFF", "EB6420", false)),
-    PREVENTIVO_ITEM_SOLUCIONADO(new SubEstadoCaso(EnumTipoCaso.PREVENTIVO.getTipoCaso(), "PREVENTIVO_SOLUCIONADO", "Solucionado", EnumEstadoCaso.CERRADO.getEstado(), "Caso solucionado.", false, "FFFFFF", "563D7C", false)),;
+    PREVENTIVO_ITEM_SOLUCIONADO(new SubEstadoCaso(EnumTipoCaso.PREVENTIVO.getTipoCaso(), "PREVENTIVO_SOLUCIONADO", "Solucionado", EnumEstadoCaso.CERRADO.getEstado(), "Caso solucionado.", false, "FFFFFF", "563D7C", false));
     private SubEstadoCaso subestado;
 
     EnumSubEstadoCaso(SubEstadoCaso subestado) {

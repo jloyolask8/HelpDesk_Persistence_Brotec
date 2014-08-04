@@ -51,10 +51,16 @@ public class SubEstadoCasoJpaController implements Serializable {
                 idEstado = em.getReference(idEstado.getClass(), idEstado.getIdEstado());
                 subEstadoCaso.setIdEstado(idEstado);
             }
-            TipoCaso tipoCaso = subEstadoCaso.getTipoCaso();
-            if (tipoCaso != null) {
-                tipoCaso = em.getReference(tipoCaso.getClass(), tipoCaso.getIdTipoCaso());
-                subEstadoCaso.setTipoCaso(tipoCaso);
+            TipoCaso tipoCasoOld = subEstadoCaso.getTipoCaso();
+            if (tipoCasoOld != null) {
+                TipoCaso tipoCaso = em.find(TipoCaso.class, tipoCasoOld.getIdTipoCaso());
+                if (tipoCaso == null) {
+                    em.persist(tipoCasoOld);
+                    subEstadoCaso.setTipoCaso(tipoCasoOld);
+                } else {
+                    subEstadoCaso.setTipoCaso(tipoCaso);
+
+                }
             }
 //            List<Categoria> attachedCategoriaList = new ArrayList<Categoria>();
 //            for (Categoria categoriaListCategoriaToAttach : subEstadoCaso.getCategoriaList()) {
@@ -68,8 +74,7 @@ public class SubEstadoCasoJpaController implements Serializable {
                 idEstado.getSubEstadoCasoList().add(subEstadoCaso);
                 idEstado = em.merge(idEstado);
             }
-            
-            
+
 //            for (Categoria categoriaListCategoria : subEstadoCaso.getCategoriaList()) {
 //                categoriaListCategoria.getSubEstadoCasoList().add(subEstadoCaso);
 //                categoriaListCategoria = em.merge(categoriaListCategoria);
