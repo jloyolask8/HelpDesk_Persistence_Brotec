@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Etiqueta.findAll", query = "SELECT e FROM Etiqueta e"),
+    @NamedQuery(name = "Etiqueta.findByTagIdAndIdUsuario", query = "SELECT e FROM Etiqueta e WHERE lower(e.tagId) LIKE lower(:tagId) and e.owner.idUsuario = :idUsuario"),
     @NamedQuery(name = "Etiqueta.findByTagId", query = "SELECT e FROM Etiqueta e WHERE e.tagId = :tagId")})
 public class Etiqueta implements Serializable {
 
