@@ -10,11 +10,9 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.itcs.helpdesk.persistence.entities.EstadoCaso;
-import com.itcs.helpdesk.persistence.entities.Categoria;
-import java.util.ArrayList;
 import java.util.List;
-import com.itcs.helpdesk.persistence.entities.Caso;
 import com.itcs.helpdesk.persistence.entities.SubEstadoCaso;
+import com.itcs.helpdesk.persistence.entities.TipoCaso;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
@@ -43,7 +41,7 @@ public class SubEstadoCasoJpaController implements Serializable {
 //        if (subEstadoCaso.getCategoriaList() == null) {
 //            subEstadoCaso.setCategoriaList(new ArrayList<Categoria>());
 //        }
-        
+
         EntityManager em = null;
         try {
             utx.begin();
@@ -53,18 +51,25 @@ public class SubEstadoCasoJpaController implements Serializable {
                 idEstado = em.getReference(idEstado.getClass(), idEstado.getIdEstado());
                 subEstadoCaso.setIdEstado(idEstado);
             }
+            TipoCaso tipoCaso = subEstadoCaso.getTipoCaso();
+            if (tipoCaso != null) {
+                tipoCaso = em.getReference(tipoCaso.getClass(), tipoCaso.getIdTipoCaso());
+                subEstadoCaso.setTipoCaso(tipoCaso);
+            }
 //            List<Categoria> attachedCategoriaList = new ArrayList<Categoria>();
 //            for (Categoria categoriaListCategoriaToAttach : subEstadoCaso.getCategoriaList()) {
 //                categoriaListCategoriaToAttach = em.getReference(categoriaListCategoriaToAttach.getClass(), categoriaListCategoriaToAttach.getIdCategoria());
 //                attachedCategoriaList.add(categoriaListCategoriaToAttach);
 //            }
 //            subEstadoCaso.setCategoriaList(attachedCategoriaList);
-            
+
             em.persist(subEstadoCaso);
             if (idEstado != null) {
                 idEstado.getSubEstadoCasoList().add(subEstadoCaso);
                 idEstado = em.merge(idEstado);
             }
+            
+            
 //            for (Categoria categoriaListCategoria : subEstadoCaso.getCategoriaList()) {
 //                categoriaListCategoria.getSubEstadoCasoList().add(subEstadoCaso);
 //                categoriaListCategoria = em.merge(categoriaListCategoria);
@@ -274,5 +279,5 @@ public class SubEstadoCasoJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

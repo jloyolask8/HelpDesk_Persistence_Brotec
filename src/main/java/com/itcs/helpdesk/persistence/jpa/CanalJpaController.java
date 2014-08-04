@@ -10,13 +10,12 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import com.itcs.helpdesk.persistence.entities.Caso;
+import com.itcs.helpdesk.persistence.entities.TipoCanal;
 import com.itcs.helpdesk.persistence.entityenums.EnumTipoCanal;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
 import com.itcs.jpautils.EasyCriteriaQuery;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -44,6 +43,11 @@ public class CanalJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
+            TipoCanal tipoCanal = canal.getIdTipoCanal();
+            if (tipoCanal != null) {
+                tipoCanal = em.getReference(tipoCanal.getClass(), tipoCanal.getIdTipo());
+                canal.setIdTipoCanal(tipoCanal);
+            }
             em.persist(canal);
             utx.commit();
         } catch (Exception ex) {
@@ -103,7 +107,7 @@ public class CanalJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The canal with id " + id + " no longer exists.", enfe);
             }
-            
+
             em.remove(canal);
             utx.commit();
         } catch (Exception ex) {
@@ -123,9 +127,8 @@ public class CanalJpaController implements Serializable {
     public List<Canal> findCanalEntities() {
         return findCanalEntities(true, -1, -1);
     }
-    
-    public List<Canal> findCanalTipoEmail()
-    {
+
+    public List<Canal> findCanalTipoEmail() {
         EasyCriteriaQuery<Canal> ecq = new EasyCriteriaQuery<Canal>(emf, Canal.class);
         ecq.addEqualPredicate("idTipoCanal", EnumTipoCanal.EMAIL.getTipoCanal());
         return ecq.getAllResultList();
@@ -172,5 +175,5 @@ public class CanalJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }
