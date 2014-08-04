@@ -113,12 +113,12 @@ public class Area implements Serializable {
 //    private Integer emailFrecuencia;
 //    @Column(name = "email_acusederecibo")
 //    private Boolean emailAcusederecibo;
-//    @Size(max = 2147483647)
-//    @Column(name = "subject_resp_automatica", length = 2147483647)
-//    private String subjectRespAutomatica;
-//    @Size(max = 2147483647)
-//    @Column(name = "texto_resp_automatica", length = 2147483647)
-//    private String textoRespAutomatica;
+    @Size(max = 2147483647)
+    @Column(name = "subject_resp_automatica", length = 2147483647)
+    private String subjectRespAutomatica;
+    @Size(max = 2147483647)
+    @Column(name = "texto_resp_automatica", length = 2147483647)
+    private String textoRespAutomatica;
 //    @Size(max = 2147483647)
 //    @Column(name = "texto_resp_caso", length = 2147483647)
 //    private String textoRespCaso;
@@ -576,6 +576,34 @@ public class Area implements Serializable {
      */
     public void setIdCanal(Canal idCanal) {
         this.idCanal = idCanal;
+    }
+
+    /**
+     * @return the subjectRespAutomatica
+     */
+    public String getSubjectRespAutomatica() {
+        return subjectRespAutomatica;
+    }
+
+    /**
+     * @param subjectRespAutomatica the subjectRespAutomatica to set
+     */
+    public void setSubjectRespAutomatica(String subjectRespAutomatica) {
+        this.subjectRespAutomatica = subjectRespAutomatica;
+    }
+
+    /**
+     * @return the textoRespAutomatica
+     */
+    public String getTextoRespAutomatica() {
+        return textoRespAutomatica;
+    }
+
+    /**
+     * @param textoRespAutomatica the textoRespAutomatica to set
+     */
+    public void setTextoRespAutomatica(String textoRespAutomatica) {
+        this.textoRespAutomatica = textoRespAutomatica;
     }
 
   
