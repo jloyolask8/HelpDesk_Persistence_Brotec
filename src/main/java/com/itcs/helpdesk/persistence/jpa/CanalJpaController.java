@@ -11,6 +11,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.itcs.helpdesk.persistence.entities.TipoCanal;
+import com.itcs.helpdesk.persistence.entities.TipoCaso;
 import com.itcs.helpdesk.persistence.entityenums.EnumTipoCanal;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
@@ -43,11 +44,19 @@ public class CanalJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            TipoCanal tipoCanal = canal.getIdTipoCanal();
-            if (tipoCanal != null) {
-                tipoCanal = em.getReference(tipoCanal.getClass(), tipoCanal.getIdTipo());
-                canal.setIdTipoCanal(tipoCanal);
+
+            TipoCanal tipoCanalNew = canal.getIdTipoCanal();
+            if (tipoCanalNew != null) {
+                TipoCanal tipoCanalOld = em.find(TipoCanal.class, tipoCanalNew.getIdTipo());
+                if (tipoCanalOld == null) {
+                    em.persist(tipoCanalNew);
+                    canal.setIdTipoCanal(tipoCanalNew);
+                } else {
+                    canal.setIdTipoCanal(tipoCanalOld);
+
+                }
             }
+
             em.persist(canal);
             utx.commit();
         } catch (Exception ex) {
