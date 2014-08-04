@@ -656,6 +656,17 @@ public class Caso implements Serializable {
         }
         return false;
     }
+    
+    public boolean hasOpenSubCasosDelTipo(TipoCaso tipo) {
+        if (this.getCasosHijosList() != null) {
+            for (Caso caso : this.getCasosHijosList()) {
+                if (caso.isOpen() && caso.getTipoCaso().equals(tipo)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public boolean isOpen() {
         if (this.getIdEstado() != null) {

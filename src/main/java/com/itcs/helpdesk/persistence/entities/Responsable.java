@@ -38,8 +38,7 @@ public class Responsable implements Serializable {
     @Size(max = 200)
     @Column(name = "nombre_responsable", length = 200)
     private String nombreResponsable;
-    @OneToMany(mappedBy = "idResponsable")
-    private List<Caso> casoList;
+  
 
     public Responsable() {
     }
@@ -71,14 +70,7 @@ public class Responsable implements Serializable {
         this.nombreResponsable = nombreResponsable;
     }
 
-    @XmlTransient
-    public List<Caso> getCasoList() {
-        return casoList;
-    }
-
-    public void setCasoList(List<Caso> casoList) {
-        this.casoList = casoList;
-    }
+   
 
     @Override
     public int hashCode() {

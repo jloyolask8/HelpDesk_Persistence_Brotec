@@ -8,10 +8,6 @@ import com.itcs.helpdesk.persistence.entities.TipoCaso;
  */
 public enum EnumTipoCaso {
 
-//    PREGUNTA(new TipoCaso("Pregunta", "Pregunta", "Caso donde el cliente solo hace una pregunta.")),
-//    PROBLEMA(new TipoCaso("Problema", "Problema", "Caso donde el cliente tiene un problema con el producto o servicio entregado.")),
-//    INCIDENTE(new TipoCaso("Incidente", "Incidente", "Caso donde el cliente tiene un incidente que impide el correcto funcionamiento del producto o servicio entregado.")),
-//    TAREA(new TipoCaso("Tarea", "Tarea", "Caso que representa una tarea a realizar por el agente.")),
     INTERNO(new TipoCaso("interno", "Colaboración Interna", "Caso Interno.")),//TODO delete this tipo caso, use Colab instead
     COTIZACION(new TipoCaso("cotizacion", "Cotización", "Caso donde el cliente solicita una Cotización de productos.")),
     PREVENTA(new TipoCaso("preventa", "Pre Venta", "Caso donde el cliente solicita una Cotización de productos y se inicia el proceso de venta.")),
@@ -20,7 +16,7 @@ public enum EnumTipoCaso {
     PREVENTIVO(new TipoCaso("preventivo", "Visita Preventiva", "Caso donde la inmobiliaria ofrece una visita preventiva.")),
     CONTACTO(new TipoCaso("contacto", "Contacto", "Caso donde el cliente solicita un contacto.")),
     PREENTREGA(new TipoCaso("preentrega", "Pre-entrega", "Caso donde especifican todos los detalles de pre-entrega."));
-//    OTRO(new TipoCaso("Otro", "Otro", "Otro."));
+
     private TipoCaso tipoCaso;
 
     EnumTipoCaso(TipoCaso tipoCaso) {

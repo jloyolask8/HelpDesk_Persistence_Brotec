@@ -3,49 +3,53 @@
   <!--persistence-unit name="helpdeskPU" transaction-type="RESOURCE_LOCAL"-->
   <persistence-unit name="helpdeskPU" transaction-type="JTA">
     <jta-data-source>${jta-data-source}</jta-data-source>
-    <class>com.itcs.helpdesk.persistence.entities.Funcion</class>
-    <class>com.itcs.helpdesk.persistence.entities.Area</class>
-    <class>com.itcs.helpdesk.persistence.entities.Categoria</class>
-    <class>com.itcs.helpdesk.persistence.entities.Item</class>
-    <class>com.itcs.helpdesk.persistence.entities.Nota</class>
-    <class>com.itcs.helpdesk.persistence.entities.Usuario</class>
-    <class>com.itcs.helpdesk.persistence.entities.EmailCliente</class>
-    <class>com.itcs.helpdesk.persistence.entities.TipoComparacion</class>
-    <class>com.itcs.helpdesk.persistence.entities.Archivo</class>
-    <class>com.itcs.helpdesk.persistence.entities.Attachment</class>
-    <class>com.itcs.helpdesk.persistence.entities.Grupo</class>
-    <class>com.itcs.helpdesk.persistence.entities.NombreAccion</class>
-    <class>com.itcs.helpdesk.persistence.entities.CampoCompCaso</class>
-    <class>com.itcs.helpdesk.persistence.entities.Prioridad</class>
-    <class>com.itcs.helpdesk.persistence.entities.ReglaTrigger</class>
-    <class>com.itcs.helpdesk.persistence.entities.TipoNota</class>
-    <class>com.itcs.helpdesk.persistence.entities.Sesiones</class>
-    <class>com.itcs.helpdesk.persistence.entities.AuditLog</class>
-    <class>com.itcs.helpdesk.persistence.entities.TipoAlerta</class>
-    <class>com.itcs.helpdesk.persistence.entities.Documento</class>
-    <class>com.itcs.helpdesk.persistence.entities.Canal</class>
-    <class>com.itcs.helpdesk.persistence.entities.Componente</class>
-    <class>com.itcs.helpdesk.persistence.entities.Cliente</class>
-    <class>com.itcs.helpdesk.persistence.entities.EstadoCaso</class>
-    <class>com.itcs.helpdesk.persistence.entities.Caso</class>
-    <class>com.itcs.helpdesk.persistence.entities.Producto</class>
-    <class>com.itcs.helpdesk.persistence.entities.SubComponente</class>
-    <class>com.itcs.helpdesk.persistence.entities.Rol</class>
-    <class>com.itcs.helpdesk.persistence.entities.SubEstadoCaso</class>
-    <class>com.itcs.helpdesk.persistence.entities.Condicion</class>
     <class>com.itcs.helpdesk.persistence.entities.Accion</class>
-    <class>com.itcs.helpdesk.persistence.entities.EmailConfig</class>
-    <class>com.itcs.helpdesk.persistence.entities.ApplicationConfig</class>
-    <class>com.itcs.helpdesk.persistence.entities.FiltroVista</class>
-    <class>com.itcs.helpdesk.persistence.entities.Vista</class>
     <class>com.itcs.helpdesk.persistence.entities.AppSetting</class>
-    <class>com.itcs.helpdesk.persistence.entities.Clipping</class>
-    <class>com.itcs.helpdesk.persistence.entities.CampoComparable</class>
-    <class>com.itcs.helpdesk.persistence.entities.Recinto</class>
-    <class>com.itcs.helpdesk.persistence.entities.TipoCanal</class>
+    <class>com.itcs.helpdesk.persistence.entities.Archivo</class>
+    <class>com.itcs.helpdesk.persistence.entities.Area</class>
+    <class>com.itcs.helpdesk.persistence.entities.Attachment</class>
+    <class>com.itcs.helpdesk.persistence.entities.AuditLog</class>
+    <class>com.itcs.helpdesk.persistence.entities.BlackListEmail</class>
+    <class>com.itcs.helpdesk.persistence.entities.Canal</class>
     <class>com.itcs.helpdesk.persistence.entities.CanalSetting</class>
+    <class>com.itcs.helpdesk.persistence.entities.Caso</class>
+    <class>com.itcs.helpdesk.persistence.entities.Categoria</class>
+    <class>com.itcs.helpdesk.persistence.entities.Cliente</class>
+    <class>com.itcs.helpdesk.persistence.entities.Clipping</class>
+    <class>com.itcs.helpdesk.persistence.entities.Componente</class>
+    <class>com.itcs.helpdesk.persistence.entities.Condicion</class>
+    <class>com.itcs.helpdesk.persistence.entities.Documento</class>
+    <class>com.itcs.helpdesk.persistence.entities.EmailCliente</class>
+    <class>com.itcs.helpdesk.persistence.entities.EstadoCaso</class>
+    <class>com.itcs.helpdesk.persistence.entities.Etiqueta</class>
+    <class>com.itcs.helpdesk.persistence.entities.FieldType</class>
+    <class>com.itcs.helpdesk.persistence.entities.FiltroVista</class>
+    <class>com.itcs.helpdesk.persistence.entities.Funcion</class>
+    <class>com.itcs.helpdesk.persistence.entities.Grupo</class>
+    <class>com.itcs.helpdesk.persistence.entities.Item</class>
+    <class>com.itcs.helpdesk.persistence.entities.ModeloProducto</class>
+    <class>com.itcs.helpdesk.persistence.entities.NombreAccion</class>
+    <class>com.itcs.helpdesk.persistence.entities.Nota</class>
+    <class>com.itcs.helpdesk.persistence.entities.Prioridad</class>
+    <class>com.itcs.helpdesk.persistence.entities.Producto</class>
+    <class>com.itcs.helpdesk.persistence.entities.ProductoContratado</class>
+    <class>com.itcs.helpdesk.persistence.entities.Recinto</class>
+    <class>com.itcs.helpdesk.persistence.entities.ReglaTrigger</class>
+    <class>com.itcs.helpdesk.persistence.entities.Resource</class>
     <class>com.itcs.helpdesk.persistence.entities.Responsable</class>
-    <class>com.itcs.helpdesk.persistence.entities.Caso_1</class>
+    <class>com.itcs.helpdesk.persistence.entities.Rol</class>
+    <class>com.itcs.helpdesk.persistence.entities.ScheduleEvent</class>
+    <class>com.itcs.helpdesk.persistence.entities.ScheduleEventReminder</class>
+    <class>com.itcs.helpdesk.persistence.entities.Sesiones</class>
+    <class>com.itcs.helpdesk.persistence.entities.SubComponente</class>
+    <class>com.itcs.helpdesk.persistence.entities.SubEstadoCaso</class>
+    <class>com.itcs.helpdesk.persistence.entities.TipoAlerta</class>
+    <class>com.itcs.helpdesk.persistence.entities.TipoCanal</class>
+    <class>com.itcs.helpdesk.persistence.entities.TipoCaso</class>
+    <class>com.itcs.helpdesk.persistence.entities.TipoComparacion</class>
+    <class>com.itcs.helpdesk.persistence.entities.TipoNota</class>
+    <class>com.itcs.helpdesk.persistence.entities.Usuario</class>
+    <class>com.itcs.helpdesk.persistence.entities.Vista</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>${shared-cache-mode}</shared-cache-mode>
     <properties>
