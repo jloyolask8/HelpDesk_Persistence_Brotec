@@ -220,6 +220,10 @@ public class Caso implements Serializable {
     @JoinColumn(name = "id_responsable", referencedColumnName = "id_responsable")
     @ManyToOne
     private Responsable idResponsable;
+    
+    //Schedule Events
+    @OneToMany(mappedBy = "idCaso")
+    private List<ScheduleEvent> scheduleEventList;
 
     public Caso() {
     }
@@ -801,5 +805,19 @@ public class Caso implements Serializable {
      */
     public void setServicioTecnico(Boolean servicioTecnico) {
         this.servicioTecnico = servicioTecnico;
+    }
+
+    /**
+     * @return the scheduleEventList
+     */
+    public List<ScheduleEvent> getScheduleEventList() {
+        return scheduleEventList;
+    }
+
+    /**
+     * @param scheduleEventList the scheduleEventList to set
+     */
+    public void setScheduleEventList(List<ScheduleEvent> scheduleEventList) {
+        this.scheduleEventList = scheduleEventList;
     }
 }
