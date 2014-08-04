@@ -64,6 +64,20 @@
       <!--property name="eclipselink.cache.coordination.protocol" value="rmi"/-->
       <!--property name="eclipselink.cache.coordination.naming-service" value="rmi"/-->
       <!--property name="eclipselink.cache.coordination.rmi.url" value="%%current-server-url%%" /-->
+      <property name="eclipselink.jdbc.cache-statements" value="true"/>
+      <!--  Optimization #10 - batch writing -->
+      <property name="eclipselink.jdbc.batch-writing" value="JDBC"/>
+      <property name="eclipselink.jdbc.batch-writing.size" value="1000"/>
+      <!--  Optimization #12 - turn logging off -->
+      <property name="eclipselink.logging.level" value="${eclipselink.logging.level.sql}"/>
+      <!--property name="eclipselink.logging.level" value="off"/-->
+      <!--  Optimization #13 - close EntityManager on commit, to avoid cost of resume -->
+      <property name="eclipselink.persistence-context.close-on-commit" value="true"/>
+      <!--  Optimization #14 - avoid auto flush cost on query execution -->
+      <property name="eclipselink.persistence-context.flush-mode" value="commit"/>
+      <!--  Optimization #15 - avoid cost of persist on commit -->
+      <property name="eclipselink.persistence-context.persist-on-commit" value="true"/>
+      <property name="javax.persistence.schema-generation.database.action" value="none"/>
     </properties>
   </persistence-unit>
 </persistence>
