@@ -181,10 +181,13 @@ public class JPAServiceFacade extends AbstractJPAController {
         try {
             utx.begin();
             em.persist(o);
-            em.flush();
             utx.commit();
         } catch (Exception ex) {
-            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                utx.rollback();
+            } catch (Exception re) {
+                throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
+            }
             throw ex;
         } finally {
             if (em != null) {
