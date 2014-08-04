@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.itcs.helpdesk.persistence.entities;
 
 import java.io.Serializable;
@@ -33,16 +32,20 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TipoCanal.findByNombre", query = "SELECT t FROM TipoCanal t WHERE t.nombre = :nombre"),
     @NamedQuery(name = "TipoCanal.findByIdTipo", query = "SELECT t FROM TipoCanal t WHERE t.idTipo = :idTipo")})
 public class TipoCanal implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    @Size(max = 2147483647)
-    @Column(name = "nombre", length = 2147483647)
-    private String nombre;
+
     @Id
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "id_tipo", nullable = false, length = 2147483647)
     private String idTipo;
+
+    @Size(max = 2147483647)
+    @Column(name = "nombre", length = 2147483647)
+    private String nombre;
+
     @OneToMany(mappedBy = "idTipoCanal")
     private List<Canal> canalList;
 
@@ -107,5 +110,5 @@ public class TipoCanal implements Serializable {
     public String toString() {
         return "com.itcs.helpdesk.persistence.entities.TipoCanal[ idTipo=" + idTipo + " ]";
     }
-    
+
 }
