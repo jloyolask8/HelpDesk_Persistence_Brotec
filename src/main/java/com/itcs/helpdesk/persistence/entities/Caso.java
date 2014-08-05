@@ -216,11 +216,11 @@ public class Caso implements Serializable {
     private Item idItem;
     @Column(name = "servicio_tecnico")
     private Boolean servicioTecnico;
-    
+
     @JoinColumn(name = "id_responsable", referencedColumnName = "id_responsable")
     @ManyToOne
     private Responsable idResponsable;
-    
+
     //Schedule Events
     @OneToMany(mappedBy = "idCaso")
     private List<ScheduleEvent> scheduleEventList;
@@ -520,15 +520,15 @@ public class Caso implements Serializable {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Caso [");
-        builder.append("idCaso=");
+         builder.append(tipoCaso != null ? tipoCaso.getNombre():"Caso").append(": [");
+        builder.append("#ID=");
         builder.append(idCaso);
-        builder.append(", idEstado=");
-        builder.append(idEstado);
-        builder.append(", idSubEstado=");
-        builder.append(idSubEstado);
-        builder.append(", tema=");
+        builder.append(", Tema=");
         builder.append(tema);
+        builder.append(", Estado=");
+        builder.append(idEstado);
+        builder.append(", SubEstado=");
+        builder.append(idSubEstado);
         builder.append("]");
         return builder.toString();
     }
@@ -660,7 +660,7 @@ public class Caso implements Serializable {
         }
         return false;
     }
-    
+
     public boolean hasOpenSubCasosDelTipo(TipoCaso tipo) {
         if (this.getCasosHijosList() != null) {
             for (Caso caso : this.getCasosHijosList()) {
@@ -784,7 +784,7 @@ public class Caso implements Serializable {
     public void setIdCliente(Cliente idCliente) {
         this.idCliente = idCliente;
     }
-    
+
     public Responsable getIdResponsable() {
         return idResponsable;
     }

@@ -52,11 +52,11 @@ public class ScheduleEventReminder implements Serializable {
      */
     @Size(max = 100)
     @Column(name = "reminder_type")
-    private String reminderType;
+    private String reminderType = EMAIL_TYPE;//default
     @Basic(optional = false)
     @NotNull
     @Column(name = "quantity_time")
-    private int quantityTime = 10;
+    private int quantityTime = 15;//thinking 15 minutes by default
     /**
      * minutos:=1 horas:=60 dias:60*24=1440 semanas:60*24*7=10080
      */

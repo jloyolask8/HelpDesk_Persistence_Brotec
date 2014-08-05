@@ -177,9 +177,10 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     public void persist(Object o) throws Exception {
-        EntityManager em = getEntityManager();
+        EntityManager em = null;//
         try {
             utx.begin();
+            em = getEntityManager();
             em.persist(o);
             utx.commit();
         } catch (Exception ex) {
@@ -194,7 +195,6 @@ public class JPAServiceFacade extends AbstractJPAController {
                 em.close();
             }
         }
-
     }
 
     public void remove(Class clazz, Object o) throws Exception {
