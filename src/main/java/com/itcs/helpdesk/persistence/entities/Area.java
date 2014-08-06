@@ -108,11 +108,11 @@ public class Area implements Serializable {
 //    @Column(name = "mail_inbound_ssl_enabled")
 //    private Boolean mailInboundSslEnabled;
     @Column(name = "email_enabled")
-    private Boolean emailEnabled;
+    private boolean emailEnabled;
 //    @Column(name = "email_frecuencia")
 //    private Integer emailFrecuencia;
-//    @Column(name = "email_acusederecibo")
-//    private Boolean emailAcusederecibo;
+    @Column(name = "email_acusederecibo")
+    private boolean emailAcusederecibo;
     @Size(max = 2147483647)
     @Column(name = "subject_resp_automatica", length = 2147483647)
     private String subjectRespAutomatica;
@@ -380,11 +380,11 @@ public class Area implements Serializable {
 //        this.mailInboundSslEnabled = mailInboundSslEnabled;
 //    }
 //
-    public Boolean getEmailEnabled() {
+    public boolean getEmailEnabled() {
         return emailEnabled;
     }
 
-    public void setEmailEnabled(Boolean emailEnabled) {
+    public void setEmailEnabled(boolean emailEnabled) {
         this.emailEnabled = emailEnabled;
     }
 //
@@ -396,13 +396,13 @@ public class Area implements Serializable {
 //        this.emailFrecuencia = emailFrecuencia;
 //    }
 //
-//    public Boolean getEmailAcusederecibo() {
-//        return emailAcusederecibo;
-//    }
-//
-//    public void setEmailAcusederecibo(Boolean emailAcusederecibo) {
-//        this.emailAcusederecibo = emailAcusederecibo;
-//    }
+    public boolean getEmailAcusederecibo() {
+        return emailAcusederecibo;
+    }
+
+    public void setEmailAcusederecibo(boolean emailAcusederecibo) {
+        this.emailAcusederecibo = emailAcusederecibo;
+    }
 //
 //    public String getSubjectRespAutomatica() {
 //        return subjectRespAutomatica;

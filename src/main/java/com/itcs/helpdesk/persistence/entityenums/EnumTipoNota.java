@@ -10,6 +10,7 @@ public enum EnumTipoNota {
 
     NOTA(new TipoNota(1, "Comentario"),"comentario"),
     RESPUESTA_A_CLIENTE(new TipoNota(2, "Respuesta"),"resptoclient"),
+    RESPUESTA_AUT_CLIENTE(new TipoNota(2, "Respuesta Automática"),"respauttoclient"),
     RESPUESTA_DE_CLIENTE(new TipoNota(3, "Comentario del Solicitante"), "respfromclient"),
     BORRADOR_RESPUESTA_A_CLIENTE(new TipoNota(4, "Borrador"),"borrador"),
     RESPUESTA_SERVIDOR(new TipoNota(5, "Respuesta del servidor"),"respfromserv"),

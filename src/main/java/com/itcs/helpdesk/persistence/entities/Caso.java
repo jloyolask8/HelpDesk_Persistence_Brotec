@@ -187,7 +187,7 @@ public class Caso implements Serializable {
     private List<Attachment> attachmentList;
     @FilterField(fieldTypeId = EnumFieldType.CHECKBOX, label = "Revisar Actualizacion", fieldIdFull = "revisarActualizacion", fieldTypeFull = Boolean.class)
     @Column(name = "revisar_actualizacion")
-    private Boolean revisarActualizacion;
+    private boolean revisarActualizacion;
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Area", fieldIdFull = "idArea.idArea", fieldTypeFull = String.class)
     @JoinColumn(name = "id_area", referencedColumnName = "id_area")
     @ManyToOne(optional = false)
@@ -536,14 +536,14 @@ public class Caso implements Serializable {
     /**
      * @return the revisarActualizacion
      */
-    public Boolean getRevisarActualizacion() {
+    public boolean getRevisarActualizacion() {
         return revisarActualizacion;
     }
 
     /**
      * @param revisarActualizacion the revisarActualizacion to set
      */
-    public void setRevisarActualizacion(Boolean revisarActualizacion) {
+    public void setRevisarActualizacion(boolean revisarActualizacion) {
         this.revisarActualizacion = revisarActualizacion;
     }
 

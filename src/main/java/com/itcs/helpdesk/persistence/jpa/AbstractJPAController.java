@@ -532,7 +532,7 @@ public abstract class AbstractJPAController {
                         localPredicate = criteriaBuilder.equal(expresion2.in(valores), Boolean.TRUE);
 
                         //handle PLACEHOLDERS! in valores
-                        System.out.println("//remove this, PLACEHOLDERS! valores:" + valores);
+//                        System.out.println("//remove this, PLACEHOLDERS! valores:" + valores);
                         if (addCurrentUserFilter) {
 
                             if (comparableField.getTipo().equals(Usuario.class) && (whoIsApplyingView != null)) {

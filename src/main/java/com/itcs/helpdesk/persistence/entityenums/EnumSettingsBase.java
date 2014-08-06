@@ -11,9 +11,8 @@ import com.itcs.helpdesk.persistence.entities.AppSetting;
  * @author jorge
  */
 public enum EnumSettingsBase {
-    
-    //TODO fix the fucking bug
 
+    //TODO fix the fucking bug
     COMPANY_NAME(new AppSetting("COMPANY_NAME", "Nombre de su empresa", "", "app", "input", 1, "", true)),
     HELPDESK_TITLE(new AppSetting("HELPDESK_TITLE", "Titulo Helpdesk", "Itcs HelpDesk", "app", "input", 2, "", true)),
     COMPANY_LOGO_ID_ATTACHMENT(new AppSetting("COMPANY_LOGO_ID_ATTACHMENT", "Logo de su empresa", "0", "app", "inputfile", 3, "Logo a mostrar en la pagina del cliente.", false)),
@@ -28,18 +27,101 @@ public enum EnumSettingsBase {
     SALUDO_CLIENTE_HOMBRE(new AppSetting("SALUDO_CLIENTE_HOMBRE", "Saludo al cliente (sexo masculino)", "Estimado", "app", "input", 11, "", true)),
     SALUDO_CLIENTE_MUJER(new AppSetting("SALUDO_CLIENTE_MUJER", "Saludo al cliente (sexo femenino)", "Estimada", "app", "input", 12, "", true)),
     SALUDO_CLIENTE_UNKNOWN(new AppSetting("SALUDO_CLIENTE_UNKNOWN", "Saludo al cliente (sexo desconocido)", "Estimad@", "app", "input", 13, "", true)),
-    SEND_NOTIFICATION_ON_TRANSFER(new AppSetting("SEND_NOTIFICATION_ON_TRANSFER", "Notificar cuando se asigne un caso", "true", "app", "booleanchoice", 14, "", true)),
-    NOTIFICATION_SUBJECT_TEXT(new AppSetting("NOTIFICATION_SUBJECT_TEXT", "Asunto Nofiticación de su empresa", "Se le ha asignado el caso #[${NumeroCaso}].", "app", "input", 15, "", true)),
+    //--
+    SEND_NOTIFICATION_ON_TRANSFER(new AppSetting("SEND_NOTIFICATION_ON_TRANSFER", "Notificar al agente cuando se asigne un caso", "true", "app", "booleanchoice", 14, "", true)),
+    NOTIFICATION_SUBJECT_TEXT(new AppSetting("NOTIFICATION_SUBJECT_TEXT", "Asunto Nofiticación", "Se le ha asignado un caso.", "app", "input", 15, "", true)),
     NOTIFICATION_BODY_TEXT(new AppSetting("NOTIFICATION_BODY_TEXT", "Cuerpo mensaje Nofiticación",
-    "Estimado ${NombreAgente}<br/>,"
-    + "Le notificamos que le han asignado el caso N°#[${NumeroCaso}] para su pronta atención. Para poder revisar el caso acceda a la plataforma #[${LinkAlCasoAgente}].", "app", "inputhtml", 16, "", true)),
-    
-    NOTIFICATION_UPDATE_CLIENT_SUBJECT_TEXT(new AppSetting("NOTIFICATION_UPDATE_CLIENT_SUBJECT_TEXT", "Asunto Nofiticación al cliente", "su caso #[${NumeroCaso}] ha sido actualizado.", "app", "input", 17, "", true)),
-    NOTIFICATION_UPDATE_CLIENT_BODY_TEXT(new AppSetting("NOTIFICATION_UPDATE_CLIENT_BODY_TEXT", "Cuerpo mensaje Nofiticación Cliente",
-    "Estimado ${NombreCliente}<br/>,"
-    + "Le notificamos que su caso N°#[${NumeroCaso}] ha sido actualizado. Para ver la actualización favor acceder a la plataforma #[${LinkAlCasoCliente}].", "app", "inputhtml", 18, "", true)),
-    
-    DEBUG_ENABLED(new AppSetting("DEBUG_ENABLED", "Debug", "false", "admin", "booleanchoice", 19, "Habilitar esta opcion para realizar un diagnostico de la ejecucion del sistema (Herramienta de diagnostico de problemas para Soporte).", true));
+            "<div>\n"
+            + "<p>Estimad@ Agente <strong>${NombreAgente}</strong>,</p>\n"
+            + "\n"
+            + "<p>Le notificamos que le han asignado el caso ${TipoCaso} N&deg;#[${NumeroCaso}]: ${Asunto}</p>\n"
+            + "\n"
+            + "<hr />\n"
+            + "<p><span style=\"color:rgb(68, 68, 68)\">${Descripcion}</span>&nbsp;</p>\n"
+            + "\n"
+            + "<hr />\n"
+            + "<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\"><small>Para una pronta atenci&oacute;n favor ingrese a nuestro portal de servicio al cliente <a href=\"\" target=\"_blank\">GoDesk</a>. O si lo desea puede responder a este correo directamente y esta respuesta sera enviada al cliente &nbsp;${NombreCliente} a su direcci&oacute;n ${EmailCliente}. Tambi&eacute;n est&aacute; permitido atachar documentos.</small><br />\n"
+            + "&nbsp;</div>\n"
+            + "\n"
+            + "<p>Atentamente,</p>\n"
+            + "\n"
+            + "<table border=\"0\" cellpadding=\"0\" cellspacing=\"10\">\n"
+            + "	<tbody>\n"
+            + "		<tr>\n"
+            + "			<td>logo</td>\n"
+            + "			<td>\n"
+            + "			<p>Su Equipo de Servicio al Cliente.</p>\n"
+            + "\n"
+            + "			<p><br />\n"
+            + "			<a href=\"\">www.suempresa.cl</a></p>\n"
+            + "			</td>\n"
+            + "		</tr>\n"
+            + "	</tbody>\n"
+            + "</table>\n"
+            + "\n"
+            + "<hr />\n"
+            + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
+            + "</div>", "app", "inputhtml", 16, "", true)),
+    //--
+    SEND_NOTIFICATION_TOCLIENT_ON_NEW_TICKET(new AppSetting("SEND_NOTIFICATION_TOCLIENT_ON_NEW_TICKET", "Notificar acuse de recibo al cliente cuando llegue un caso", "false", "app", "booleanchoice", 17, "", true)),
+    NOTIFICATION_NEW_TICKET_CLIENT_SUBJECT_TEXT(new AppSetting("NOTIFICATION_NEW_TICKET_CLIENT_SUBJECT_TEXT", "Asunto Nofiticación al cliente", "${TipoCaso}:${Asunto}", "app", "input", 18, "", true)),
+    NOTIFICATION_NEW_TICKET_CLIENT_BODY_TEXT(new AppSetting("NOTIFICATION_NEW_TICKET_CLIENT_BODY_TEXT", "Cuerpo mensaje Nofiticación Cliente",
+            "<div>\n"
+            + "<p>Estimad@ <strong>${NombreCliente}</strong>,</p>\n"
+            + "\n"
+            + "<p>Hemos procesado su solicitud y se ha creado un caso con n&uacute;mero de servicio #<strong>${NumeroCaso}</strong>.<br />\n"
+            + "Uno de nuestros ejecutivos le enviar&aacute; una respuesta a la brevedad.</p>\n"
+            + "Si desea ver el estado de su caso, o agregar comentarios, favor visite nuestro portal de servicio al cliente:<br />\n"
+            + "<a href=\"\" target=\"_blank\">aqu&iacute;</a>. O si lo desea puede respondernos a este correo directamente.<br />\n"
+            + "&nbsp;\n"
+            + "<p>Atentamente,</p>\n"
+            + "\n"
+            + "<table border=\"0\" cellpadding=\"0\" cellspacing=\"10\">\n"
+            + "	<tbody>\n"
+            + "		<tr>\n"
+            + "			<td>logo</td>\n"
+            + "			<td>\n"
+            + "			<p>Equipo de Servicio al Cliente.</p>\n"
+            + "\n"
+            + "			<p><Empresa><br/>\n"
+            + "			<a href=\"\">www.suempresa.cl</a></p>\n"
+            + "			</td>\n"
+            + "		</tr>\n"
+            + "	</tbody>\n"
+            + "</table>\n"
+            + "\n"
+            + "<hr />\n"
+            + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
+            + "</div>", "app", "inputhtml", 19, "Cuando un nuevo caso llegue este mensaje de recepción será enviado. Nota: Los departamentos o areas podrían tener su propio texto, se prioriza el texto del Area que corresponda.", true)),
+    NOTIFICATION_UPDATE_CLIENT_SUBJECT_TEXT(new AppSetting("NOTIFICATION_UPDATE_CLIENT_SUBJECT_TEXT", "Asunto Nofiticación de actualización de caso, al Cliente", "su caso ha sido actualizado.", "app", "input", 20, "", true)),
+    NOTIFICATION_UPDATE_CLIENT_BODY_TEXT(new AppSetting("NOTIFICATION_UPDATE_CLIENT_BODY_TEXT", "Cuerpo mensaje Nofiticación de actualización de caso, al Cliente",
+            "<div>\n"
+            + "<p>${SaludoCliente} <strong>${NombreCliente}</strong>,</p>\n"
+            + "\n"
+            + "<p>Le informamos que su caso N°#${NumeroCaso} ha sido actualizado.</p>\n"
+            + "Si desea ver el estado de su caso, o agregar comentarios, favor visite nuestro portal de servicio al cliente:<br />\n"
+            + "<a href=\"\" target=\"_blank\">aqu&iacute;</a>.<br />\n"
+            + "&nbsp;\n"
+            + "<p>Atentamente,</p>\n"
+            + "\n"
+            + "<table border=\"0\" cellpadding=\"0\" cellspacing=\"10\">\n"
+            + "	<tbody>\n"
+            + "		<tr>\n"
+            + "			<td>logo</td>\n"
+            + "			<td>\n"
+            + "			<p>Equipo de Servicio al Cliente.</p>\n"
+            + "\n"
+            + "			<p><Empresa><br/>\n"
+            + "			<a href=\"\">www.suempresa.cl</a></p>\n"
+            + "			</td>\n"
+            + "		</tr>\n"
+            + "	</tbody>\n"
+            + "</table>\n"
+            + "\n"
+            + "<hr />\n"
+            + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
+            + "</div>", "app", "inputhtml", 21, "", true)),
+    DEBUG_ENABLED(new AppSetting("DEBUG_ENABLED", "Debug", "false", "admin", "booleanchoice", 22, "Habilitar esta opcion para realizar un diagnostico de la ejecucion del sistema (Herramienta de diagnostico de problemas para Soporte).", true));
 //    SEND_GROUP_NOTIFICATION_ON_NEW_CASE(new AppSetting("SEND_GROUP_NOTIFICATION_ON_NEW_CASE", "Notificar a el/los Grupo(s)", "true", "app", "booleanchoice", 22, "Notificar a el/los Grupo(s) encargado(s) del producto cuando llegue un nuevo caso", true));
     private AppSetting appSetting;
 
