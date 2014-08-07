@@ -9,8 +9,11 @@ import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
 import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,6 +33,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -819,5 +823,53 @@ public class Caso implements Serializable {
      */
     public void setScheduleEventList(List<ScheduleEvent> scheduleEventList) {
         this.scheduleEventList = scheduleEventList;
+    }
+    
+     @Transient
+    public List<Attachment> getAttachmentsNotEmbedded() {
+        try {
+            if (getAttachmentList() != null) {
+                List<Attachment> lista = new ArrayList<Attachment>();
+                for (Attachment attachment : getAttachmentList()) {
+                    if (attachment.getContentId() == null) {
+                        lista.add(attachment);
+                    }
+                }
+                return lista;// getJpaController().countAttachmentsWOContentId(current).intValue();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Error at getAttachmentsNotEmbedded", ex);
+        }
+        return Collections.EMPTY_LIST;
+    }
+
+    @Transient
+    public int getCantidadAttachment() {
+        try {
+            return getAttachmentsNotEmbedded().size();
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Error at cantidadAttachment", ex);
+            return 0;
+        }
+    }
+
+    @Transient
+    public int getCantidadAttachmentEmbedded() {
+//        return cantidadAttachmentsEmbedded;//getJpaController().countAttachmentWContentId(current).intValue();
+        try {
+            if (getAttachmentList() != null) {
+                int count = 0;
+                for (Attachment attachment : getAttachmentList()) {
+                    if (attachment.getContentId() != null) {
+                        count++;
+                    }
+                }
+                return count;// getJpaController().countAttachmentsWOContentId(current).intValue();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Error at cantidadAttachmentEmbedded", ex);
+
+        }
+        return 0;
     }
 }

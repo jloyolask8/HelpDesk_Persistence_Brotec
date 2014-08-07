@@ -5,6 +5,7 @@
 package com.itcs.helpdesk.persistence.entities;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -71,6 +72,29 @@ public class Attachment implements Serializable {
         this.nombreArchivo = nombreArchivo;
     }
 
+//     @Transient
+//    public String getReadableFileSize() {
+//        if (fileSize <= 0) {
+//            return "0";
+//        }
+//        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+//        int digitGroups = (int) (Math.log10(fileSize) / Math.log10(1024));
+//        return new DecimalFormat("#,##0.#").format(fileSize / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+//    }
+    
+    @Transient
+    public boolean isImageOrPDF() {
+        if (getMimeType() == null) {
+            return false;
+        }
+        String type = getMimeType().split("/")[0];
+        if (type.equals("image") || getMimeType().equalsIgnoreCase("application/pdf")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     public Long getIdAttachment() {
         return idAttachment;
     }

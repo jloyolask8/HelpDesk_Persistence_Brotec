@@ -92,7 +92,8 @@ public enum EnumSettingsBase {
             + "\n"
             + "<hr />\n"
             + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
-            + "</div>", "app", "inputhtml", 19, "Cuando un nuevo caso llegue este mensaje de recepción será enviado. Nota: Los departamentos o areas podrían tener su propio texto, se prioriza el texto del Area que corresponda.", true)),
+            + "</div>", "app", "inputhtml", 19, 
+            "Cuando un nuevo caso llegue este mensaje de recepción será enviado. Nota: Los departamentos o areas podrían tener su propio texto, se prioriza el texto del Area que corresponda.", true)),
     NOTIFICATION_UPDATE_CLIENT_SUBJECT_TEXT(new AppSetting("NOTIFICATION_UPDATE_CLIENT_SUBJECT_TEXT", "Asunto Nofiticación de actualización de caso, al Cliente", "su caso ha sido actualizado.", "app", "input", 20, "", true)),
     NOTIFICATION_UPDATE_CLIENT_BODY_TEXT(new AppSetting("NOTIFICATION_UPDATE_CLIENT_BODY_TEXT", "Cuerpo mensaje Nofiticación de actualización de caso, al Cliente",
             "<div>\n"
@@ -121,7 +122,37 @@ public enum EnumSettingsBase {
             + "<hr />\n"
             + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
             + "</div>", "app", "inputhtml", 21, "", true)),
-    DEBUG_ENABLED(new AppSetting("DEBUG_ENABLED", "Debug", "false", "admin", "booleanchoice", 22, "Habilitar esta opcion para realizar un diagnostico de la ejecucion del sistema (Herramienta de diagnostico de problemas para Soporte).", true));
+    
+    SEND_NOTIFICATION_TOCLIENT_ON_SUBSCRIBED_TO_EVENT(new AppSetting("SEND_NOTIFICATION_TOCLIENT_ON_SUBSCRIBED_TO_EVENT", "Notificar acuse de recibo cuando un cliente se inscriba a un evento", "true", "app", "booleanchoice", 22, "", true)),
+    NOTIFICATION_SUBSCRIBED_TO_EVENT_CLIENT_SUBJECT_TEXT(new AppSetting("NOTIFICATION_SUBSCRIBED_TO_EVENT_CLIENT_SUBJECT_TEXT", "Asunto Nofiticación al cliente (Inscripción Evento)", "${TipoCaso}:${Asunto}", "app", "input", 23, "", true)),
+    NOTIFICATION_SUBSCRIBED_TO_EVENT_CLIENT_BODY_TEXT(new AppSetting("NOTIFICATION_SUBSCRIBED_TO_EVENT_CLIENT_BODY_TEXT", "Cuerpo mensaje Nofiticación Cliente (Inscripción Evento)",
+            "<div>\n"
+            + "<p>Estimad@ <strong>${NombreCliente}</strong>,</p>\n"
+            + "\n"
+            + "<p>su #{TipoCaso} se realizó con éxito. Nuestros ejecutivos lo contactarán para coordinar su asistencia a la actividad.</p>\n"
+            + "<p>Atentamente,</p>\n"
+            + "\n"
+            + "<table border=\"0\" cellpadding=\"0\" cellspacing=\"10\">\n"
+            + "	<tbody>\n"
+            + "		<tr>\n"
+            + "			<td>logo</td>\n"
+            + "			<td>\n"
+            + "			<p>Equipo de Servicio al Cliente.</p>\n"
+            + "\n"
+            + "			<p><Empresa><br/>\n"
+            + "			<a href=\"\">www.suempresa.cl</a></p>\n"
+            + "			</td>\n"
+            + "		</tr>\n"
+            + "	</tbody>\n"
+            + "</table>\n"
+            + "\n"
+            + "<hr />\n"
+            + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
+            + "</div>", "app", "inputhtml", 24, 
+            "Cuando un cliente se inscriba en un evento este mensaje de recepción será enviado. Nota: Los departamentos o areas podrían tener su propio texto, se prioriza el texto del Area que corresponda.", true)),
+    
+    
+    DEBUG_ENABLED(new AppSetting("DEBUG_ENABLED", "AppDebug", "false", "admin", "booleanchoice", 50, "Habilitar esta opcion para realizar un diagnostico de la ejecucion del sistema (Herramienta de diagnostico de problemas para Soporte).", true));
 //    SEND_GROUP_NOTIFICATION_ON_NEW_CASE(new AppSetting("SEND_GROUP_NOTIFICATION_ON_NEW_CASE", "Notificar a el/los Grupo(s)", "true", "app", "booleanchoice", 22, "Notificar a el/los Grupo(s) encargado(s) del producto cuando llegue un nuevo caso", true));
     private AppSetting appSetting;
 

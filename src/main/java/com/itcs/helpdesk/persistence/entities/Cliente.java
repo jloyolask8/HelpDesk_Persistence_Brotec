@@ -177,15 +177,7 @@ public class Cliente implements Serializable {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Cliente [");
-        builder.append("idCliente=").append(idCliente);
-        builder.append(", rut=").append(rut);
-        builder.append(", nombres=").append(nombres);
-        builder.append(", apellidos=").append(apellidos);
-        builder.append(", dirComercial=").append(dirComercial);
-        builder.append(", dirParticular=").append(dirParticular);
-        builder.append(", sexo=").append(sexo);
-        builder.append("]");
+        builder.append(getCapitalName()).append(" (").append(rut).append(")");
         return builder.toString();
     }
 
