@@ -62,14 +62,14 @@ public class ClienteJpaController implements Serializable {
             return null;
         }
     }
-    
+
     private Predicate createSearchExpression(Root<Cliente> root, CriteriaBuilder criteriaBuilder, String searchPattern) {
         Expression<String> expresionNombre = root.get(Cliente_.nombres);
         Expression<String> expresionApellido = root.get(Cliente_.apellidos);
         Expression<String> expresionRut = root.get(Cliente_.rut);
-        Expression<String> expresionEmail =  root.joinList(Cliente_.emailClienteList.getName(), JoinType.LEFT).get("emailCliente");//root.get(Cliente_.emailClienteList).(EmailCliente_.emailCliente);
+        Expression<String> expresionEmail = root.joinList(Cliente_.emailClienteList.getName(), JoinType.LEFT).get("emailCliente");//root.get(Cliente_.emailClienteList).(EmailCliente_.emailCliente);
         Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT).join("subComponente", JoinType.LEFT).get("direccionMunicipal"); //.get("subComponente").get("direccionMunicipal");
-        
+
         Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.upper(expresionNombre), searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionApellido), searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionRut), searchPattern.toUpperCase() + "%"),
@@ -77,7 +77,7 @@ public class ClienteJpaController implements Serializable {
                 criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionM), "%" + searchPattern.toUpperCase() + "%"));
         return predicate;
     }
-    
+
     public Long countSearchEntities(String searchPattern) throws ClassNotFoundException {
         EntityManager em = getEntityManager();
         em.setProperty("javax.persistence.cache.storeMode", javax.persistence.CacheRetrieveMode.USE);
@@ -112,9 +112,9 @@ public class ClienteJpaController implements Serializable {
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
             CriteriaQuery criteriaQuery = em.getCriteriaBuilder().createQuery();
             Root<Cliente> root = criteriaQuery.from(Cliente.class);
-            
+
             Predicate predicate = createSearchExpression(root, criteriaBuilder, searchPattern);
-            
+
             criteriaQuery.where(predicate).distinct(true);
 
             Query q = em.createQuery(criteriaQuery);
@@ -138,8 +138,10 @@ public class ClienteJpaController implements Serializable {
      * commit.
      *
      */
-      public int persistManyClients(List<Cliente> list) throws Exception {
+    public Integer[] persistManyClients(List<Cliente> list) throws Exception {
         int persistedClients = 0;
+        int existingClients = 0;
+        int errorClients = 0;
         if (list != null && !list.isEmpty()) {
 
             EntityManager em = null;
@@ -156,15 +158,15 @@ public class ClienteJpaController implements Serializable {
                                 List<Cliente> clientesRut = em.createNamedQuery("Cliente.findByRut").setParameter("rut", cliente.getRut()).getResultList();
                                 if (clientesRut != null && !clientesRut.isEmpty()) {
                                     cliente = clientesRut.get(0);
-                                    System.out.println("ya existe un cliente con rut " + cliente.getRut());
+                                    existingClients++;
                                 } else {
                                     List<EmailCliente> attachedEmailClienteList = new ArrayList<EmailCliente>();
                                     for (EmailCliente emailClienteListEmailClienteToAttach : cliente.getEmailClienteList()) {
                                         if (em.find(EmailCliente.class, emailClienteListEmailClienteToAttach.getEmailCliente()) == null) {
                                             em.persist(emailClienteListEmailClienteToAttach);
                                             //emailClienteListEmailClienteToAttach = em.getReference(emailClienteListEmailClienteToAttach.getClass(), emailClienteListEmailClienteToAttach.getEmailCliente());
-                                        }else{
-                                            System.out.println(emailClienteListEmailClienteToAttach.getEmailCliente()+ " existe");
+                                        } else {
+                                            System.out.println(emailClienteListEmailClienteToAttach.getEmailCliente() + " existe");
                                         }
 
                                         attachedEmailClienteList.add(emailClienteListEmailClienteToAttach);
@@ -174,20 +176,21 @@ public class ClienteJpaController implements Serializable {
                                     persistedClients++;
                                 }
                             }
-                        }else{
-                            System.out.println("cliente is null");
+                        } else {
+                            errorClients++;
                         }
                         em.flush();
                     } catch (Exception e) {
-                        System.out.println("ERORR en " + cliente + " -- " + cliente.getEmailClienteList() );
+                        System.out.println("ERORR en " + cliente + " -- " + cliente.getEmailClienteList());
                         e.printStackTrace();
+                        errorClients++;
 //                        break;
                     }
                     System.out.println(count++);
                 }
                 utx.commit();
-                
-            }catch(Exception e){
+
+            } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 if (em != null) {
@@ -199,7 +202,7 @@ public class ClienteJpaController implements Serializable {
             throw new Exception("Nothing to persist dude.");
         }
 
-        return persistedClients;
+        return new Integer[]{persistedClients, existingClients, errorClients};
     }
 
     public void create(Cliente cliente) throws PreexistingEntityException, RollbackFailureException, Exception {
@@ -258,11 +261,11 @@ public class ClienteJpaController implements Serializable {
             List<EmailCliente> emailClienteListNew = cliente.getEmailClienteList();
 
             Cliente existentCliente = null;
-            try{
-                if(cliente.getRut() != null && !cliente.getRut().isEmpty()){
+            try {
+                if (cliente.getRut() != null && !cliente.getRut().isEmpty()) {
                     existentCliente = (Cliente) em.createNamedQuery("Cliente.findByRut").setParameter("rut", cliente.getRut()).getSingleResult();
-                }               
-            }catch(NoResultException not){
+                }
+            } catch (NoResultException not) {
                 existentCliente = null;
             }
             if (existentCliente != null && !existentCliente.getIdCliente().equals(cliente.getIdCliente())) {

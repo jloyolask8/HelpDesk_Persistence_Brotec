@@ -403,21 +403,23 @@ public abstract class AbstractJPAController {
             final ComparableField comparableField = annotatedFields.get(filtro.getIdCampo());
 
             if (comparableField == null) {
-                throw new IllegalStateException("Los valores de los filtros de la vista no cumplen con los requisitos minimos!. Debe especificar un campo comparable.");
+//                throw new IllegalStateException("Los valores de los filtros de la vista no cumplen con los requisitos minimos!. Debe especificar un campo comparable.");
+                continue;
             }
 
             TipoComparacion operador = filtro.getIdComparador();
 
             String valorAttributo = filtro.getValor();
 
-            if (operador == null || valorAttributo == null || filtro == null) {
-                throw new IllegalStateException("Los valores de los filtros de la vista no cumplen con los requisitos minimos.");
+            if (operador == null || valorAttributo == null) {
+//                throw new IllegalStateException("Los valores de los filtros de la vista no cumplen con los requisitos minimos.");
+                continue;
             }
 
             final FieldType fieldType = comparableField.getFieldTypeId();
 
             if (fieldType == null) {
-                throw new IllegalStateException("Los valores de los filtros de la vista no cumplen con los requisitos minimos!. Debe especificar un tipo de campo.");
+                throw new IllegalStateException("Los filtros de la vista no cumplen con los requisitos minimos!. Debe especificar un tipo de campo.");
             }
 
             Predicate localPredicate = null;

@@ -64,6 +64,9 @@ public class Nota implements Serializable, Comparable<Nota> {
     @Size(max = 200)
     private String enviadoPor;
     
+     @Column(name = "enviado_a")
+    private String enviadoA;
+    
     @Column(name = "fecha_envio")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaEnvio;
@@ -219,5 +222,19 @@ public class Nota implements Serializable, Comparable<Nota> {
      */
     public void setEnviado(Boolean enviado) {
         this.enviado = enviado;
+    }
+
+    /**
+     * @return the enviadoA
+     */
+    public String getEnviadoA() {
+        return enviadoA;
+    }
+
+    /**
+     * @param enviadoA the enviadoA to set
+     */
+    public void setEnviadoA(String enviadoA) {
+        this.enviadoA = enviadoA;
     }
 }

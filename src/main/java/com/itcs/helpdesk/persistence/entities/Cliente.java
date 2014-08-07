@@ -4,6 +4,8 @@
  */
 package com.itcs.helpdesk.persistence.entities;
 
+import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
+import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -41,12 +43,16 @@ public class Cliente implements Serializable {
     @Column(name = "ID_CLIENTE")
     private Integer idCliente;
     @Size(max = 40)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "rut", fieldIdFull = "rut", fieldTypeFull = String.class)
     private String rut;
     @Size(max = 80)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "nombres", fieldIdFull = "nombres", fieldTypeFull = String.class)
     private String nombres;
     @Size(max = 80)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "apellidos", fieldIdFull = "apellidos", fieldTypeFull = String.class)
     private String apellidos;
     @Size(max = 40)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Sexo (Hombre/Mujer)", fieldIdFull = "sexo", fieldTypeFull = String.class)
     private String sexo;
     @Size(max = 40)
     private String fono1;

@@ -63,7 +63,7 @@ public enum EnumSettingsBase {
             + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
             + "</div>", "app", "inputhtml", 16, "", true)),
     //--
-    SEND_NOTIFICATION_TOCLIENT_ON_NEW_TICKET(new AppSetting("SEND_NOTIFICATION_TOCLIENT_ON_NEW_TICKET", "Notificar acuse de recibo al cliente cuando llegue un caso", "false", "app", "booleanchoice", 17, "", true)),
+    SEND_NOTIFICATION_TOCLIENT_ON_NEW_TICKET(new AppSetting("SEND_NOTIFICATION_TOCLIENT_ON_NEW_TICKET", "Notificar acuse de recibo al cliente cuando llegue un caso", "true", "app", "booleanchoice", 17, "", true)),
     NOTIFICATION_NEW_TICKET_CLIENT_SUBJECT_TEXT(new AppSetting("NOTIFICATION_NEW_TICKET_CLIENT_SUBJECT_TEXT", "Asunto Nofiticación al cliente", "${TipoCaso}:${Asunto}", "app", "input", 18, "", true)),
     NOTIFICATION_NEW_TICKET_CLIENT_BODY_TEXT(new AppSetting("NOTIFICATION_NEW_TICKET_CLIENT_BODY_TEXT", "Cuerpo mensaje Nofiticación Cliente",
             "<div>\n"

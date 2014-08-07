@@ -8,7 +8,6 @@ package com.itcs.helpdesk.persistence.entities;
 import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
 import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -71,7 +70,7 @@ public class ScheduleEvent implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
     @Column(name = "all_day")
-    private Boolean allDay;
+    private Boolean allDay = Boolean.FALSE;//default
     @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "Creado", fieldIdFull = "fechaCreacion", fieldTypeFull = Date.class)
     @Basic(optional = false)
     @NotNull
@@ -99,7 +98,7 @@ public class ScheduleEvent implements Serializable {
     private Usuario idUsuario;
 
     @Column(name = "execute_action")
-    private Boolean executeAction;
+    private Boolean executeAction = Boolean.FALSE;
 
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Tipo Accion", fieldIdFull = "idTipoAccion.idTipoAccion", fieldTypeFull = String.class)
     @JoinColumn(name = "id_tipo_accion", referencedColumnName = "id_nombre_accion")
@@ -141,6 +140,10 @@ public class ScheduleEvent implements Serializable {
             })
     @ManyToMany
     private List<Usuario> usuariosInvitedList;
+
+    //invited clients
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scheduleEvent")
+    private List<ScheduleEventClient> scheduleEventClientList;
 
     public ScheduleEvent() {
 
@@ -429,6 +432,20 @@ public class ScheduleEvent implements Serializable {
      */
     public void setUsuariosInvitedList(List<Usuario> usuariosInvitedList) {
         this.usuariosInvitedList = usuariosInvitedList;
+    }
+
+    /**
+     * @return the scheduleEventClientList
+     */
+    public List<ScheduleEventClient> getScheduleEventClientList() {
+        return scheduleEventClientList;
+    }
+
+    /**
+     * @param scheduleEventClientList the scheduleEventClientList to set
+     */
+    public void setScheduleEventClientList(List<ScheduleEventClient> scheduleEventClientList) {
+        this.scheduleEventClientList = scheduleEventClientList;
     }
 
 }

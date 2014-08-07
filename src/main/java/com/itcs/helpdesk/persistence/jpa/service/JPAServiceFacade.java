@@ -2206,6 +2206,36 @@ public class JPAServiceFacade extends AbstractJPAController {
             em.close();
         }
     }
+    
+    public List<Cliente> findClientesEntitiesLike(String searchPart, boolean all, int maxResults, int firstResult) {
+        EntityManager em = getEntityManager();
+
+        try {
+
+            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+            CriteriaQuery<Cliente> criteriaQuery = criteriaBuilder.createQuery(Cliente.class);
+            Root<Cliente> from = criteriaQuery.from(Cliente.class);
+            Expression<String> exp1 = from.get("rut");
+            Expression<String> exp2 = from.get("nombres");
+            Expression<String> exp3 = from.get("apellidos");
+
+            Expression<String> literal = criteriaBuilder.upper(criteriaBuilder.literal("%" + (String) searchPart + "%"));
+            Predicate predicate1 = criteriaBuilder.like(criteriaBuilder.upper(exp1), literal);
+            Predicate predicate2 = criteriaBuilder.like(criteriaBuilder.upper(exp2), literal);
+            Predicate predicate3 = criteriaBuilder.like(criteriaBuilder.upper(exp3), literal);
+
+            criteriaQuery.where(criteriaBuilder.or(predicate1, predicate2, predicate3));
+
+            TypedQuery<Cliente> typedQuery = em.createQuery(criteriaQuery);
+            if (!all) {
+                typedQuery.setMaxResults(maxResults);
+                typedQuery.setFirstResult(firstResult);
+            }
+            return typedQuery.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
     public List<Resource> findResourcesEntitiesLike(String searchPart, boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
