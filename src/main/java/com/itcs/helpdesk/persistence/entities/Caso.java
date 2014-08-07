@@ -186,7 +186,7 @@ public class Caso implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCaso", fetch = FetchType.EAGER)
     @CascadeOnDelete
     private List<Nota> notaList;
-    @OneToMany(mappedBy = "idCaso")
+    @OneToMany(mappedBy = "idCaso", fetch = FetchType.EAGER)
     @CascadeOnDelete
     private List<Attachment> attachmentList;
     @FilterField(fieldTypeId = EnumFieldType.CHECKBOX, label = "Revisar Actualizacion", fieldIdFull = "revisarActualizacion", fieldTypeFull = Boolean.class)

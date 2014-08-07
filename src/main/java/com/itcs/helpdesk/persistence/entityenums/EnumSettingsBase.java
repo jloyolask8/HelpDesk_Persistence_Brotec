@@ -13,6 +13,7 @@ import com.itcs.helpdesk.persistence.entities.AppSetting;
 public enum EnumSettingsBase {
 
     //TODO fix the fucking bug
+//TODO fix the fucking bug
     COMPANY_NAME(new AppSetting("COMPANY_NAME", "Nombre de su empresa", "", "app", "input", 1, "", true)),
     HELPDESK_TITLE(new AppSetting("HELPDESK_TITLE", "Titulo Helpdesk", "Itcs HelpDesk", "app", "input", 2, "", true)),
     COMPANY_LOGO_ID_ATTACHMENT(new AppSetting("COMPANY_LOGO_ID_ATTACHMENT", "Logo de su empresa", "0", "app", "inputfile", 3, "Logo a mostrar en la pagina del cliente.", false)),
@@ -124,7 +125,7 @@ public enum EnumSettingsBase {
             + "</div>", "app", "inputhtml", 21, "", true)),
     
     SEND_NOTIFICATION_TOCLIENT_ON_SUBSCRIBED_TO_EVENT(new AppSetting("SEND_NOTIFICATION_TOCLIENT_ON_SUBSCRIBED_TO_EVENT", "Notificar acuse de recibo cuando un cliente se inscriba a un evento", "true", "app", "booleanchoice", 22, "", true)),
-    NOTIFICATION_SUBSCRIBED_TO_EVENT_CLIENT_SUBJECT_TEXT(new AppSetting("NOTIFICATION_SUBSCRIBED_TO_EVENT_CLIENT_SUBJECT_TEXT", "Asunto Nofiticación al cliente (Inscripción Evento)", "${TipoCaso}:${Asunto}", "app", "input", 23, "", true)),
+    NOTIF_SUBSCRIBED_EVENT_CLIENT_SUBJECT(new AppSetting("NOTIF_SUBSCRIBED_EVENT_CLIENT_SUBJECT", "Asunto Nofiticación al cliente (Inscripción Evento)", "${TipoCaso}:${Asunto}", "app", "input", 23, "", true)),
     NOTIFICATION_SUBSCRIBED_TO_EVENT_CLIENT_BODY_TEXT(new AppSetting("NOTIFICATION_SUBSCRIBED_TO_EVENT_CLIENT_BODY_TEXT", "Cuerpo mensaje Nofiticación Cliente (Inscripción Evento)",
             "<div>\n"
             + "<p>Estimad@ <strong>${NombreCliente}</strong>,</p>\n"

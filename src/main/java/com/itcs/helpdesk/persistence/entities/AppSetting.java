@@ -33,7 +33,7 @@ public class AppSetting implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 64)
+    @Size(min = 1, max = 128)
     @Column(name = "setting_key", nullable = false, length = 64)
     private String settingKey;
     @Size(max = 2147483647)
@@ -46,7 +46,7 @@ public class AppSetting implements Serializable {
     private String grupo;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 64)
+    @Size(min = 1, max = 128)
     @Column(name = "label", nullable = false, length = 64)
     private String label;
     @Size(max = 2147483647)
