@@ -303,11 +303,13 @@ public class JPAServiceFacade extends AbstractJPAController {
             return q.getResultList();
 
         } catch (IllegalStateException ex) {
-            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "IllegalStateException at findEntities", ex);
-            throw ex;
+            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, ex.getMessage());
+//            throw ex;
+            return Collections.EMPTY_LIST;
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "ClassNotFoundException at findEntities", ex);
-            throw ex;
+//            throw ex;
+            return Collections.EMPTY_LIST;
         } finally {
             em.close();
         }
@@ -769,6 +771,9 @@ public class JPAServiceFacade extends AbstractJPAController {
      * code>SELECT u FROM Usuario u WHERE u.email = :email</code>
      */
     public List<Usuario> getUsuarioFindByEmail(String email) {
+        if(email == null){
+            return null;
+        }
         return getUsuarioJpaController().getEntityManager().createNamedQuery("Usuario.findByEmail").setParameter("email", email).getResultList();
     }
 

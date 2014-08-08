@@ -51,6 +51,15 @@
             </properties>
         </profile>  
         
+         <profile>
+            <id>brotecFINE</id>
+            <properties>
+                <jta-data-source>jdbc/brotec</jta-data-source>
+                <eclipselink.logging.level.sql>FINE</eclipselink.logging.level.sql>
+                <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
+            </properties>
+        </profile>  
+        
         <profile>
             <id>brotec2</id>
             <properties>

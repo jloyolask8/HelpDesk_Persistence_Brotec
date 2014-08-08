@@ -17,6 +17,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -113,10 +114,7 @@ public class ScheduleEvent implements Serializable {
     @Column(name = "quartz_job_id")
     private String quartzJobId;
 
-    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Caso", fieldIdFull = "idCaso.idCaso", fieldTypeFull = Long.class)
-    @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")
-    @ManyToOne
-    private Caso idCaso;
+    
 
     @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL)
     private List<ScheduleEventReminder> scheduleEventReminderList;
@@ -142,8 +140,13 @@ public class ScheduleEvent implements Serializable {
     private List<Usuario> usuariosInvitedList;
 
     //invited clients
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scheduleEvent")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scheduleEvent", fetch = FetchType.LAZY)
     private List<ScheduleEventClient> scheduleEventClientList;
+    
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Caso", fieldIdFull = "idCaso.idCaso", fieldTypeFull = Long.class)
+    @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")
+    @ManyToOne
+    private Caso idCaso;
 
     public ScheduleEvent() {
 

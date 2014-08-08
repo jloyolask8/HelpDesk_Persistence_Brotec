@@ -183,10 +183,10 @@ public class Caso implements Serializable {
     @JoinColumn(name = "id_canal", referencedColumnName = "id_canal")
     @ManyToOne
     private Canal idCanal;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCaso", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCaso")
     @CascadeOnDelete
     private List<Nota> notaList;
-    @OneToMany(mappedBy = "idCaso", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idCaso")
     @CascadeOnDelete
     private List<Attachment> attachmentList;
     @FilterField(fieldTypeId = EnumFieldType.CHECKBOX, label = "Revisar Actualizacion", fieldIdFull = "revisarActualizacion", fieldTypeFull = Boolean.class)
@@ -200,7 +200,7 @@ public class Caso implements Serializable {
     @JoinTable(name = "etiqueta_caso", joinColumns = {
         @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")}, inverseJoinColumns = {
         @JoinColumn(name = "tag_id", referencedColumnName = "tag_id")})
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.MERGE)
     private List<Etiqueta> etiquetaList;
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Tipo", fieldIdFull = "tipoCaso.idTipoCaso", fieldTypeFull = String.class)
     @JoinColumn(name = "tipo_caso", referencedColumnName = "id_tipo_caso")

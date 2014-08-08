@@ -56,11 +56,7 @@
       <property name="eclipselink.logging.logger" value="JavaLogger"/>
       <property name="eclipselink.logging.level.sql" value="${eclipselink.logging.level.sql}"/>
       <property name="eclipselink.logging.parameters" value="true"/>
-      <property name="eclipselink.logging.file" value="persistence_logging.log"/>
-      <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
-      <property name="eclipselink.create-ddl-jdbc-file-name" value="create.jdbc"/>
-      <property name="eclipselink.drop-ddl-jdbc-file-name" value="drop.jdbc"/>
-      <property name="eclipselink.ddl-generation.output-mode" value="both"/>
+      <property name="eclipselink.ddl-generation" value="none"/>
       <!--property name="eclipselink.cache.coordination.protocol" value="rmi"/-->
       <!--property name="eclipselink.cache.coordination.naming-service" value="rmi"/-->
       <!--property name="eclipselink.cache.coordination.rmi.url" value="%%current-server-url%%" /-->
