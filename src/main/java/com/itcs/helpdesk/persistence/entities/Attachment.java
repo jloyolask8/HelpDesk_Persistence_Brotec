@@ -6,6 +6,7 @@ package com.itcs.helpdesk.persistence.entities;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -34,6 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Attachment.findByMimeType", query = "SELECT a FROM Attachment a WHERE a.mimeType = :mimeType"),
     @NamedQuery(name = "Attachment.findByEnRespuesta", query = "SELECT a FROM Attachment a WHERE a.enRespuesta = :enRespuesta")})
 public class Attachment implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,13 +56,16 @@ public class Attachment implements Serializable {
     @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")
     @ManyToOne
     private Caso idCaso;
-    @Size(max = 200)
+
     @Column(name = "contentId")
     private String contentId;
-    
+
     //this is for holding the phisical file for a while before creating the case.
     @Transient
     private Archivo archivo;
+
+    @ManyToMany(mappedBy = "attachmentList")
+    private List<Nota> notaList;
 
     public Attachment() {
     }
@@ -81,7 +88,6 @@ public class Attachment implements Serializable {
 //        int digitGroups = (int) (Math.log10(fileSize) / Math.log10(1024));
 //        return new DecimalFormat("#,##0.#").format(fileSize / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 //    }
-    
     @Transient
     public boolean isImageOrPDF() {
         if (getMimeType() == null) {
@@ -94,7 +100,7 @@ public class Attachment implements Serializable {
             return false;
         }
     }
-    
+
     public Long getIdAttachment() {
         return idAttachment;
     }
@@ -157,7 +163,7 @@ public class Attachment implements Serializable {
 
     @Override
     public String toString() {
-        return "Att[ idAttachment=" + idAttachment + " nombreArchivo="+nombreArchivo+"]";
+        return "Att[ idAttachment=" + idAttachment + " nombreArchivo=" + nombreArchivo + "]";
     }
 
     /**
@@ -187,5 +193,19 @@ public class Attachment implements Serializable {
     public void setArchivo(Archivo archivo) {
         this.archivo = archivo;
     }
-    
+
+    /**
+     * @return the notaList
+     */
+    public List<Nota> getNotaList() {
+        return notaList;
+    }
+
+    /**
+     * @param notaList the notaList to set
+     */
+    public void setNotaList(List<Nota> notaList) {
+        this.notaList = notaList;
+    }
+
 }

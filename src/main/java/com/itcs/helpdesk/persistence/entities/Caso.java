@@ -220,6 +220,16 @@ public class Caso implements Serializable {
     private Item idItem;
     @Column(name = "servicio_tecnico")
     private Boolean servicioTecnico;
+    
+    //TODO update this values
+    @FilterField(fieldTypeId = EnumFieldType.CHECKBOX, label = "hasAttachments", fieldIdFull = "hasAttachments", fieldTypeFull = Boolean.class)
+    @Column(name = "has_attachments")
+    private boolean hasAttachments;
+    
+    //TODO update this values
+    @FilterField(fieldTypeId = EnumFieldType.CHECKBOX, label = "hasScheduledEvents", fieldIdFull = "hasScheduledEvents", fieldTypeFull = Boolean.class)
+    @Column(name = "has_scheduled_events")
+    private boolean hasScheduledEvents;
 
     @JoinColumn(name = "id_responsable", referencedColumnName = "id_responsable")
     @ManyToOne
@@ -871,5 +881,33 @@ public class Caso implements Serializable {
 
         }
         return 0;
+    }
+
+    /**
+     * @return the hasAttachments
+     */
+    public boolean isHasAttachments() {
+        return hasAttachments;
+    }
+
+    /**
+     * @param hasAttachments the hasAttachments to set
+     */
+    public void setHasAttachments(boolean hasAttachments) {
+        this.hasAttachments = hasAttachments;
+    }
+
+    /**
+     * @return the hasScheduledEvents
+     */
+    public boolean isHasScheduledEvents() {
+        return hasScheduledEvents;
+    }
+
+    /**
+     * @param hasScheduledEvents the hasScheduledEvents to set
+     */
+    public void setHasScheduledEvents(boolean hasScheduledEvents) {
+        this.hasScheduledEvents = hasScheduledEvents;
     }
 }

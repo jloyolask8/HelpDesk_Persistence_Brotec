@@ -6,13 +6,17 @@ package com.itcs.helpdesk.persistence.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -73,9 +77,12 @@ public class Nota implements Serializable, Comparable<Nota> {
     
     @Column(name = "enviado")
     private Boolean enviado;
-//    @Basic(optional = true)
-//    @Column(name = "LABOR_TIME")
-//    private float laborTime;
+    
+    @JoinTable(name = "nota_attachments", joinColumns = {  @JoinColumn(name = "id_nota", referencedColumnName = "id_nota")
+        }, inverseJoinColumns = {@JoinColumn(name = "id_attachment", referencedColumnName = "id_attachment")
+       })
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Attachment> attachmentList;
 
     public Nota() {
     }
@@ -236,5 +243,19 @@ public class Nota implements Serializable, Comparable<Nota> {
      */
     public void setEnviadoA(String enviadoA) {
         this.enviadoA = enviadoA;
+    }
+
+    /**
+     * @return the attachmentList
+     */
+    public List<Attachment> getAttachmentList() {
+        return attachmentList;
+    }
+
+    /**
+     * @param attachmentList the attachmentList to set
+     */
+    public void setAttachmentList(List<Attachment> attachmentList) {
+        this.attachmentList = attachmentList;
     }
 }

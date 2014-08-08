@@ -43,8 +43,14 @@ public class Archivo implements Serializable {
     //ALTER TABLE archivo ADD COLUMN format character varying(64);
     @Column(name = "format")
     private String format;
-      @Column(name = "file_name")
+    @Column(name = "file_name")
     private String fileName;
+
+//    @Column(name = "file_size")
+//    private Long fileSize;
+//    
+//    @Column(name = "contentId")
+//    private String contentId;
 
     public Archivo() {
     }
@@ -140,4 +146,32 @@ public class Archivo implements Serializable {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
+
+//    /**
+//     * @return the fileSize
+//     */
+//    public Long getFileSize() {
+//        return fileSize;
+//    }
+//
+//    /**
+//     * @param fileSize the fileSize to set
+//     */
+//    public void setFileSize(Long fileSize) {
+//        this.fileSize = fileSize;
+//    }
+//
+//    /**
+//     * @return the contentId
+//     */
+//    public String getContentId() {
+//        return contentId;
+//    }
+//
+//    /**
+//     * @param contentId the contentId to set
+//     */
+//    public void setContentId(String contentId) {
+//        this.contentId = contentId;
+//    }
 }
