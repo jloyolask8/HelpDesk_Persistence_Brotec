@@ -434,7 +434,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //            em.close();
 //        }
 //    }
-
     public List<Etiqueta> findEtiquetasLike(String etiquetaPattern, String idUsuario) {
 
         EntityManager em = getEntityManager();
@@ -451,7 +450,7 @@ public class JPAServiceFacade extends AbstractJPAController {
             em.close();
         }
     }
-    
+
     public Long countCasosByClosedBetween(Date from, Date to/*, Area idArea, ,Grupo idGrupo*/, Usuario owner) {
         EasyCriteriaQuery q = new EasyCriteriaQuery(emf, Caso.class);
         q.addBetweenPredicate(Caso_.fechaCierre, from, to);
@@ -566,6 +565,12 @@ public class JPAServiceFacade extends AbstractJPAController {
 //        return getCasoJpa().countCasoCatFilter(cat, user);
 //    }
     public void persistCaso(Caso caso, List<AuditLog> changeList) throws PreexistingEntityException, RollbackFailureException, Exception {
+        if (caso.getAttachmentList() != null && !caso.getAttachmentList().isEmpty()) {
+            caso.setHasAttachments(true);
+        }
+        if (caso.getScheduleEventList() != null && !caso.getScheduleEventList().isEmpty()) {
+            caso.setHasScheduledEvents(true);
+        }
         getCasoJpa().create(caso);
         if (changeList != null) {
             for (AuditLog auditLog : changeList) {
@@ -587,6 +592,14 @@ public class JPAServiceFacade extends AbstractJPAController {
 
     public Caso mergeCaso(Caso caso, List<AuditLog> changeList) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         // caso.setFechaModif(new Date());
+
+        if (caso.getAttachmentList() != null && !caso.getAttachmentList().isEmpty()) {
+            caso.setHasAttachments(true);
+        }
+        if (caso.getScheduleEventList() != null && !caso.getScheduleEventList().isEmpty()) {
+            caso.setHasScheduledEvents(true);
+        }
+
         merge(caso);
         if (changeList != null) {
             for (AuditLog auditLog : changeList) {
@@ -596,7 +609,7 @@ public class JPAServiceFacade extends AbstractJPAController {
         if (getCasoChangeListener() != null) {
             getCasoChangeListener().casoChanged(caso, changeList);
         } else {
-            System.out.println("***ERROR*** NO getCasoChangeListener configured!");
+            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.WARNING, "\n*** WARNING *** CasoChangeListener NOT configured!\n");
         }
 
         return (Caso) getCasoJpa().getEntityManager().getReference(Caso.class, caso.getIdCaso());
@@ -771,7 +784,7 @@ public class JPAServiceFacade extends AbstractJPAController {
      * code>SELECT u FROM Usuario u WHERE u.email = :email</code>
      */
     public List<Usuario> getUsuarioFindByEmail(String email) {
-        if(email == null){
+        if (email == null) {
             return null;
         }
         return getUsuarioJpaController().getEntityManager().createNamedQuery("Usuario.findByEmail").setParameter("email", email).getResultList();
@@ -2211,7 +2224,7 @@ public class JPAServiceFacade extends AbstractJPAController {
             em.close();
         }
     }
-    
+
     public List<Cliente> findClientesEntitiesLike(String searchPart, boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
 
