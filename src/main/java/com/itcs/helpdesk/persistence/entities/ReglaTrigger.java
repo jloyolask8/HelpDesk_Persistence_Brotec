@@ -61,6 +61,9 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
     @Size(min = 1, max = 40)
     @Column(name = "evento")
     private String evento;
+    @Size(min = 1, max = 40)
+    @Column(name = "any_or_all")
+    private String anyOrAll;
     //ALTER TABLE regla_trigger ADD COLUMN "orden" integer NOT NULL DEFAULT 0;
     @Basic(optional = false)
     @NotNull
@@ -139,8 +142,9 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
 
     @Override
     public String toString() {
+        
         return (evento.equalsIgnoreCase("CREATE") ? "<b>Cuando se cree un caso</b>":"<b>Cuando se modifique un caso</b>") 
-                + " y se cumplan <b>todas las Condiciones </b>(" + getCondicionList().size() + "):"+
+                + " y se cumplan <b>"+((anyOrAll == null)?"todas":(anyOrAll.equals("ANY")?"cualquiera de":"todas"))+" las Condiciones </b>(" + getCondicionList().size() + "):"+
                 getCondicionList().toString() + " <br/><b>Ejecutar Acciones</b> (" + getAccionList().size() + "):" + getAccionList().toString();
     }
 
@@ -191,5 +195,19 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
     public int compareTo(ReglaTrigger o) {
         //ascending order
        return this.orden - o.orden;
+    }
+
+    /**
+     * @return the anyOrAll
+     */
+    public String getAnyOrAll() {
+        return anyOrAll;
+    }
+
+    /**
+     * @param anyOrAll the anyOrAll to set
+     */
+    public void setAnyOrAll(String anyOrAll) {
+        this.anyOrAll = anyOrAll;
     }
 }
