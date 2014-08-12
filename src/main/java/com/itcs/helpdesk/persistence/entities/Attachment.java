@@ -44,11 +44,11 @@ public class Attachment implements Serializable {
     @Column(name = "id_attachment")
     private Long idAttachment;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 2000)
+    @NotNull   
     @Column(name = "nombre_archivo")
     private String nombreArchivo;
-    @Size(max = 200)
+    @Column(name = "nombre_archivo_original")
+    private String nombreArchivoOriginal;
     @Column(name = "mime_type")
     private String mimeType;
     @Column(name = "en_respuesta")
@@ -67,6 +67,12 @@ public class Attachment implements Serializable {
     @ManyToMany(mappedBy = "attachmentList")
     private List<Nota> notaList;
 
+    @Column(name = "file_extension")
+    private String fileExtension;
+
+    @Column(name = "file_size_human")
+    private String fileSizeHuman;
+
     public Attachment() {
     }
 
@@ -79,26 +85,30 @@ public class Attachment implements Serializable {
         this.nombreArchivo = nombreArchivo;
     }
 
-//     @Transient
-//    public String getReadableFileSize() {
-//        if (fileSize <= 0) {
-//            return "0";
-//        }
-//        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
-//        int digitGroups = (int) (Math.log10(fileSize) / Math.log10(1024));
-//        return new DecimalFormat("#,##0.#").format(fileSize / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
-//    }
+    
+
     @Transient
     public boolean isImageOrPDF() {
         if (getMimeType() == null) {
             return false;
         }
-        String type = getMimeType().split("/")[0];
-        if (type.equals("image") || getMimeType().equalsIgnoreCase("application/pdf")) {
-            return true;
-        } else {
+        return getMimeType().toLowerCase().startsWith("image") || getMimeType().toLowerCase().equalsIgnoreCase("application/pdf");
+    }
+
+    @Transient
+    public boolean isImage() {
+        if (getMimeType() == null) {
             return false;
         }
+        return getMimeType().toLowerCase().startsWith("image");
+    }
+
+    @Transient
+    public boolean isPdf() {
+        if (getMimeType() == null) {
+            return false;
+        }
+        return getMimeType().toLowerCase().startsWith("application/pdf");
     }
 
     public Long getIdAttachment() {
@@ -206,6 +216,50 @@ public class Attachment implements Serializable {
      */
     public void setNotaList(List<Nota> notaList) {
         this.notaList = notaList;
+    }
+
+    /**
+     * @return the fileExtension
+     */
+    public String getFileExtension() {
+        return fileExtension;
+    }
+
+    /**
+     * @param fileExtension the fileExtension to set
+     */
+    public void setFileExtension(String fileExtension) {
+        this.fileExtension = fileExtension;
+    }
+
+ 
+
+    /**
+     * @return the fileSizeHuman
+     */
+    public String getFileSizeHuman() {
+        return fileSizeHuman;
+    }
+
+    /**
+     * @param fileSizeHuman the fileSizeHuman to set
+     */
+    public void setFileSizeHuman(String fileSizeHuman) {
+        this.fileSizeHuman = fileSizeHuman;
+    }
+
+    /**
+     * @return the nombreArchivoOriginal
+     */
+    public String getNombreArchivoOriginal() {
+        return nombreArchivoOriginal;
+    }
+
+    /**
+     * @param nombreArchivoOriginal the nombreArchivoOriginal to set
+     */
+    public void setNombreArchivoOriginal(String nombreArchivoOriginal) {
+        this.nombreArchivoOriginal = nombreArchivoOriginal;
     }
 
 }

@@ -6,6 +6,7 @@ package com.itcs.helpdesk.persistence.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -67,22 +68,27 @@ public class Nota implements Serializable, Comparable<Nota> {
     @Column(name = "enviado_por")
     @Size(max = 200)
     private String enviadoPor;
-    
-     @Column(name = "enviado_a")
+
+    @Column(name = "enviado_a")
     private String enviadoA;
-    
+
     @Column(name = "fecha_envio")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaEnvio;
-    
+
     @Column(name = "enviado")
     private Boolean enviado;
-    
-    @JoinTable(name = "nota_attachments", joinColumns = {  @JoinColumn(name = "id_nota", referencedColumnName = "id_nota")
-        }, inverseJoinColumns = {@JoinColumn(name = "id_attachment", referencedColumnName = "id_attachment")
-       })
-    @ManyToMany(cascade = CascadeType.ALL)
+
+    @JoinTable(name = "nota_attachments", joinColumns = {
+        @JoinColumn(name = "id_nota", referencedColumnName = "id_nota")
+    }, inverseJoinColumns = {
+        @JoinColumn(name = "id_attachment", referencedColumnName = "id_attachment")
+    })
+    @ManyToMany
     private List<Attachment> attachmentList;
+
+    @Column(name = "has_attachments")
+    private boolean hasAttachments;
 
     public Nota() {
     }
@@ -177,7 +183,7 @@ public class Nota implements Serializable, Comparable<Nota> {
 
     @Override
     public String toString() {
-        return "cl.cnsv.referidos.persistence.entities.Nota[ idNota=" + idNota + " ]";
+        return "Nota{" + "idNota=" + idNota + ", texto=" + texto + ", fechaCreacion=" + fechaCreacion + ", fechaModificacion=" + fechaModificacion + ", visible=" + visible + ", creadaPor=" + creadaPor + ", idTipoNota=" + idTipoNota + ", idCaso=" + idCaso + ", enviadoPor=" + enviadoPor + ", enviadoA=" + enviadoA + ", fechaEnvio=" + fechaEnvio + ", enviado=" + enviado + ", hasAttachments=" + hasAttachments + '}';
     }
 
     @Override
@@ -257,5 +263,45 @@ public class Nota implements Serializable, Comparable<Nota> {
      */
     public void setAttachmentList(List<Attachment> attachmentList) {
         this.attachmentList = attachmentList;
+    }
+
+    /**
+     * @return the attachmentList
+     */
+    public List<Attachment> getImageAttachmentList() {
+        List<Attachment> images = new LinkedList<Attachment>();
+        for (Attachment attachment : attachmentList) {
+            if (attachment.isImage()) {
+                images.add(attachment);
+            }
+        }
+        return images;
+    }
+    
+      /**
+     * @return the attachmentList
+     */
+    public List<Attachment> getFileAttachmentList() {
+        List<Attachment> notImages = new LinkedList<Attachment>();
+        for (Attachment attachment : attachmentList) {
+            if (!attachment.isImage()) {
+                notImages.add(attachment);
+            }
+        }
+        return notImages;
+    }
+
+    /**
+     * @return the hasAttachments
+     */
+    public boolean isHasAttachments() {
+        return hasAttachments;
+    }
+
+    /**
+     * @param hasAttachments the hasAttachments to set
+     */
+    public void setHasAttachments(boolean hasAttachments) {
+        this.hasAttachments = hasAttachments;
     }
 }

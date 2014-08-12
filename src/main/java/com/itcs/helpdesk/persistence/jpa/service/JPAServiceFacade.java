@@ -86,6 +86,7 @@ import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
 import com.itcs.helpdesk.persistence.utils.CasoChangeListener;
 import com.itcs.helpdesk.persistence.utils.vo.AuditLogVO;
 import com.itcs.jpautils.EasyCriteriaQuery;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
@@ -591,7 +592,7 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     public Caso mergeCaso(Caso caso, List<AuditLog> changeList) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
-        // caso.setFechaModif(new Date());
+        caso.setFechaModif(Calendar.getInstance().getTime());
 
         if (caso.getAttachmentList() != null && !caso.getAttachmentList().isEmpty()) {
             caso.setHasAttachments(true);
