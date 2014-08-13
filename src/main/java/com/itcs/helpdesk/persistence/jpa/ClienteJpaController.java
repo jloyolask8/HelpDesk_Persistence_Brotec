@@ -70,10 +70,11 @@ public class ClienteJpaController implements Serializable {
         Expression<String> expresionEmail = root.joinList(Cliente_.emailClienteList.getName(), JoinType.LEFT).get("emailCliente");//root.get(Cliente_.emailClienteList).(EmailCliente_.emailCliente);
         Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT).join("subComponente", JoinType.LEFT).get("direccionMunicipal"); //.get("subComponente").get("direccionMunicipal");
 
-        Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.upper(expresionNombre), searchPattern.toUpperCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.upper(expresionApellido), searchPattern.toUpperCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.upper(expresionRut), searchPattern.toUpperCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.upper(expresionEmail), searchPattern.toUpperCase() + "%"),
+        Predicate predicate = criteriaBuilder.or(
+                criteriaBuilder.like(criteriaBuilder.upper(expresionNombre), "%" +searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionApellido), "%" +searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionRut), "%" +searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionEmail), "%" +searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionM), "%" + searchPattern.toUpperCase() + "%"));
         return predicate;
     }

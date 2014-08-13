@@ -21,7 +21,7 @@ public enum EnumNombreAccion {
 //    DEFINIR_SLA_FECHA_COMPRA(new NombreAccion("REDEFINIR SLA FECHA COMPRA","Redefine SLA a la fecha de compra", "Se redefine el tiempo de SLA a la fecha definida como fecha de compra"));
 
     DEFINIR_SLA_FECHA_COMPRA(new NombreAccion("REDEFINIR SLA FECHA COMPRA","Redefine SLA a la fecha de compra", "Se redefine el tiempo de SLA a la fecha definida como fecha de compra", null)),
-    CAMBIO_CAT(new NombreAccion("CAMBIO CAT", "Cambio de categoría", "El caso se asocia a la categoría seleccionada", null)),
+    //CAMBIO_CAT(new NombreAccion("CAMBIO CAT", "Cambio de categoría", "El caso se asocia a la categoría seleccionada", null)),
     ASIGNAR_A_USUARIO(new NombreAccion("ASIGNAR A USUARIO", "Asignar caso", "El caso se le asigna al usuario seleccionado", null)),
     ASIGNAR_A_GRUPO(new NombreAccion("ASIGNAR A GRUPO", "Asignar caso a un grupo", "El caso se le asigna al usuario "
             + "disponible que tenga menos casos asignados en el grupo seleccionado", null)),
