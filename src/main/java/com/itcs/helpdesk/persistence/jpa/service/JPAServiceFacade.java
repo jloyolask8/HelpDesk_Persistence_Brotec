@@ -84,6 +84,7 @@ import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
 import com.itcs.helpdesk.persistence.utils.CasoChangeListener;
+import com.itcs.helpdesk.persistence.utils.ConstraintViolationExceptionHelper;
 import com.itcs.helpdesk.persistence.utils.vo.AuditLogVO;
 import com.itcs.jpautils.EasyCriteriaQuery;
 import java.util.Calendar;
@@ -185,12 +186,25 @@ public class JPAServiceFacade extends AbstractJPAController {
             em.persist(o);
             utx.commit();
         } catch (Exception ex) {
+            ConstraintViolationExceptionHelper.handleError(ex);
             try {
                 utx.rollback();
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
             throw ex;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    public void persistInTx(Object o) throws Exception {
+        EntityManager em = null;//
+        try {
+            em = getEntityManager();
+            em.persist(o);
         } finally {
             if (em != null) {
                 em.close();
@@ -217,6 +231,22 @@ public class JPAServiceFacade extends AbstractJPAController {
 
     }
 
+    public void mergeInTx(Object o) throws Exception {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.merge(o);
+        } catch (Exception ex) {
+            ConstraintViolationExceptionHelper.handleError(ex);
+            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
     public void merge(Object o) throws Exception {
         EntityManager em = null;
         try {
@@ -225,6 +255,7 @@ public class JPAServiceFacade extends AbstractJPAController {
             em.merge(o);
             utx.commit();
         } catch (Exception ex) {
+            ConstraintViolationExceptionHelper.handleError(ex);
             Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         } finally {
@@ -232,7 +263,6 @@ public class JPAServiceFacade extends AbstractJPAController {
                 em.close();
             }
         }
-
     }
 
     /**
@@ -1008,7 +1038,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //    public List<Attachment> getAttachmentWOContentId(Caso caso) {
 //        return getAttachmentJpaController().findAttachmentsWOContentId(caso);
 //    }
-
     public Long countAttachmentWOContentId(Caso caso) {
         return getAttachmentJpaController().countAttachmentsWOContentId(caso);
     }

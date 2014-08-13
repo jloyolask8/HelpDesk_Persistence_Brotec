@@ -17,12 +17,9 @@ import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
 import com.itcs.jpautils.EasyCriteriaQuery;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.transaction.UserTransaction;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 
 /**
  *

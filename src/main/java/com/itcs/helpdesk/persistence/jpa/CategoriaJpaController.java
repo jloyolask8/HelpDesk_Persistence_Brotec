@@ -18,14 +18,10 @@ import com.itcs.helpdesk.persistence.entities.Caso;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
-import java.util.Iterator;
-import java.util.Set;
+import com.itcs.helpdesk.persistence.utils.ConstraintViolationExceptionHelper;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.transaction.UserTransaction;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
 
 /**
  *
@@ -132,14 +128,7 @@ public class CategoriaJpaController implements Serializable {
             }
             utx.commit();
         } catch (Exception ex) {
-            if (ex instanceof ConstraintViolationException) {
-                printOutContraintViolation((ConstraintViolationException) ex);
-            }
-
-            if (ex.getCause() instanceof ConstraintViolationException) {
-                printOutContraintViolation((ConstraintViolationException) (ex.getCause()));
-            }
-            ex.printStackTrace();
+           ConstraintViolationExceptionHelper.handleError(ex);
             try {
                 utx.rollback();
             } catch (Exception re) {
@@ -158,18 +147,7 @@ public class CategoriaJpaController implements Serializable {
         }
     }
     
-    private void printOutContraintViolation(ConstraintViolationException ex) {
-        Set<ConstraintViolation<?>> set = (ex).getConstraintViolations();
-        for (ConstraintViolation<?> constraintViolation : set) {
-            System.out.println("leafBean class: " + constraintViolation.getLeafBean().getClass());
-            Iterator<Path.Node> iter = constraintViolation.getPropertyPath().iterator();
-            System.out.println("constraintViolation.getPropertyPath(): ");
-            while (iter.hasNext()) {
-                System.out.print(iter.next().getName() + "/");
-            }
-            System.out.println("anotacion: " + constraintViolation.getConstraintDescriptor().getAnnotation().toString() + " value:" + constraintViolation.getInvalidValue());
-        }
-    }
+    
     
     public void edit(Categoria categoria) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
@@ -302,6 +280,7 @@ public class CategoriaJpaController implements Serializable {
             }
             utx.commit();
         } catch (Exception ex) {
+            ConstraintViolationExceptionHelper.handleError(ex);
             try {
                 utx.rollback();
             } catch (Exception re) {

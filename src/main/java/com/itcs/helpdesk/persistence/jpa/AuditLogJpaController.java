@@ -13,13 +13,11 @@ import javax.persistence.criteria.Root;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
+import com.itcs.helpdesk.persistence.utils.ConstraintViolationExceptionHelper;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.transaction.UserTransaction;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 
 /**
  *
@@ -49,26 +47,7 @@ public class AuditLogJpaController implements Serializable {
         }
         catch (Exception ex)
         {
-            if(ex.getCause() instanceof ConstraintViolationException)
-            {
-                Set<ConstraintViolation<?>> set = ((ConstraintViolationException)ex.getCause()).getConstraintViolations();
-                for (ConstraintViolation<?> constraintViolation : set) {
-                    System.out.println("leafBean class: "+constraintViolation.getLeafBean().getClass());
-                    System.out.println("anotacion: "+constraintViolation.getConstraintDescriptor().getAnnotation().toString()+" value:"+constraintViolation.getInvalidValue());
-                }
-                System.out.println("auditLog:"+auditLog.toString());
-            }
-            if(ex instanceof ConstraintViolationException)
-            {
-                Set<ConstraintViolation<?>> set = ((ConstraintViolationException)ex).getConstraintViolations();
-                for (ConstraintViolation<?> constraintViolation : set) {
-                    System.out.println("leafBean class: "+constraintViolation.getLeafBean().getClass());
-                    System.out.println("anotacion: "+constraintViolation.getConstraintDescriptor().getAnnotation().toString()+" value:"+constraintViolation.getInvalidValue());
-                }
-                System.out.println("auditLog:"+auditLog.toString());
-            }
-            System.out.println(auditLog.toString());
-            ex.printStackTrace();
+           ConstraintViolationExceptionHelper.handleError(ex);
             try {
                 utx.rollback();
             } catch (Exception re) {
@@ -90,13 +69,10 @@ public class AuditLogJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            
-            
             auditLog = em.merge(auditLog);
-            
-            
             utx.commit();
         } catch (Exception ex) {
+             ConstraintViolationExceptionHelper.handleError(ex);
             try {
                 utx.rollback();
             } catch (Exception re) {

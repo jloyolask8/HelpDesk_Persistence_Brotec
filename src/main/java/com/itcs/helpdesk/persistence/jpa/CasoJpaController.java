@@ -17,7 +17,6 @@ import com.itcs.helpdesk.persistence.entities.Item;
 import com.itcs.helpdesk.persistence.entities.Nota;
 import com.itcs.helpdesk.persistence.entities.Prioridad;
 import com.itcs.helpdesk.persistence.entities.Producto;
-import com.itcs.helpdesk.persistence.entities.Recinto;
 import com.itcs.helpdesk.persistence.entities.SubComponente;
 import com.itcs.helpdesk.persistence.entities.SubEstadoCaso;
 import com.itcs.helpdesk.persistence.entities.TipoAlerta;
@@ -26,11 +25,10 @@ import com.itcs.helpdesk.persistence.jpa.exceptions.IllegalOrphanException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
+import com.itcs.helpdesk.persistence.utils.ConstraintViolationExceptionHelper;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
@@ -38,9 +36,6 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.UserTransaction;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
 
@@ -123,9 +118,7 @@ public abstract class CasoJpaController extends AbstractJPAController implements
             if (emailCliente != null && emailCliente.getEmailCliente() != null) {
                 emailCliente = em.getReference(emailCliente.getClass(), emailCliente.getEmailCliente());
                 caso.setEmailCliente(emailCliente);
-            }
-            else
-            {
+            } else {
                 caso.setEmailCliente(null);
             }
             Componente idComponente = caso.getIdComponente();
@@ -148,10 +141,9 @@ public abstract class CasoJpaController extends AbstractJPAController implements
                 idCanal = em.getReference(idCanal.getClass(), idCanal.getIdCanal());
                 caso.setIdCanal(idCanal);
             }
-           
+
             Item idItem = caso.getIdItem();
-            if (idItem != null)
-            {
+            if (idItem != null) {
                 idItem = em.getReference(idItem.getClass(), idItem.getIdItem());
                 caso.setIdItem(idItem);
             }
@@ -167,8 +159,6 @@ public abstract class CasoJpaController extends AbstractJPAController implements
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
 
 //            List<Caso> attachedCasoList1 = new ArrayList<Caso>();
 //            for (Caso casoList1CasoToAttach : caso.getCasoList1()) {
@@ -191,14 +181,12 @@ public abstract class CasoJpaController extends AbstractJPAController implements
                 caso.setCasosHijosList(attachedCasosHijosList);
             }
 
-
 //            List<Nota> attachedNotaList = new ArrayList<Nota>();
 //            for (Nota notaListNotaToAttach : caso.getNotaList()) {
 //                notaListNotaToAttach = em.getReference(notaListNotaToAttach.getClass(), notaListNotaToAttach.getIdNota());
 //                attachedNotaList.add(notaListNotaToAttach);
 //            }
 //            caso.setNotaList(attachedNotaList);
-
             try {
                 if (caso.getAttachmentList() != null) {
                     List<Attachment> attachedAttachmentList = new ArrayList<Attachment>();
@@ -214,8 +202,6 @@ public abstract class CasoJpaController extends AbstractJPAController implements
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
 
             try {
                 if (caso.getEtiquetaList() != null) {
@@ -250,14 +236,7 @@ public abstract class CasoJpaController extends AbstractJPAController implements
 
             utx.commit();
         } catch (Exception ex) {
-            if (ex instanceof ConstraintViolationException) {
-                printOutContraintViolation((ConstraintViolationException) ex);
-            }
-
-            if (ex.getCause() instanceof ConstraintViolationException) {
-                printOutContraintViolation((ConstraintViolationException) (ex.getCause()));
-            }
-//            ex.printStackTrace();
+            ConstraintViolationExceptionHelper.handleError(ex);
             try {
                 utx.rollback();
             } catch (Exception re) {
@@ -275,7 +254,6 @@ public abstract class CasoJpaController extends AbstractJPAController implements
             }
         }
     }
-
 
     public void destroy(Long id) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
@@ -375,15 +353,13 @@ public abstract class CasoJpaController extends AbstractJPAController implements
                 documentoListDocumento.getCasoList().remove(caso);
                 documentoListDocumento = em.merge(documentoListDocumento);
             }
-            
-            
+
             Item idItem = caso.getIdItem();
-            if (idItem != null)
-            {
+            if (idItem != null) {
                 idItem.getCasoList().remove(caso);
                 idItem = em.merge(idItem);
             }
-            
+
             List<Caso> casoList2 = caso.getCasosHijosList();
             for (Caso casoList2Caso : casoList2) {
                 casoList2Caso.setIdCasoPadre(null);
@@ -398,13 +374,7 @@ public abstract class CasoJpaController extends AbstractJPAController implements
             em.remove(caso);
             utx.commit();
         } catch (Exception ex) {
-            if (ex instanceof ConstraintViolationException) {
-                printOutContraintViolation((ConstraintViolationException) ex);
-            }
-
-            if (ex.getCause() instanceof ConstraintViolationException) {
-                printOutContraintViolation((ConstraintViolationException) (ex.getCause()));
-            }
+            ConstraintViolationExceptionHelper.handleError(ex);
             try {
                 utx.rollback();
             } catch (Exception re) {
@@ -462,19 +432,6 @@ public abstract class CasoJpaController extends AbstractJPAController implements
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();
-        }
-    }
-
-    private void printOutContraintViolation(ConstraintViolationException ex) {
-        Set<ConstraintViolation<?>> set = (ex).getConstraintViolations();
-        for (ConstraintViolation<?> constraintViolation : set) {
-            System.out.println("leafBean class: " + constraintViolation.getLeafBean().getClass());
-            Iterator<Path.Node> iter = constraintViolation.getPropertyPath().iterator();
-            System.out.println("constraintViolation.getPropertyPath(): ");
-            while (iter.hasNext()) {
-                System.out.print(iter.next().getName() + "/");
-            }
-            System.out.println("anotacion: " + constraintViolation.getConstraintDescriptor().getAnnotation().toString() + " value:" + constraintViolation.getInvalidValue());
         }
     }
 }

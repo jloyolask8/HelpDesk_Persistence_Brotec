@@ -16,16 +16,12 @@ import com.itcs.helpdesk.persistence.entities.ProductoContratado;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
+import com.itcs.helpdesk.persistence.utils.ConstraintViolationExceptionHelper;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.transaction.UserTransaction;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
 
 /**
  *
@@ -74,13 +70,7 @@ public class EmailClienteJpaController implements Serializable {
 
             utx.commit();
         } catch (Exception ex) {
-            if (ex instanceof ConstraintViolationException) {
-                printOutContraintViolation((ConstraintViolationException) ex);
-            }
-
-            if (ex.getCause() instanceof ConstraintViolationException) {
-                printOutContraintViolation((ConstraintViolationException) (ex.getCause()));
-            }
+           ConstraintViolationExceptionHelper.handleError(ex);
             ex.printStackTrace();
             try {
                 utx.rollback();
@@ -159,13 +149,7 @@ public class EmailClienteJpaController implements Serializable {
 //            }
             utx.commit();
         } catch (Exception ex) {
-            if (ex instanceof ConstraintViolationException) {
-                printOutContraintViolation((ConstraintViolationException) ex);
-            }
-
-            if (ex.getCause() instanceof ConstraintViolationException) {
-                printOutContraintViolation((ConstraintViolationException) (ex.getCause()));
-            }
+          ConstraintViolationExceptionHelper.handleError(ex);
             try {
                 utx.rollback();
             } catch (Exception re) {
@@ -211,13 +195,7 @@ public class EmailClienteJpaController implements Serializable {
             em.remove(emailCliente);
             utx.commit();
         } catch (Exception ex) {
-            if (ex instanceof ConstraintViolationException) {
-                printOutContraintViolation((ConstraintViolationException) ex);
-            }
-
-            if (ex.getCause() instanceof ConstraintViolationException) {
-                printOutContraintViolation((ConstraintViolationException) (ex.getCause()));
-            }
+           ConstraintViolationExceptionHelper.handleError(ex);
             try {
                 utx.rollback();
             } catch (Exception re) {
@@ -280,16 +258,5 @@ public class EmailClienteJpaController implements Serializable {
         }
     }
 
-    private void printOutContraintViolation(ConstraintViolationException ex) {
-        Set<ConstraintViolation<?>> set = (ex).getConstraintViolations();
-        for (ConstraintViolation<?> constraintViolation : set) {
-            System.out.println("leafBean class: " + constraintViolation.getLeafBean().getClass());
-            Iterator<Path.Node> iter = constraintViolation.getPropertyPath().iterator();
-            System.out.println("constraintViolation.getPropertyPath(): ");
-            while (iter.hasNext()) {
-                System.out.print(iter.next().getName() + "/");
-            }
-            System.out.println("anotacion: " + constraintViolation.getConstraintDescriptor().getAnnotation().toString() + " value:" + constraintViolation.getInvalidValue());
-        }
-    }
+    
 }
