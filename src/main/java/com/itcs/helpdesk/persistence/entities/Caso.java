@@ -186,6 +186,7 @@ public class Caso implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCaso")
     @CascadeOnDelete
     private List<Nota> notaList;
+
     @OneToMany(mappedBy = "idCaso")
     @CascadeOnDelete
     private List<Attachment> attachmentList;
@@ -220,12 +221,12 @@ public class Caso implements Serializable {
     private Item idItem;
     @Column(name = "servicio_tecnico")
     private Boolean servicioTecnico;
-    
+
     //TODO update this values
     @FilterField(fieldTypeId = EnumFieldType.CHECKBOX, label = "hasAttachments", fieldIdFull = "hasAttachments", fieldTypeFull = Boolean.class)
     @Column(name = "has_attachments")
     private boolean hasAttachments;
-    
+
     //TODO update this values
     @FilterField(fieldTypeId = EnumFieldType.CHECKBOX, label = "hasScheduledEvents", fieldIdFull = "hasScheduledEvents", fieldTypeFull = Boolean.class)
     @Column(name = "has_scheduled_events")
@@ -238,6 +239,11 @@ public class Caso implements Serializable {
     //Schedule Events
     @OneToMany(mappedBy = "idCaso")
     private List<ScheduleEvent> scheduleEventList;
+
+    @Transient
+    public boolean hasNotas() {
+        return (notaList != null && !notaList.isEmpty());
+    }
 
     public Caso() {
     }
@@ -495,6 +501,7 @@ public class Caso implements Serializable {
     }
 
     public List<Nota> getNotaList() {
+        Collections.sort(notaList);
         return notaList;
     }
 
@@ -534,7 +541,7 @@ public class Caso implements Serializable {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-         builder.append(tipoCaso != null ? tipoCaso.getNombre():"Caso").append(": [");
+        builder.append(tipoCaso != null ? tipoCaso.getNombre() : "Caso").append(": [");
         builder.append("#ID=");
         builder.append(idCaso);
         builder.append(", Tema=");
@@ -834,8 +841,8 @@ public class Caso implements Serializable {
     public void setScheduleEventList(List<ScheduleEvent> scheduleEventList) {
         this.scheduleEventList = scheduleEventList;
     }
-    
-     @Transient
+
+    @Transient
     public List<Attachment> getAttachmentsNotEmbedded() {
         try {
             if (getAttachmentList() != null) {

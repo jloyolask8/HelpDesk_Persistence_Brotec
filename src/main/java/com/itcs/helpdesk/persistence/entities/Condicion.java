@@ -72,7 +72,7 @@ public class Condicion implements Serializable {
     }
 
     public void setValor(String valor) {
-        System.out.println("Condicion valor: " + valor);
+//        System.out.println("Condicion valor: " + valor);
         this.valor = valor;
     }
 

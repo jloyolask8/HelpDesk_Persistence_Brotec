@@ -59,7 +59,7 @@ public class AttachmentJpaController implements Serializable {
 //            }
             utx.commit();
         } catch (Exception ex) {
-           
+
 //            System.out.println(attachment.toString());
             try {
                 utx.rollback();
@@ -198,13 +198,12 @@ public class AttachmentJpaController implements Serializable {
         }
     }
 
-    public List<Attachment> findAttachmentsWOContentId(Caso caso) {
-        EasyCriteriaQuery<Attachment> easyCriteriaQuery = new EasyCriteriaQuery<Attachment>(emf, Attachment.class);
-        easyCriteriaQuery.addEqualPredicate(Attachment_.contentId.getName(), (Attachment) null);
-        easyCriteriaQuery.addEqualPredicate(Attachment_.idCaso.getName(), caso);
-        return easyCriteriaQuery.getAllResultList();
-    }
-
+//    public List<Attachment> findAttachmentsWOContentId(Caso caso) {
+//        EasyCriteriaQuery<Attachment> easyCriteriaQuery = new EasyCriteriaQuery<Attachment>(emf, Attachment.class);
+//        easyCriteriaQuery.addEqualPredicate(Attachment_.idCaso.getName(), caso);
+//        easyCriteriaQuery.addEqualPredicate(Attachment_.contentId.getName(), (Attachment) null);
+//        return easyCriteriaQuery.getAllResultList();
+//    }
     public Long countAttachmentsWOContentId(Caso caso) {
         EasyCriteriaQuery<Attachment> easyCriteriaQuery = new EasyCriteriaQuery<Attachment>(emf, Attachment.class);
         easyCriteriaQuery.addEqualPredicate(Attachment_.contentId.getName(), (Attachment) null);

@@ -89,6 +89,7 @@ public class CasoJPACustomController extends CasoJpaController {
      * improve this code. 
      */
     public int getCasoCountByTipoAlerta(Usuario usuario, TipoAlerta tipo_alerta) {
+//        System.out.println("getCasoCountByTipoAlerta()");
         EntityManager em = getEntityManager();
         try {
             CriteriaBuilder cb = em.getCriteriaBuilder();

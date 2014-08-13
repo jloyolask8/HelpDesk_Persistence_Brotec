@@ -1005,9 +1005,9 @@ public class JPAServiceFacade extends AbstractJPAController {
         return getAttachmentJpaController().findAttachment(idAttachment);
     }
 
-    public List<Attachment> getAttachmentWOContentId(Caso caso) {
-        return getAttachmentJpaController().findAttachmentsWOContentId(caso);
-    }
+//    public List<Attachment> getAttachmentWOContentId(Caso caso) {
+//        return getAttachmentJpaController().findAttachmentsWOContentId(caso);
+//    }
 
     public Long countAttachmentWOContentId(Caso caso) {
         return getAttachmentJpaController().countAttachmentsWOContentId(caso);

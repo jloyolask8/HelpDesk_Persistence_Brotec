@@ -382,7 +382,7 @@ public class Usuario implements Serializable {
      */
     public void setPageLayoutState(String pageLayoutState) {
         this.pageLayoutState = pageLayoutState;
-        System.out.println("setPageLayoutState:" + pageLayoutState);
+//        System.out.println("setPageLayoutState:" + pageLayoutState);
     }
 
     /**
