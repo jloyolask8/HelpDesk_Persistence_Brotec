@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ReglaTrigger.findAll", query = "SELECT r FROM ReglaTrigger r ORDER BY r.orden ASC"),
-    @NamedQuery(name = "ReglaTrigger.findByEvento", query = "SELECT r FROM ReglaTrigger r WHERE r.evento = :evento ORDER BY r.orden ASC"),
+    @NamedQuery(name = "ReglaTrigger.findByEvento", query = "SELECT r FROM ReglaTrigger r WHERE r.evento like :evento ORDER BY r.orden ASC"),
     @NamedQuery(name = "ReglaTrigger.findByIdTrigger", query = "SELECT r FROM ReglaTrigger r WHERE r.idTrigger = :idTrigger")})
 public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
 
@@ -143,7 +143,8 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
     @Override
     public String toString() {
         
-        return (evento.equalsIgnoreCase("CREATE") ? "<b>Cuando se cree un caso</b>":"<b>Cuando se modifique un caso</b>") 
+        return (evento.equalsIgnoreCase("CREATE") ? "<b>Cuando se cree un caso</b>":
+                (evento.equalsIgnoreCase("UPDATE OR CREATE")?"<b>Cuando se cree o modifique un caso</b>":"<b>Cuando se modifique un caso</b>")) 
                 + " y se cumplan <b>"+((anyOrAll == null)?"todas":(anyOrAll.equals("ANY")?"cualquiera de":"todas"))+" las Condiciones </b>(" + getCondicionList().size() + "):"+
                 getCondicionList().toString() + " <br/><b>Ejecutar Acciones</b> (" + getAccionList().size() + "):" + getAccionList().toString();
     }
