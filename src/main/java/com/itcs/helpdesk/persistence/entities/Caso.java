@@ -201,7 +201,7 @@ public class Caso implements Serializable {
     @JoinTable(name = "etiqueta_caso", joinColumns = {
         @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")}, inverseJoinColumns = {
         @JoinColumn(name = "tag_id", referencedColumnName = "tag_id")})
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<Etiqueta> etiquetaList;
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Tipo", fieldIdFull = "tipoCaso.idTipoCaso", fieldTypeFull = String.class)
     @JoinColumn(name = "tipo_caso", referencedColumnName = "id_tipo_caso")
