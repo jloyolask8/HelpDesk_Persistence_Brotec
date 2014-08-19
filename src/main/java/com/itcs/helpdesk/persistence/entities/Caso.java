@@ -38,6 +38,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 /**
@@ -840,6 +841,16 @@ public class Caso implements Serializable {
      */
     public void setScheduleEventList(List<ScheduleEvent> scheduleEventList) {
         this.scheduleEventList = scheduleEventList;
+    }
+
+    @Transient
+    public String getClientName() {
+        if (getIdCliente() != null) {
+            if (!StringUtils.isEmpty(StringUtils.trim(getIdCliente().getNombres()))) {
+                return getIdCliente().getCapitalName();
+            }
+        }
+        return getEmailCliente().getEmailCliente();
     }
 
     @Transient

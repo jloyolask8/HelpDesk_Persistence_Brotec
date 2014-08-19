@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -217,10 +218,13 @@ public class Cliente implements Serializable {
     public void setProductoContratadoList(List<ProductoContratado> productoContratadoList) {
         this.productoContratadoList = productoContratadoList;
     }
-
+    
     public String getCapitalName() {
         String capitalName = "";
-        String[] names = new String[]{nombres == null ? "" : nombres.split(" ")[0], apellidos == null ? "" : apellidos.split(" ")[0]};
+        final String trimmedName = StringUtils.trim(nombres);        
+        final String trimmedApellidos = StringUtils.trim(apellidos);
+        
+        String[] names = new String[]{StringUtils.isEmpty(trimmedName) ? "" : trimmedName.split(" ")[0], StringUtils.isEmpty(trimmedApellidos) ? "" :  trimmedApellidos.split(" ")[0]};
         for (int i = 0; i < names.length; i++) {
             if (!(names[i].trim().isEmpty())) {
                 if (i > 0) {
