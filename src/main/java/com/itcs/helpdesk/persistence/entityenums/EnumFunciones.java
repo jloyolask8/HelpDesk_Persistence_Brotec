@@ -20,6 +20,7 @@ public enum EnumFunciones {
     CAMBIAR_CATEGORIA_CASO(new Funcion(5, "CAMBIAR CATEGORIA CASO", "puede cambiar categoria casos")),
     FILTRO_OWNER(new Funcion(7, "FILTRO OWNER", "")),
     ADMINISTRAR_VISTAS(new Funcion(22, "ADMINISTRAR VISTAS", "El usuario puede crear/editar/eliminar Vistas.")),
+    FILTROS_INBOX(new Funcion(23, "FILTROS INBOX", "El usuario puede utilizar los filtros de casos del Inbox")),
     SUPERVISOR(new Funcion(33, "SUPERVISOR", "El usuario puede supervisar a otros agentes.")),
     ASIGNAR_TRANSFERIR_CASO(new Funcion(8, "ASIGNAR/TRANSFERIR CASO", "puede asignar o transferir casos")),
     EDITAR_AJUSTES(new Funcion(9, "EDITAR AJUSTES", "puede editar ajustes")),
