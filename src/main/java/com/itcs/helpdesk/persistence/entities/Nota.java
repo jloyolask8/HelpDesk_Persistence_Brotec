@@ -90,6 +90,9 @@ public class Nota implements Serializable, Comparable<Nota> {
     @Column(name = "has_attachments")
     private boolean hasAttachments;
 
+    @Column(name = "enviado_por_quartz_job_id")
+    private String enviadoPorQuartzJobId;
+
     public Nota() {
     }
 
@@ -277,8 +280,8 @@ public class Nota implements Serializable, Comparable<Nota> {
         }
         return images;
     }
-    
-      /**
+
+    /**
      * @return the attachmentList
      */
     public List<Attachment> getFileAttachmentList() {
@@ -303,5 +306,19 @@ public class Nota implements Serializable, Comparable<Nota> {
      */
     public void setHasAttachments(boolean hasAttachments) {
         this.hasAttachments = hasAttachments;
+    }
+
+    /**
+     * @return the enviadoPorQuartzJobId
+     */
+    public String getEnviadoPorQuartzJobId() {
+        return enviadoPorQuartzJobId;
+    }
+
+    /**
+     * @param enviadoPorQuartzJobId the enviadoPorQuartzJobId to set
+     */
+    public void setEnviadoPorQuartzJobId(String enviadoPorQuartzJobId) {
+        this.enviadoPorQuartzJobId = enviadoPorQuartzJobId;
     }
 }

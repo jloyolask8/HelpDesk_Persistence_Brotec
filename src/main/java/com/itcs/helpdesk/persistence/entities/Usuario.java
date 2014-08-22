@@ -325,7 +325,7 @@ public class Usuario implements Serializable {
         if (((nombres == null) || (nombres.isEmpty())) && ((apellidos == null) || (apellidos.isEmpty()))) {
             return idUsuario;
         }
-        return nombres + " " + apellidos + "(" + idUsuario + ")";
+        return nombres + " " + apellidos + " (" + idUsuario + ")";
     }
 
     /**

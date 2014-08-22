@@ -9,6 +9,7 @@ import com.itcs.helpdesk.persistence.entities.TipoNota;
 public enum EnumTipoNota {
 
     NOTA(new TipoNota(1, "Comentario"),"comentario"),
+    REG_ENVIO_CORREO(new TipoNota(2, "Reg. de envío de correo"),"regenviocorreo"),
     RESPUESTA_A_CLIENTE(new TipoNota(2, "Respuesta"),"resptoclient"),
     RESPUESTA_AUT_CLIENTE(new TipoNota(2, "Respuesta Automática"),"respauttoclient"),
     RESPUESTA_DE_CLIENTE(new TipoNota(3, "Comentario del Solicitante"), "respfromclient"),

@@ -183,8 +183,10 @@ public class AuditLog implements Serializable {
 
     @Override
     public String toString() {
-        return "AuditLog{" + "idLog=" + idLog + ", tabla=" + tabla + ", campo=" + campo + ", oldValue=" + oldValue + ", newValue=" + newValue + ", fecha=" + fecha + ", idUser=" + idUser + ", idCaso=" + idCaso + '}';
+        return "AuditLog{" + "idLog=" + idLog + ", tabla=" + tabla + ", campo=" + campo + ", oldValue=" + oldValue + ", newValue=" + newValue + ", fecha=" + fecha + ", idUser=" + idUser + ", idCaso=" + idCaso + ", owner=" + owner + ", idCampo=" + idCampo + '}';
     }
+
+   
 
     /**
      * @return the owner

@@ -85,6 +85,7 @@ import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
 import com.itcs.helpdesk.persistence.utils.CasoChangeListener;
 import com.itcs.helpdesk.persistence.utils.ConstraintViolationExceptionHelper;
+import com.itcs.helpdesk.persistence.utils.OrderBy;
 import com.itcs.helpdesk.persistence.utils.vo.AuditLogVO;
 import com.itcs.jpautils.EasyCriteriaQuery;
 import java.util.Calendar;
@@ -274,21 +275,28 @@ public class JPAServiceFacade extends AbstractJPAController {
         return q.count();
     }
 
+    public Long countEntities(Vista vista) throws ClassNotFoundException {
+        return countEntities(vista, null);
+    }
+
     public Long countEntities(Vista vista, Usuario who) throws ClassNotFoundException {
         EntityManager em = getEntityManager();
+        em.setProperty("javax.persistence.cache.storeMode", javax.persistence.CacheRetrieveMode.USE);
+
         try {
             final Class<?> clazz = Class.forName(vista.getBaseEntityType());
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root rt = cq.from(clazz);
-            Predicate predicate = createPredicate(em, cb, rt, vista, who);
+            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+            CriteriaQuery criteriaQuery = em.getCriteriaBuilder().createQuery();
+            Root root = criteriaQuery.from(clazz);
+            Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, who);
 
             if (predicate != null) {
-                cq.select(cb.count(rt)).where(predicate).distinct(true);
+                criteriaQuery.select(criteriaBuilder.count(root)).where(predicate).distinct(true);
             } else {
-                cq.select(cb.count(rt));
+                criteriaQuery.select(criteriaBuilder.count(root));
             }
-            Query q = em.createQuery(cq);
+            Query q = em.createQuery(criteriaQuery);
+            q.setHint("eclipselink.query-results-cache", true);
             return ((Long) q.getSingleResult());
         } catch (ClassNotFoundException e) {
             Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "ClassNotFoundException countEntities by view of class " + vista.getBaseEntityType(), e);
@@ -301,16 +309,17 @@ public class JPAServiceFacade extends AbstractJPAController {
         }
     }
 
-    public List<?> findAllEntities(Class entityClass, Vista vista, String orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
+    public List<?> findAllEntities(Class entityClass, Vista vista, OrderBy orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
         return findEntities(entityClass, vista, true, -1, -1, orderBy, who);
     }
 
-    public List<?> findEntities(Class entityClass, Vista vista, int maxResults, int firstResult, String orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
+    public List<?> findEntities(Class entityClass, Vista vista, int maxResults, int firstResult, OrderBy orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
         return findEntities(entityClass, vista, false, maxResults, firstResult, orderBy, who);
     }
 
-    private List<?> findEntities(Class entityClass, Vista vista, boolean all, int maxResults, int firstResult, String orderBy, Usuario who) throws IllegalStateException, ClassNotFoundException {
+    private List<?> findEntities(Class entityClass, Vista vista, boolean all, int maxResults, int firstResult, OrderBy orderBy, Usuario who) throws IllegalStateException, ClassNotFoundException {
         EntityManager em = getEntityManager();
+
         try {
 
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
@@ -322,8 +331,13 @@ public class JPAServiceFacade extends AbstractJPAController {
             if (predicate != null) {
                 criteriaQuery.where(predicate).distinct(true);
             }
-            if (orderBy != null && !orderBy.isEmpty()) {
-                criteriaQuery.orderBy(criteriaBuilder.desc(root.get(orderBy)));
+            if (orderBy != null && orderBy.getFieldName() != null) {
+                if (orderBy.getOrderType().equals(OrderBy.OrderType.ASC)) {
+                    criteriaQuery.orderBy(criteriaBuilder.asc(root.get(orderBy.getFieldName())));
+                } else {
+                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get(orderBy.getFieldName())));
+                }
+
             }
             Query q = em.createQuery(criteriaQuery);
 
@@ -425,11 +439,13 @@ public class JPAServiceFacade extends AbstractJPAController {
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
             CriteriaQuery<Etiqueta> criteriaQuery = criteriaBuilder.createQuery(Etiqueta.class);
             Root<Etiqueta> root = criteriaQuery.from(Etiqueta.class);
-            Expression<String> exp = root.get("owner").get("idUsuario");
+            Expression<String> idUsuarioExp = root.get("owner").get("idUsuario");
+            Expression<String> ownerExp = root.get("owner");
 
             criteriaQuery = criteriaQuery.orderBy(criteriaBuilder.desc(root.get("tagId")));
-            Predicate predicate = criteriaBuilder.equal(exp, idUsuario);
-            criteriaQuery.where(predicate);
+            Predicate predicate = criteriaBuilder.equal(idUsuarioExp, idUsuario);
+            Predicate predicate2 = criteriaBuilder.isNull(ownerExp);
+            criteriaQuery.where(criteriaBuilder.or(predicate, predicate2));
             Query q = em.createQuery(criteriaQuery);
             return q.getResultList();
 
@@ -556,14 +572,11 @@ public class JPAServiceFacade extends AbstractJPAController {
     /*
      * Caso helper Methods
      */
-//    public List<Caso> findCasoByCatFilter(Categoria cat, Usuario user, int maxResults, int firstResult) {
-//        return getCasoJpa().findCasoCatFilter(cat, user, maxResults, firstResult);
-//    }
-    public List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, int maxResults, int firstResult, String orderBy) throws IllegalStateException, javax.resource.NotSupportedException, ClassNotFoundException {
+    public List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, int maxResults, int firstResult, OrderBy orderBy) throws IllegalStateException, javax.resource.NotSupportedException, ClassNotFoundException {
         return findCasoEntities(view, userWhoIsApplying, false, maxResults, firstResult, orderBy);
     }
 
-    public List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, String orderBy) throws IllegalStateException, ClassNotFoundException {
+    public List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, OrderBy orderBy) throws IllegalStateException, ClassNotFoundException {
         return findCasoEntities(view, userWhoIsApplying, true, 0, 0, orderBy);
     }
 
@@ -571,7 +584,7 @@ public class JPAServiceFacade extends AbstractJPAController {
         return countEntities(view, userWhoIsApplying).intValue();
     }
 
-    private List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, boolean all, int maxResults, int firstResult, String orderBy) throws IllegalStateException, ClassNotFoundException {
+    private List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, boolean all, int maxResults, int firstResult, OrderBy orderBy) throws IllegalStateException, ClassNotFoundException {
         return (List<Caso>) findEntities(Caso.class, view, all, maxResults, firstResult, orderBy, userWhoIsApplying);
 
     }
@@ -662,7 +675,7 @@ public class JPAServiceFacade extends AbstractJPAController {
 
     public Caso mergeCasoWithoutNotify(Caso caso) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         merge(caso);
-        return (Caso) getCasoJpa().getEntityManager().getReference(Caso.class, caso.getIdCaso());
+        return (Caso) getEntityManager().getReference(Caso.class, caso.getIdCaso());
     }
 
     public Caso mergeCasoWithoutNotify(Caso caso, List<AuditLog> changeList) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {

@@ -31,6 +31,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -186,6 +187,7 @@ public class Caso implements Serializable {
     private Canal idCanal;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCaso")
     @CascadeOnDelete
+    @OrderBy("fechaCreacion DESC")
     private List<Nota> notaList;
 
     @OneToMany(mappedBy = "idCaso")
@@ -502,7 +504,7 @@ public class Caso implements Serializable {
     }
 
     public List<Nota> getNotaList() {
-        Collections.sort(notaList);
+//        Collections.sort(notaList);
         return notaList;
     }
 

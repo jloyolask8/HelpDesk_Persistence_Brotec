@@ -42,6 +42,12 @@ public class Condicion implements Serializable {
     @Size(max = 5000)
     @Column(name = "valor2", length = 5000)
     private String valor2;
+    
+    @Column(name = "valor_desc")
+    private String valorDesc;
+    @Column(name = "valor2_desc")
+    private String valor2Desc;
+    
     @JoinColumn(name = "ID_COMPARADOR", referencedColumnName = "ID_COMPARADOR")
     @ManyToOne
     private TipoComparacion idComparador;
@@ -167,5 +173,33 @@ public class Condicion implements Serializable {
                 valor += "," + string;
             }
         }
+    }
+
+    /**
+     * @return the valorDesc
+     */
+    public String getValorDesc() {
+        return valorDesc;
+    }
+
+    /**
+     * @param valorDesc the valorDesc to set
+     */
+    public void setValorDesc(String valorDesc) {
+        this.valorDesc = valorDesc;
+    }
+
+    /**
+     * @return the valor2Desc
+     */
+    public String getValor2Desc() {
+        return valor2Desc;
+    }
+
+    /**
+     * @param valor2Desc the valor2Desc to set
+     */
+    public void setValor2Desc(String valor2Desc) {
+        this.valor2Desc = valor2Desc;
     }
 }
