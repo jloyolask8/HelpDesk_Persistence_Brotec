@@ -145,8 +145,20 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
         
         return (evento.equalsIgnoreCase("CREATE") ? "<b>Cuando se cree un caso</b>":
                 (evento.equalsIgnoreCase("UPDATE OR CREATE")?"<b>Cuando se cree o modifique un caso</b>":"<b>Cuando se modifique un caso</b>")) 
-                + " y se cumplan <b>"+((anyOrAll == null)?"todas":(anyOrAll.equals("ANY")?"cualquiera de":"todas"))+" las Condiciones </b>(" + getCondicionList().size() + "):"+
-                getCondicionList().toString() + " <br/><b>Ejecutar Acciones</b> (" + getAccionList().size() + "):" + getAccionList().toString();
+                + " y se cumplan <b>"+((anyOrAll == null)?"todas":(anyOrAll.equals("ANY")?"cualquiera de":"todas"))+" las Condiciones </b>(" + getCondicionList().size() + "):<br/>"+
+                formatList(getCondicionList()) + " <br/><b>Ejecutar Acciones</b> (" + getAccionList().size() + "):<br/>" + formatList(getAccionList());
+    }
+    
+    public String formatList(List lista)
+    {
+        StringBuilder sb = new StringBuilder("<ul>");
+        for (Object object : lista) {
+            sb.append("<li>");
+            sb.append(object.toString());
+            sb.append("</li>");
+        }
+        sb.append("</ul>");
+        return sb.toString();
     }
 
   
