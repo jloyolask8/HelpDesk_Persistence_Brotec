@@ -36,12 +36,12 @@ public enum EnumTipoComparacion
     /**
      * "Contiene", "CO", "CO", "Verdadero si contiene la secuencia de caracteres dada"
      */
-    CO(new TipoComparacion("Contiene la siguiente cadena", "CO", "CO", "Verdadero si contiene la secuencia de caracteres dada")),   
+    CO(new TipoComparacion("Contiene", "CO", "CO", "Verdadero si contiene la secuencia de caracteres dada")),   
  
     /**
      * "Sub Conjunto", "SC", "SC", "Verdadero si el valor del campo esta dentro del subconjunto pasado como parametro."
      */
-    SC(new TipoComparacion("Contiene al menos una de las siguientes", "SC", "SC", "Verdadero si el valor del campo esta dentro del subconjunto pasado como parametro.")),
+    SC(new TipoComparacion("Es SubConjunto de", "SC", "SC", "Verdadero si el valor del campo esta dentro del subconjunto pasado como parametro.")),
     /**
      * "Cambie A", "CT", "Change To", "Verdadero si el valor del campo cambio, y cambio al valor especificado."
      */
@@ -49,7 +49,7 @@ public enum EnumTipoComparacion
     /**
      * "Contiene Valores", "IM", "IM", "Verdadero si la lista a comparar contiene todas los valores separados por coma."
      */
-    IM(new TipoComparacion("Contiene todas las siguientes", "IM", "IM", "Verdadero si la lista a comparar contiene todas los valores separados por coma.")),
+    IM(new TipoComparacion("Contiene todas", "IM", "IM", "Verdadero si la lista a comparar contiene todas los valores separados por coma.")),
     /**
      * "Entre Fechas", "BW", "BW", "BW: Verdadero, si la fecha a comparar esta entre la fecha operando1 y la fecha operando2."
      */

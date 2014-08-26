@@ -27,7 +27,7 @@ public enum EnumFunciones {
     RESPONDER_CUALQUIER_CASO(new Funcion(10, "RESPONDER CUALQUIER CASO", "puede responder cualquier caso")),
     EDITAR_CUALQUIER_CASO(new Funcion(11, "EDITAR CUALQUIER CASO", "puede editar cualquier caso")),
     ADMINISTRAR_ITEMS_PREENTREGA(new Funcion(12, "ADMINISTRAR ITEMS PREENTREGA", "Administrar items pre-entrega")),
-    CREAR_CASO_PREENTREGA(new Funcion(13, "CREAR CASO PREENTREGA", "Crear caso pre-entrega"));
+    CREAR_CASO_ENTREGA(new Funcion(13, "CREAR CASO ENTREGA", "Crear caso pre-entrega"));
     
     private final Funcion funcion;
 

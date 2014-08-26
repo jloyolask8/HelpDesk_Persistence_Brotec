@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -115,6 +116,9 @@ public class Usuario implements Serializable {
     private String pageLayoutState;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuarioCreadaPor")
     private List<Clipping> clippingList;
+    
+    @Transient
+    private String randomColor;
 
     public Usuario() {
     }
@@ -397,5 +401,19 @@ public class Usuario implements Serializable {
      */
     public void setClippingList(List<Clipping> clippingList) {
         this.clippingList = clippingList;
+    }
+
+    /**
+     * @return the randomColor
+     */
+    public String getRandomColor() {
+        return randomColor;
+    }
+
+    /**
+     * @param randomColor the randomColor to set
+     */
+    public void setRandomColor(String randomColor) {
+        this.randomColor = randomColor;
     }
 }
