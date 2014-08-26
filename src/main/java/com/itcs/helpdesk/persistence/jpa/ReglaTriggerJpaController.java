@@ -4,23 +4,29 @@
  */
 package com.itcs.helpdesk.persistence.jpa;
 
-import java.io.Serializable;
-import javax.persistence.Query;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import com.itcs.helpdesk.persistence.entities.Accion;
 import com.itcs.helpdesk.persistence.entities.Area;
 import com.itcs.helpdesk.persistence.entities.Condicion;
-import java.util.ArrayList;
-import java.util.List;
-import com.itcs.helpdesk.persistence.entities.Accion;
 import com.itcs.helpdesk.persistence.entities.ReglaTrigger;
 import com.itcs.helpdesk.persistence.jpa.exceptions.IllegalOrphanException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.UserTransaction;
 
 /**
@@ -327,5 +333,76 @@ public class ReglaTriggerJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+
+
+    private Predicate createSearchExpression(Root<ReglaTrigger> root, CriteriaBuilder criteriaBuilder, String searchPattern) {
+        Expression<String> expresionNombre = root.get("idTrigger");
+        Expression<String> expresionDescripcion = root.get("desccripcion");
+        Expression<String> expresionCampo = root.joinList("condicionList", JoinType.LEFT).get("idCampo");
+        Expression<String> expresionCondicionValor = root.joinList("condicionList", JoinType.LEFT).get("valor");
+        Expression<String> expresionAccionParams = root.joinList("accionList", JoinType.LEFT).get("parametros");
+        Expression<String> expresionAccionNombre = root.joinList("accionList", JoinType.LEFT).get("idNombreAccion").get("idNombreAccion");
+
+        Predicate predicate = criteriaBuilder.or(
+                criteriaBuilder.like(criteriaBuilder.upper(expresionNombre), "%" +searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionDescripcion), "%" +searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionCampo), "%" +searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionCondicionValor), "%" +searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionAccionParams), "%" +searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionAccionNombre), "%" + searchPattern.toUpperCase() + "%"));
+        return predicate;
+    }
+
+    public Long countSearchEntities(String searchPattern) throws ClassNotFoundException {
+        EntityManager em = getEntityManager();
+        em.setProperty("javax.persistence.cache.storeMode", javax.persistence.CacheRetrieveMode.USE);
+
+        try {
+            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+            CriteriaQuery criteriaQuery = em.getCriteriaBuilder().createQuery();
+            Root<ReglaTrigger> root = criteriaQuery.from(ReglaTrigger.class);
+
+            Predicate predicate = createSearchExpression(root, criteriaBuilder, searchPattern);
+
+            if (predicate != null) {
+                criteriaQuery.select(criteriaBuilder.count(root)).where(predicate).distinct(true);
+            } else {
+                criteriaQuery.select(criteriaBuilder.count(root));
+            }
+            Query q = em.createQuery(criteriaQuery);
+            q.setHint("eclipselink.query-results-cache", true);
+            return ((Long) q.getSingleResult());
+        } catch (Exception e) {
+            Logger.getLogger(ReglaTriggerJpaController.class.getName()).log(Level.SEVERE, "countSearchEntities " + searchPattern, e);
+            return 0L;
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<ReglaTrigger> searchEntities(String searchPattern, boolean all, int maxResults, int firstResult) {
+        EntityManager em = getEntityManager();
+
+        try {
+            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+            CriteriaQuery criteriaQuery = em.getCriteriaBuilder().createQuery();
+            Root<ReglaTrigger> root = criteriaQuery.from(ReglaTrigger.class);
+
+            Predicate predicate = createSearchExpression(root, criteriaBuilder, searchPattern);
+
+            criteriaQuery.where(predicate).distinct(true);
+
+            Query q = em.createQuery(criteriaQuery);
+            q.setHint("eclipselink.query-results-cache", true);
+            if (!all) {
+                q.setMaxResults(maxResults);
+                q.setFirstResult(firstResult);
+            }
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+
     }
 }
