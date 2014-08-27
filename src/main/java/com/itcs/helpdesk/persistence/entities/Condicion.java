@@ -128,7 +128,7 @@ public class Condicion implements Serializable {
 
     @Override
     public String toString() {
-        return idCampo + " <b>" + idComparador + "</b> '" + (valor != null ? ((valorDesc != null ? (valorDesc) : valor)) : "null") + (valor2 != null ? ((valor2Desc != null ? (valor2Desc) : valor2)) : "null") + "'";
+        return idCampo + " <b>" + idComparador + "</b> '" + (valor != null ? ((valorDesc != null ? (valorDesc) : valor)) : "null") + (valor2 != null ? ((valor2Desc != null ? (valor2Desc) : valor2)) : "") + "'";
     }
 
     /**
