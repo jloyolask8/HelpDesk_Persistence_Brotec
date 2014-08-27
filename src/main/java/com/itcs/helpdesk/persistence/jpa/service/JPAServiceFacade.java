@@ -543,6 +543,13 @@ public class JPAServiceFacade extends AbstractJPAController {
 //        }
 //        return query.getResultList();
 //    }
+    /**
+     * @deprecated 
+     * @param entityClazz
+     * @param maxResults
+     * @param firstResult
+     * @return 
+     */
     public List queryByRange(Class entityClazz, int maxResults, int firstResult) {
         EntityManager em = emf.createEntityManager();
         try {

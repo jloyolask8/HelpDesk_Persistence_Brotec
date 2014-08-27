@@ -392,6 +392,8 @@ public class ReglaTriggerJpaController implements Serializable {
             Predicate predicate = createSearchExpression(root, criteriaBuilder, searchPattern);
 
             criteriaQuery.where(predicate).distinct(true);
+            
+            criteriaQuery.orderBy(criteriaBuilder.asc(root.get("orden")));
 
             Query q = em.createQuery(criteriaQuery);
             q.setHint("eclipselink.query-results-cache", true);
