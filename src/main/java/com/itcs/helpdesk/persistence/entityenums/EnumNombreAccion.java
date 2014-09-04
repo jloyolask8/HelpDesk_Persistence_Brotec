@@ -30,6 +30,7 @@ public enum EnumNombreAccion {
     ENVIAR_EMAIL(new NombreAccion("ENVIAR EMAIL", "Enviar email", "Se envia un correo electronico", null)),
     RECALCULAR_SLA(new NombreAccion("RECALC SLA", "Recalcular SLA", "Se recalcula el tiempo de SLA (Service Level Agreement)", null)),
     CAMBIAR_PRIORIDAD(new NombreAccion("CAMBIA PRIORIDAD", "Cambio de prioridad", "Se cambia la prioridad del caso", null)),
+    DEFINIR_TIPO(new NombreAccion("DEFINE TIPO CASO", "Define tipo caso", "Se define el tipo de caso", null)),
     /**
      * actions *
      */
