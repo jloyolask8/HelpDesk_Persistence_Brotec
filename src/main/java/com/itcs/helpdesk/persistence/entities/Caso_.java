@@ -41,7 +41,6 @@ public class Caso_ {
     public static volatile SingularAttribute<Caso, SubEstadoCaso> idSubEstado;
     public static volatile SingularAttribute<Caso, Date> initResponseDue;
     public static volatile SingularAttribute<Caso, TipoAlerta> estadoAlerta;
-    public static volatile SingularAttribute<Caso, Categoria> idCategoria;
     public static volatile SingularAttribute<Caso, Boolean> esPrioritario;
     public static volatile SingularAttribute<Caso, Date> nextResponseDue;
     public static volatile SingularAttribute<Caso, Usuario> owner;

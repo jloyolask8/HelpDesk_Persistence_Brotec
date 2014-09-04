@@ -48,8 +48,8 @@ public class Grupo implements Serializable {
     @Lob
     @Size(max = 2147483647)
     private String descripcion;
-    @ManyToMany(mappedBy = "grupoList")
-    private List<Categoria> categoriaList;
+//    @ManyToMany(mappedBy = "grupoList")
+//    private List<Categoria> categoriaList;
     @JoinColumn(name = "id_area", referencedColumnName = "id_area")
     @ManyToOne(optional = true)
     private Area idArea;
@@ -107,14 +107,14 @@ public class Grupo implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @XmlTransient
-    public List<Categoria> getCategoriaList() {
-        return categoriaList;
-    }
-
-    public void setCategoriaList(List<Categoria> categoriaList) {
-        this.categoriaList = categoriaList;
-    }
+//    @XmlTransient
+//    public List<Categoria> getCategoriaList() {
+//        return categoriaList;
+//    }
+//
+//    public void setCategoriaList(List<Categoria> categoriaList) {
+//        this.categoriaList = categoriaList;
+//    }
 
     public Area getIdArea() {
         return idArea;

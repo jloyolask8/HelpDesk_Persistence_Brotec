@@ -4,10 +4,8 @@
  */
 package com.itcs.helpdesk.persistence.jpa;
 
-import com.itcs.helpdesk.persistence.entities.Categoria;
 import com.itcs.helpdesk.persistence.entities.FieldType;
 import com.itcs.helpdesk.persistence.entities.FiltroVista;
-import com.itcs.helpdesk.persistence.entities.Grupo;
 import com.itcs.helpdesk.persistence.entities.TipoComparacion;
 import com.itcs.helpdesk.persistence.entities.Usuario;
 import com.itcs.helpdesk.persistence.entities.Vista;
@@ -23,11 +21,8 @@ import java.lang.reflect.ParameterizedType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -745,6 +740,12 @@ public abstract class AbstractJPAController {
         return filters;
     }
 
+    /**
+     * try Keep this code for godesk
+     * @param comparableField
+     * @param userWhoIsAsking
+     * @return 
+     */
     public List<?> findPosibleDBOptionsFor(ComparableField comparableField, Usuario userWhoIsAsking) {
         FieldType fieldType = comparableField.getFieldTypeId();
 
@@ -755,23 +756,24 @@ public abstract class AbstractJPAController {
         List<?> entities;
 
         //need to filter what categories you can see
-        if (comparableField.getTipo().equals(Categoria.class)) {
-            List<Categoria> lista = new LinkedList<Categoria>();
-            for (Grupo grupo : userWhoIsAsking.getGrupoList()) {
-                for (Categoria cat : grupo.getCategoriaList()) {
-                    if (!lista.contains(cat)) {
-                        lista.add(cat);
-                    }
-                }
-            }
-            Collections.sort(lista, new Comparator<Categoria>() {
-                @Override
-                public int compare(Categoria o1, Categoria o2) {
-                    return o1.getOrden() - o2.getOrden();
-                }
-            });
-            entities = lista;
-        } else if (comparableField.getTipo().equals(List.class)) {
+//        if (comparableField.getTipo().equals(Categoria.class)) {
+//            List<Categoria> lista = new LinkedList<Categoria>();
+//            for (Grupo grupo : userWhoIsAsking.getGrupoList()) {
+//                for (Categoria cat : grupo.getCategoriaList()) {
+//                    if (!lista.contains(cat)) {
+//                        lista.add(cat);
+//                    }
+//                }
+//            }
+//            Collections.sort(lista, new Comparator<Categoria>() {
+//                @Override
+//                public int compare(Categoria o1, Categoria o2) {
+//                    return o1.getOrden() - o2.getOrden();
+//                }
+//            });
+//            entities = lista;
+//        } else
+        if (comparableField.getTipo().equals(List.class)) {
             entities = findAll(comparableField.getListGenericType());
             if (comparableField.getListGenericType().equals(Usuario.class)) {
                 entities.remove(EnumUsuariosBase.SISTEMA.getUsuario());

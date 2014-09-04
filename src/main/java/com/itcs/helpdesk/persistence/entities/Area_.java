@@ -1,8 +1,5 @@
 package com.itcs.helpdesk.persistence.entities;
 
-import com.itcs.helpdesk.persistence.entities.Categoria;
-import com.itcs.helpdesk.persistence.entities.Grupo;
-import com.itcs.helpdesk.persistence.entities.ReglaTrigger;
 import javax.annotation.Generated;
 import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
@@ -14,7 +11,6 @@ public class Area_ {
 
     public static volatile SingularAttribute<Area, String> nombre;
     public static volatile ListAttribute<Area, Grupo> grupoList;
-    public static volatile ListAttribute<Area, Categoria> categoriaList;
     public static volatile SingularAttribute<Area, String> idArea;
     public static volatile SingularAttribute<Area, String> descripcion;
     public static volatile ListAttribute<Area, ReglaTrigger> reglaTriggerList;

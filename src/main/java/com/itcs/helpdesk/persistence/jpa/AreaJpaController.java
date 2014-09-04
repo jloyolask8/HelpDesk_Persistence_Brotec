@@ -5,9 +5,7 @@
 package com.itcs.helpdesk.persistence.jpa;
 
 import com.itcs.helpdesk.persistence.entities.Area;
-import com.itcs.helpdesk.persistence.entities.Categoria;
 import com.itcs.helpdesk.persistence.entities.Grupo;
-import com.itcs.helpdesk.persistence.entities.ReglaTrigger;
 import com.itcs.helpdesk.persistence.jpa.exceptions.IllegalOrphanException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
@@ -41,9 +39,7 @@ public class AreaJpaController implements Serializable {
     }
 
     public void create(Area area) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (area.getCategoriaList() == null) {
-            area.setCategoriaList(new ArrayList<Categoria>());
-        }
+       
         if (area.getGrupoList() == null) {
             area.setGrupoList(new ArrayList<Grupo>());
         }
@@ -54,12 +50,7 @@ public class AreaJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            List<Categoria> attachedCategoriaList = new ArrayList<Categoria>();
-            for (Categoria categoriaListCategoriaToAttach : area.getCategoriaList()) {
-                categoriaListCategoriaToAttach = em.getReference(categoriaListCategoriaToAttach.getClass(), categoriaListCategoriaToAttach.getIdCategoria());
-                attachedCategoriaList.add(categoriaListCategoriaToAttach);
-            }
-            area.setCategoriaList(attachedCategoriaList);
+           
             List<Grupo> attachedGrupoList = new ArrayList<Grupo>();
             for (Grupo grupoListGrupoToAttach : area.getGrupoList()) {
                 grupoListGrupoToAttach = em.getReference(grupoListGrupoToAttach.getClass(), grupoListGrupoToAttach.getIdGrupo());
@@ -73,15 +64,7 @@ public class AreaJpaController implements Serializable {
 //            }
 //            area.setReglaTriggerList(attachedReglaTriggerList);
             em.persist(area);
-            for (Categoria categoriaListCategoria : area.getCategoriaList()) {
-                Area oldIdAreaOfCategoriaListCategoria = categoriaListCategoria.getIdArea();
-                categoriaListCategoria.setIdArea(area);
-                categoriaListCategoria = em.merge(categoriaListCategoria);
-                if (oldIdAreaOfCategoriaListCategoria != null) {
-                    oldIdAreaOfCategoriaListCategoria.getCategoriaList().remove(categoriaListCategoria);
-                    oldIdAreaOfCategoriaListCategoria = em.merge(oldIdAreaOfCategoriaListCategoria);
-                }
-            }
+          
             for (Grupo grupoListGrupo : area.getGrupoList()) {
                 Area oldIdAreaOfGrupoListGrupo = grupoListGrupo.getIdArea();
                 grupoListGrupo.setIdArea(area);
@@ -91,15 +74,7 @@ public class AreaJpaController implements Serializable {
                     oldIdAreaOfGrupoListGrupo = em.merge(oldIdAreaOfGrupoListGrupo);
                 }
             }
-//            for (ReglaTrigger reglaTriggerListReglaTrigger : area.getReglaTriggerList()) {
-//                Area oldIdAreaOfReglaTriggerListReglaTrigger = reglaTriggerListReglaTrigger.getIdArea();
-//                reglaTriggerListReglaTrigger.setIdArea(area);
-//                reglaTriggerListReglaTrigger = em.merge(reglaTriggerListReglaTrigger);
-//                if (oldIdAreaOfReglaTriggerListReglaTrigger != null) {
-//                    oldIdAreaOfReglaTriggerListReglaTrigger.getReglaTriggerList().remove(reglaTriggerListReglaTrigger);
-//                    oldIdAreaOfReglaTriggerListReglaTrigger = em.merge(oldIdAreaOfReglaTriggerListReglaTrigger);
-//                }
-//            }
+
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -124,21 +99,12 @@ public class AreaJpaController implements Serializable {
             utx.begin();
             em = getEntityManager();
             Area persistentArea = em.find(Area.class, area.getIdArea());
-            List<Categoria> categoriaListOld = persistentArea.getCategoriaList();
-            List<Categoria> categoriaListNew = area.getCategoriaList();
             List<Grupo> grupoListOld = persistentArea.getGrupoList();
             List<Grupo> grupoListNew = area.getGrupoList();
 //            List<ReglaTrigger> reglaTriggerListOld = persistentArea.getReglaTriggerList();
 //            List<ReglaTrigger> reglaTriggerListNew = area.getReglaTriggerList();
             List<String> illegalOrphanMessages = null;
-            for (Categoria categoriaListOldCategoria : categoriaListOld) {
-                if (!categoriaListNew.contains(categoriaListOldCategoria)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Categoria " + categoriaListOldCategoria + " since its idArea field is not nullable.");
-                }
-            }
+           
             for (Grupo grupoListOldGrupo : grupoListOld) {
                 if (!grupoListNew.contains(grupoListOldGrupo)) {
                     if (illegalOrphanMessages == null) {
@@ -158,13 +124,7 @@ public class AreaJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Categoria> attachedCategoriaListNew = new ArrayList<Categoria>();
-            for (Categoria categoriaListNewCategoriaToAttach : categoriaListNew) {
-                categoriaListNewCategoriaToAttach = em.getReference(categoriaListNewCategoriaToAttach.getClass(), categoriaListNewCategoriaToAttach.getIdCategoria());
-                attachedCategoriaListNew.add(categoriaListNewCategoriaToAttach);
-            }
-            categoriaListNew = attachedCategoriaListNew;
-            area.setCategoriaList(categoriaListNew);
+         
             List<Grupo> attachedGrupoListNew = new ArrayList<Grupo>();
             for (Grupo grupoListNewGrupoToAttach : grupoListNew) {
                 grupoListNewGrupoToAttach = em.getReference(grupoListNewGrupoToAttach.getClass(), grupoListNewGrupoToAttach.getIdGrupo());
@@ -180,17 +140,7 @@ public class AreaJpaController implements Serializable {
 //            reglaTriggerListNew = attachedReglaTriggerListNew;
 //            area.setReglaTriggerList(reglaTriggerListNew);
             area = em.merge(area);
-            for (Categoria categoriaListNewCategoria : categoriaListNew) {
-                if (!categoriaListOld.contains(categoriaListNewCategoria)) {
-                    Area oldIdAreaOfCategoriaListNewCategoria = categoriaListNewCategoria.getIdArea();
-                    categoriaListNewCategoria.setIdArea(area);
-                    categoriaListNewCategoria = em.merge(categoriaListNewCategoria);
-                    if (oldIdAreaOfCategoriaListNewCategoria != null && !oldIdAreaOfCategoriaListNewCategoria.equals(area)) {
-                        oldIdAreaOfCategoriaListNewCategoria.getCategoriaList().remove(categoriaListNewCategoria);
-                        oldIdAreaOfCategoriaListNewCategoria = em.merge(oldIdAreaOfCategoriaListNewCategoria);
-                    }
-                }
-            }
+           
             for (Grupo grupoListNewGrupo : grupoListNew) {
                 if (!grupoListOld.contains(grupoListNewGrupo)) {
                     Area oldIdAreaOfGrupoListNewGrupo = grupoListNewGrupo.getIdArea();
@@ -248,13 +198,7 @@ public class AreaJpaController implements Serializable {
                 throw new NonexistentEntityException("The area with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Categoria> categoriaListOrphanCheck = area.getCategoriaList();
-            for (Categoria categoriaListOrphanCheckCategoria : categoriaListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Area (" + area + ") cannot be destroyed since the Categoria " + categoriaListOrphanCheckCategoria + " in its categoriaList field has a non-nullable idArea field.");
-            }
+           
             List<Grupo> grupoListOrphanCheck = area.getGrupoList();
             for (Grupo grupoListOrphanCheckGrupo : grupoListOrphanCheck) {
                 if (illegalOrphanMessages == null) {

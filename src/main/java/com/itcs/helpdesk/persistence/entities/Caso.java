@@ -171,10 +171,10 @@ public class Caso implements Serializable {
         @JoinColumn(name = "id_producto", referencedColumnName = "id_producto", insertable = false, updatable = false)})
     @ManyToOne
     private ModeloProducto idModelo;
-    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Categoria", fieldIdFull = "idCategoria.idCategoria", fieldTypeFull = Integer.class)
-    @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
-    @ManyToOne
-    private Categoria idCategoria;
+//    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Categoria", fieldIdFull = "idCategoria.idCategoria", fieldTypeFull = Integer.class)
+//    @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
+//    @ManyToOne
+//    private Categoria idCategoria;
     @OneToMany(mappedBy = "idCasoPadre")
     private List<Caso> casosHijosList;
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_PLACE_HOLDER, label = "Caso padre", fieldIdFull = "idCasoPadre.idCaso", fieldTypeFull = Long.class)
@@ -470,13 +470,13 @@ public class Caso implements Serializable {
         this.idComponente = idComponente;
     }
 
-    public Categoria getIdCategoria() {
-        return idCategoria;
-    }
-
-    public void setIdCategoria(Categoria idCategoria) {
-        this.idCategoria = idCategoria;
-    }
+//    public Categoria getIdCategoria() {
+//        return idCategoria;
+//    }
+//
+//    public void setIdCategoria(Categoria idCategoria) {
+//        this.idCategoria = idCategoria;
+//    }
 
     @XmlTransient
     public List<Caso> getCasosHijosList() {

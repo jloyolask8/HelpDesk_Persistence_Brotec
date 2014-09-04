@@ -9,7 +9,6 @@ import com.itcs.helpdesk.persistence.entities.AuditLog;
 import com.itcs.helpdesk.persistence.entities.Canal;
 import com.itcs.helpdesk.persistence.entities.Caso;
 import com.itcs.helpdesk.persistence.entities.Caso_;
-import com.itcs.helpdesk.persistence.entities.Categoria;
 import com.itcs.helpdesk.persistence.entities.Cliente;
 import com.itcs.helpdesk.persistence.entities.Componente;
 import com.itcs.helpdesk.persistence.entities.Condicion;
@@ -49,7 +48,6 @@ import com.itcs.helpdesk.persistence.jpa.AreaJpaController;
 import com.itcs.helpdesk.persistence.jpa.AttachmentJpaController;
 import com.itcs.helpdesk.persistence.jpa.CanalJpaController;
 import com.itcs.helpdesk.persistence.jpa.CanalSettingJpaController;
-import com.itcs.helpdesk.persistence.jpa.CategoriaJpaController;
 import com.itcs.helpdesk.persistence.jpa.ClienteJpaController;
 import com.itcs.helpdesk.persistence.jpa.ClippingJpaController;
 import com.itcs.helpdesk.persistence.jpa.ComponenteJpaController;
@@ -127,7 +125,6 @@ public class JPAServiceFacade extends AbstractJPAController {
     private ClienteJpaController clienteJpaController;
     private PrioridadJpaController prioridadJpaController;
     private GrupoJpaController grupoJpaController;
-    private CategoriaJpaController categoriaJpaController;
     private AreaJpaController areaJpaController;
     private CanalJpaController canalJpaController;
     private TipoNotaJpaController tipoNotaJpaController;
@@ -1739,22 +1736,22 @@ public class JPAServiceFacade extends AbstractJPAController {
         return getEntityManager().createNamedQuery("Rol.findByNombre").setParameter("nombre", nombre).getResultList();
     }
 
-    public void persistCategoria(Categoria current) throws PreexistingEntityException, RollbackFailureException, Exception {
-        current.setIdCategoria(current.getOrden().intValue());
-        getCategoriaJpaController().create(current);
-    }
-
-    public void mergeCategoria(Categoria current) throws NonexistentEntityException, RollbackFailureException, Exception {
-        getCategoriaJpaController().edit(current);
-    }
-
-    public void removeCategoria(Categoria current) throws NonexistentEntityException, RollbackFailureException, Exception {
-        getCategoriaJpaController().destroy(current.getIdCategoria());
-    }
-
-    public List<Categoria> getCategoriaFindByNombreLike(String nombre) {
-        return getEntityManager().createNamedQuery("Categoria.findByNombreLike").setParameter("nombre", "%" + nombre + "%").getResultList();
-    }
+//    public void persistCategoria(Categoria current) throws PreexistingEntityException, RollbackFailureException, Exception {
+//        current.setIdCategoria(current.getOrden().intValue());
+//        getCategoriaJpaController().create(current);
+//    }
+//
+//    public void mergeCategoria(Categoria current) throws NonexistentEntityException, RollbackFailureException, Exception {
+//        getCategoriaJpaController().edit(current);
+//    }
+//
+//    public void removeCategoria(Categoria current) throws NonexistentEntityException, RollbackFailureException, Exception {
+//        getCategoriaJpaController().destroy(current.getIdCategoria());
+//    }
+//
+//    public List<Categoria> getCategoriaFindByNombreLike(String nombre) {
+//        return getEntityManager().createNamedQuery("Categoria.findByNombreLike").setParameter("nombre", "%" + nombre + "%").getResultList();
+//    }
 
     public void persistItem(Item current) throws PreexistingEntityException, RollbackFailureException, Exception {
         getItemJpaController().create(current);
@@ -1775,32 +1772,32 @@ public class JPAServiceFacade extends AbstractJPAController {
 //        return getEntityManager().createNamedQuery("Item.findByNombreLike").setParameter("nombre", "%" + nombre + "%").getResultList();
     }
 
-    /**
-     * <
-     * code>SELECT c FROM Categoria c</code>
-     */
-    public List<Categoria> getCategoriaFindAll() {
-        return getCategoriaJpaController().findCategoriaEntities();
-    }
+//    /**
+//     * <
+//     * code>SELECT c FROM Categoria c</code>
+//     */
+//    public List<Categoria> getCategoriaFindAll() {
+//        return getCategoriaJpaController().findCategoriaEntities();
+//    }
 
-    /**
-     * <
-     * code>SELECT c FROM Categoria c WHERE c.idCategoria = :idCategoria</code>
-     */
-    public Categoria getCategoriaFindByIdCategoria(Integer idCategoria) {
-        return getCategoriaJpaController().findCategoria(idCategoria);
-//        return getEntityManager().createNamedQuery("Categoria.findByIdCategoria").setParameter("idCategoria", idCategoria).getResultList();
-    }
+//    /**
+//     * <
+//     * code>SELECT c FROM Categoria c WHERE c.idCategoria = :idCategoria</code>
+//     */
+//    public Categoria getCategoriaFindByIdCategoria(Integer idCategoria) {
+//        return getCategoriaJpaController().findCategoria(idCategoria);
+////        return getEntityManager().createNamedQuery("Categoria.findByIdCategoria").setParameter("idCategoria", idCategoria).getResultList();
+//    }
 
     public Item getItemFindByIdItem(Integer idItem) {
         return getItemJpaController().findItem(idItem);
 //        return getEntityManager().createNamedQuery("Categoria.findByIdCategoria").setParameter("idCategoria", idCategoria).getResultList();
     }
 
-    public Categoria getCategoriaFindByName(String nombreCategoria) {
-        return (Categoria) getEntityManager().createNamedQuery("Categoria.findByNombre").setParameter("nombre", nombreCategoria).getSingleResult();
-//        return getEntityManager().createNamedQuery("Categoria.findByIdCategoria").setParameter("idCategoria", idCategoria).getResultList();
-    }
+//    public Categoria getCategoriaFindByName(String nombreCategoria) {
+//        return (Categoria) getEntityManager().createNamedQuery("Categoria.findByNombre").setParameter("nombre", nombreCategoria).getSingleResult();
+////        return getEntityManager().createNamedQuery("Categoria.findByIdCategoria").setParameter("idCategoria", idCategoria).getResultList();
+//    }
 
 //    public Object findById(Class aClass, Object key) {
 //    }
@@ -1984,15 +1981,7 @@ public class JPAServiceFacade extends AbstractJPAController {
         return itemJpaController;
     }
 
-    /**
-     * @return the categoriaJpaController
-     */
-    public CategoriaJpaController getCategoriaJpaController() {
-        if (categoriaJpaController == null) {
-            categoriaJpaController = new CategoriaJpaController(utx, emf);
-        }
-        return categoriaJpaController;
-    }
+   
 
     /**
      * @return the areaJpaController
