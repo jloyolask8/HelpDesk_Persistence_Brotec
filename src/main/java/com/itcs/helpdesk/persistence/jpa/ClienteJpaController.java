@@ -7,7 +7,6 @@ package com.itcs.helpdesk.persistence.jpa;
 import com.itcs.helpdesk.persistence.entities.Cliente;
 import com.itcs.helpdesk.persistence.entities.Cliente_;
 import com.itcs.helpdesk.persistence.entities.EmailCliente;
-import com.itcs.helpdesk.persistence.entities.EmailCliente_;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
@@ -24,7 +23,6 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -117,6 +115,8 @@ public class ClienteJpaController implements Serializable {
             Predicate predicate = createSearchExpression(root, criteriaBuilder, searchPattern);
 
             criteriaQuery.where(predicate).distinct(true);
+            
+            criteriaQuery.orderBy(criteriaBuilder.asc(root.get("nombres")),criteriaBuilder.asc(root.get("apellidos")));
 
             Query q = em.createQuery(criteriaQuery);
             q.setHint("eclipselink.query-results-cache", true);

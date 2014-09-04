@@ -94,33 +94,33 @@ public class EmailClienteJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            EmailCliente persistentEmailCliente = em.find(EmailCliente.class, emailCliente.getEmailCliente());
-            Cliente idClienteOld = persistentEmailCliente.getCliente();
-            Cliente idClienteNew = emailCliente.getCliente();
+//            EmailCliente persistentEmailCliente = em.find(EmailCliente.class, emailCliente.getEmailCliente());
+//            Cliente idClienteOld = persistentEmailCliente.getCliente();
+//            Cliente idClienteNew = emailCliente.getCliente();
 
-            final Cliente existentCliente = (Cliente) em.createNamedQuery("Cliente.findByRut").setParameter("rut", idClienteNew.getRut()).getSingleResult();
-
-            if (existentCliente != null && existentCliente.getIdCliente() != idClienteNew.getIdCliente()) {
-                //There is another client using this RUT.
-                throw new Exception("El Rut ya está asociado al cliente " + existentCliente.getNombres() + " " + existentCliente.getApellidos());
-            }
-            List<ProductoContratado> ProductoContratadoListOld = idClienteOld.getProductoContratadoList();
-            List<ProductoContratado> ProductoContratadoListNew = idClienteNew.getProductoContratadoList();
+//            final Cliente existentCliente = (Cliente) em.createNamedQuery("Cliente.findByRut").setParameter("rut", idClienteNew.getRut()).getSingleResult();
+//
+//            if (existentCliente != null && existentCliente.getIdCliente() != idClienteNew.getIdCliente()) {
+//                //There is another client using this RUT.
+//                throw new Exception("El Rut ya está asociado al cliente " + existentCliente.getNombres() + " " + existentCliente.getApellidos());
+//            }
+//            List<ProductoContratado> ProductoContratadoListOld = idClienteOld.getProductoContratadoList();
+//            List<ProductoContratado> ProductoContratadoListNew = idClienteNew.getProductoContratadoList();
 //            if (idClienteNew != null) {
 //                idClienteNew = em.getReference(idClienteNew.getClass(), idClienteNew.getIdCliente());
 //                emailCliente.setCliente(idClienteNew);
 //            }
-            List<ProductoContratado> attachedProductoContratadoListNew = new ArrayList<ProductoContratado>();
-            for (ProductoContratado productoContratadoListNewProductoContratadoToAttach : ProductoContratadoListNew) {
-                ProductoContratado productoContratadoListNewProductoContratadoToAttach2 = em.find(ProductoContratado.class, productoContratadoListNewProductoContratadoToAttach.getProductoContratadoPK());
-
-                if (productoContratadoListNewProductoContratadoToAttach2 == null) {
-                    em.persist(productoContratadoListNewProductoContratadoToAttach);
-                }
-                attachedProductoContratadoListNew.add(productoContratadoListNewProductoContratadoToAttach);
-            }
-            ProductoContratadoListNew = attachedProductoContratadoListNew;
-            emailCliente.getCliente().setProductoContratadoList(ProductoContratadoListNew);
+//            List<ProductoContratado> attachedProductoContratadoListNew = new ArrayList<ProductoContratado>();
+//            for (ProductoContratado productoContratadoListNewProductoContratadoToAttach : ProductoContratadoListNew) {
+//                ProductoContratado productoContratadoListNewProductoContratadoToAttach2 = em.find(ProductoContratado.class, productoContratadoListNewProductoContratadoToAttach.getProductoContratadoPK());
+//
+//                if (productoContratadoListNewProductoContratadoToAttach2 == null) {
+//                    em.persist(productoContratadoListNewProductoContratadoToAttach);
+//                }
+//                attachedProductoContratadoListNew.add(productoContratadoListNewProductoContratadoToAttach);
+//            }
+//            ProductoContratadoListNew = attachedProductoContratadoListNew;
+//            emailCliente.getCliente().setProductoContratadoList(ProductoContratadoListNew);
             emailCliente = em.merge(emailCliente);
 //            if (idClienteOld != null && !idClienteOld.equals(idClienteNew)) {
 //                idClienteOld.getEmailClienteList().remove(emailCliente);
@@ -130,11 +130,11 @@ public class EmailClienteJpaController implements Serializable {
 //                idClienteNew.getEmailClienteList().add(emailCliente);
 //                idClienteNew = em.merge(idClienteNew);
 //            }
-            for (ProductoContratado ProductoContratadoListOldProductoContratado : ProductoContratadoListOld) {
-                if (!ProductoContratadoListNew.contains(ProductoContratadoListOldProductoContratado)) {
-                    em.remove(ProductoContratadoListOldProductoContratado);
-                }
-            }
+//            for (ProductoContratado ProductoContratadoListOldProductoContratado : ProductoContratadoListOld) {
+//                if (!ProductoContratadoListNew.contains(ProductoContratadoListOldProductoContratado)) {
+//                    em.remove(ProductoContratadoListOldProductoContratado);
+//                }
+//            }
 
 //            for (ProductoContratado ProductoContratadoListNewProductoContratado : ProductoContratadoListNew) {
 //                if (!ProductoContratadoListOld.contains(ProductoContratadoListNewProductoContratado)) {

@@ -37,6 +37,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -74,9 +75,11 @@ public abstract class AbstractJPAController {
             cq.select(rt);
 
             if (orderBy != null && orderBy.length > 0) {
-                for (String o : orderBy) {
-                    cq.orderBy(criteriaBuilder.asc(rt.get(o)));
+                ArrayList<Order> orderList = new ArrayList<Order>(orderBy.length);
+                for (String field : orderBy) {
+                    orderList.add(criteriaBuilder.asc(rt.get(field)));
                 }
+                cq.orderBy(orderList);
             }
 
             Query q = em.createQuery(cq);
