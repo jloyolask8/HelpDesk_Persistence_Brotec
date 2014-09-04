@@ -1,8 +1,5 @@
 package com.itcs.helpdesk.persistence.entities;
 
-import com.itcs.helpdesk.persistence.entities.Caso;
-import com.itcs.helpdesk.persistence.entities.Categoria;
-import com.itcs.helpdesk.persistence.entities.EstadoCaso;
 import javax.annotation.Generated;
 import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
@@ -13,7 +10,6 @@ import javax.persistence.metamodel.StaticMetamodel;
 public class SubEstadoCaso_ { 
 
     public static volatile SingularAttribute<SubEstadoCaso, String> nombre;
-    public static volatile ListAttribute<SubEstadoCaso, Categoria> categoriaList;
     public static volatile SingularAttribute<SubEstadoCaso, String> descripcion;
     public static volatile SingularAttribute<SubEstadoCaso, EstadoCaso> idEstado;
     public static volatile SingularAttribute<SubEstadoCaso, String> idSubEstado;

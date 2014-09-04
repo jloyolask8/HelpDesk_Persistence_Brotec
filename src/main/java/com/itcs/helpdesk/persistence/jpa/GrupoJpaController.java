@@ -5,7 +5,6 @@
 package com.itcs.helpdesk.persistence.jpa;
 
 import com.itcs.helpdesk.persistence.entities.Area;
-import com.itcs.helpdesk.persistence.entities.Categoria;
 import com.itcs.helpdesk.persistence.entities.Grupo;
 import com.itcs.helpdesk.persistence.entities.Producto;
 import com.itcs.helpdesk.persistence.entities.Usuario;
@@ -42,9 +41,9 @@ public class GrupoJpaController implements Serializable {
     }
 
     public void create(Grupo grupo) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (grupo.getCategoriaList() == null) {
-            grupo.setCategoriaList(new ArrayList<Categoria>());
-        }
+//        if (grupo.getCategoriaList() == null) {
+//            grupo.setCategoriaList(new ArrayList<Categoria>());
+//        }
         if (grupo.getUsuarioList() == null) {
             grupo.setUsuarioList(new ArrayList<Usuario>());
         }
@@ -67,12 +66,12 @@ public class GrupoJpaController implements Serializable {
                 attachedProductoList.add(productoListProductoToAttach);
             }
             grupo.setProductoList(attachedProductoList);
-            List<Categoria> attachedCategoriaList = new ArrayList<Categoria>();
-            for (Categoria categoriaListCategoriaToAttach : grupo.getCategoriaList()) {
-                categoriaListCategoriaToAttach = em.getReference(categoriaListCategoriaToAttach.getClass(), categoriaListCategoriaToAttach.getIdCategoria());
-                attachedCategoriaList.add(categoriaListCategoriaToAttach);
-            }
-            grupo.setCategoriaList(attachedCategoriaList);
+//            List<Categoria> attachedCategoriaList = new ArrayList<Categoria>();
+//            for (Categoria categoriaListCategoriaToAttach : grupo.getCategoriaList()) {
+//                categoriaListCategoriaToAttach = em.getReference(categoriaListCategoriaToAttach.getClass(), categoriaListCategoriaToAttach.getIdCategoria());
+//                attachedCategoriaList.add(categoriaListCategoriaToAttach);
+//            }
+//            grupo.setCategoriaList(attachedCategoriaList);
             List<Usuario> attachedUsuarioList = new ArrayList<Usuario>();
             for (Usuario usuarioListUsuarioToAttach : grupo.getUsuarioList()) {
                 usuarioListUsuarioToAttach = em.getReference(usuarioListUsuarioToAttach.getClass(), usuarioListUsuarioToAttach.getIdUsuario());
@@ -88,10 +87,10 @@ public class GrupoJpaController implements Serializable {
                 productoListProducto.getGrupoList().add(grupo);
                 productoListProducto = em.merge(productoListProducto);
             }
-            for (Categoria categoriaListCategoria : grupo.getCategoriaList()) {
-                categoriaListCategoria.getGrupoList().add(grupo);
-                categoriaListCategoria = em.merge(categoriaListCategoria);
-            }
+//            for (Categoria categoriaListCategoria : grupo.getCategoriaList()) {
+//                categoriaListCategoria.getGrupoList().add(grupo);
+//                categoriaListCategoria = em.merge(categoriaListCategoria);
+//            }
             for (Usuario usuarioListUsuario : grupo.getUsuarioList()) {
                 usuarioListUsuario.getGrupoList().add(grupo);
                 usuarioListUsuario = em.merge(usuarioListUsuario);
@@ -123,8 +122,8 @@ public class GrupoJpaController implements Serializable {
             Grupo persistentGrupo = em.find(Grupo.class, grupo.getIdGrupo());
             Area idAreaOld = persistentGrupo.getIdArea();
             Area idAreaNew = grupo.getIdArea();
-            List<Categoria> categoriaListOld = persistentGrupo.getCategoriaList();
-            List<Categoria> categoriaListNew = grupo.getCategoriaList();
+//            List<Categoria> categoriaListOld = persistentGrupo.getCategoriaList();
+//            List<Categoria> categoriaListNew = grupo.getCategoriaList();
             List<Usuario> usuarioListOld = persistentGrupo.getUsuarioList();
             List<Usuario> usuarioListNew = grupo.getUsuarioList();
             List<Producto> productoListOld = persistentGrupo.getProductoList();
@@ -133,13 +132,13 @@ public class GrupoJpaController implements Serializable {
                 idAreaNew = em.getReference(idAreaNew.getClass(), idAreaNew.getIdArea());
                 grupo.setIdArea(idAreaNew);
             }
-            List<Categoria> attachedCategoriaListNew = new ArrayList<Categoria>();
-            for (Categoria categoriaListNewCategoriaToAttach : categoriaListNew) {
-                categoriaListNewCategoriaToAttach = em.getReference(categoriaListNewCategoriaToAttach.getClass(), categoriaListNewCategoriaToAttach.getIdCategoria());
-                attachedCategoriaListNew.add(categoriaListNewCategoriaToAttach);
-            }
-            categoriaListNew = attachedCategoriaListNew;
-            grupo.setCategoriaList(categoriaListNew);
+//            List<Categoria> attachedCategoriaListNew = new ArrayList<Categoria>();
+//            for (Categoria categoriaListNewCategoriaToAttach : categoriaListNew) {
+//                categoriaListNewCategoriaToAttach = em.getReference(categoriaListNewCategoriaToAttach.getClass(), categoriaListNewCategoriaToAttach.getIdCategoria());
+//                attachedCategoriaListNew.add(categoriaListNewCategoriaToAttach);
+//            }
+//            categoriaListNew = attachedCategoriaListNew;
+//            grupo.setCategoriaList(categoriaListNew);
             List<Usuario> attachedUsuarioListNew = new ArrayList<Usuario>();
             for (Usuario usuarioListNewUsuarioToAttach : usuarioListNew) {
                 usuarioListNewUsuarioToAttach = em.getReference(usuarioListNewUsuarioToAttach.getClass(), usuarioListNewUsuarioToAttach.getIdUsuario());
@@ -165,18 +164,18 @@ public class GrupoJpaController implements Serializable {
                 idAreaNew.getGrupoList().add(grupo);
                 idAreaNew = em.merge(idAreaNew);
             }
-            for (Categoria categoriaListOldCategoria : categoriaListOld) {
-                if (!categoriaListNew.contains(categoriaListOldCategoria)) {
-                    categoriaListOldCategoria.getGrupoList().remove(grupo);
-                    categoriaListOldCategoria = em.merge(categoriaListOldCategoria);
-                }
-            }
-            for (Categoria categoriaListNewCategoria : categoriaListNew) {
-                if (!categoriaListOld.contains(categoriaListNewCategoria)) {
-                    categoriaListNewCategoria.getGrupoList().add(grupo);
-                    categoriaListNewCategoria = em.merge(categoriaListNewCategoria);
-                }
-            }
+//            for (Categoria categoriaListOldCategoria : categoriaListOld) {
+//                if (!categoriaListNew.contains(categoriaListOldCategoria)) {
+//                    categoriaListOldCategoria.getGrupoList().remove(grupo);
+//                    categoriaListOldCategoria = em.merge(categoriaListOldCategoria);
+//                }
+//            }
+//            for (Categoria categoriaListNewCategoria : categoriaListNew) {
+//                if (!categoriaListOld.contains(categoriaListNewCategoria)) {
+//                    categoriaListNewCategoria.getGrupoList().add(grupo);
+//                    categoriaListNewCategoria = em.merge(categoriaListNewCategoria);
+//                }
+//            }
 
             for (Usuario usuarioListOldUsuario : usuarioListOld) {
                 if (!usuarioListNew.contains(usuarioListOldUsuario)) {
@@ -243,11 +242,11 @@ public class GrupoJpaController implements Serializable {
                 idArea.getGrupoList().remove(grupo);
                 idArea = em.merge(idArea);
             }
-            List<Categoria> categoriaList = grupo.getCategoriaList();
-            for (Categoria categoriaListCategoria : categoriaList) {
-                categoriaListCategoria.getGrupoList().remove(grupo);
-                categoriaListCategoria = em.merge(categoriaListCategoria);
-            }
+//            List<Categoria> categoriaList = grupo.getCategoriaList();
+//            for (Categoria categoriaListCategoria : categoriaList) {
+//                categoriaListCategoria.getGrupoList().remove(grupo);
+//                categoriaListCategoria = em.merge(categoriaListCategoria);
+//            }
 
             List<Usuario> usuarioList = grupo.getUsuarioList();
             for (Usuario usuarioListUsuario : usuarioList) {

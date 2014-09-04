@@ -7,7 +7,6 @@ package com.itcs.helpdesk.persistence.jpa;
 import com.itcs.helpdesk.persistence.entities.Attachment;
 import com.itcs.helpdesk.persistence.entities.Canal;
 import com.itcs.helpdesk.persistence.entities.Caso;
-import com.itcs.helpdesk.persistence.entities.Categoria;
 import com.itcs.helpdesk.persistence.entities.Componente;
 import com.itcs.helpdesk.persistence.entities.Documento;
 import com.itcs.helpdesk.persistence.entities.EmailCliente;
@@ -126,11 +125,7 @@ public abstract class CasoJpaController extends AbstractJPAController implements
                 idComponente = em.getReference(idComponente.getClass(), idComponente.getIdComponente());
                 caso.setIdComponente(idComponente);
             }
-            Categoria idCategoria = caso.getIdCategoria();
-            if (idCategoria != null) {
-                idCategoria = em.getReference(idCategoria.getClass(), idCategoria.getIdCategoria());
-                caso.setIdCategoria(idCategoria);
-            }
+        
             Caso idCasoPadre = caso.getIdCasoPadre();
             if (idCasoPadre != null) {
                 idCasoPadre = em.getReference(idCasoPadre.getClass(), idCasoPadre.getIdCaso());
@@ -323,11 +318,7 @@ public abstract class CasoJpaController extends AbstractJPAController implements
                 idComponente.getCasoList().remove(caso);
                 idComponente = em.merge(idComponente);
             }
-            Categoria idCategoria = caso.getIdCategoria();
-            if (idCategoria != null) {
-                idCategoria.getCasoList().remove(caso);
-                idCategoria = em.merge(idCategoria);
-            }
+           
             Caso idCasoPadre = caso.getIdCasoPadre();
             if (idCasoPadre != null) {
                 idCasoPadre.getCasosRelacionadosList().remove(caso);

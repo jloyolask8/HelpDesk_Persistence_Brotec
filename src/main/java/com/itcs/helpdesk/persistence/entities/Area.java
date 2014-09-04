@@ -138,8 +138,8 @@ public class Area implements Serializable {
 //    private Boolean mailSmtpSslEnable;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idArea")
     private List<Grupo> grupoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idArea")
-    private List<Categoria> categoriaList;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idArea")
+//    private List<Categoria> categoriaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idArea")
     private List<Item> itemList;
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idArea")
@@ -511,19 +511,6 @@ public class Area implements Serializable {
         return nombre + " (" + idArea + ")";
     }
 
-    /**
-     * @return the categoriaList
-     */
-    public List<Categoria> getCategoriaList() {
-        return categoriaList;
-    }
-
-    /**
-     * @param categoriaList the categoriaList to set
-     */
-    public void setCategoriaList(List<Categoria> categoriaList) {
-        this.categoriaList = categoriaList;
-    }
 
 //    /**
 //     * @return the reglaTriggerList

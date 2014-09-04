@@ -1,8 +1,5 @@
 package com.itcs.helpdesk.persistence.entities;
 
-import com.itcs.helpdesk.persistence.entities.Area;
-import com.itcs.helpdesk.persistence.entities.Categoria;
-import com.itcs.helpdesk.persistence.entities.Usuario;
 import javax.annotation.Generated;
 import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
@@ -13,7 +10,6 @@ import javax.persistence.metamodel.StaticMetamodel;
 public class Grupo_ { 
 
     public static volatile SingularAttribute<Grupo, String> nombre;
-    public static volatile ListAttribute<Grupo, Categoria> categoriaList;
     public static volatile SingularAttribute<Grupo, String> idGrupo;
     public static volatile SingularAttribute<Grupo, Area> idArea;
     public static volatile ListAttribute<Grupo, Usuario> usuarioList;
