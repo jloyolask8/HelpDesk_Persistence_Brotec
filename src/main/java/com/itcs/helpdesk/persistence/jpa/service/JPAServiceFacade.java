@@ -629,9 +629,7 @@ public class JPAServiceFacade extends AbstractJPAController {
                 persistAuditLog(auditLog);
             }
         }
-        if (getCasoChangeListener() != null) {
-            getCasoChangeListener().casoCreated(caso);
-        }
+        notifyCasoEventListeners(caso, true, changeList);
 
     }
 
@@ -670,14 +668,31 @@ public class JPAServiceFacade extends AbstractJPAController {
             }
         }
         if (notifyListeners) {
-            if (getCasoChangeListener() != null) {
-                getCasoChangeListener().casoChanged(caso, changeList);
-            } else {
-                Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.WARNING, "\n*** WARNING *** CasoChangeListener NOT configured!\n");
-            }
+            notifyCasoEventListeners(caso, false, changeList);
         }
 
         return (Caso) getCasoJpa().getEntityManager().getReference(Caso.class, caso.getIdCaso());
+    }
+
+    /**
+     * Notify to all event listeners
+     * @param caso caso que cambia
+     * @param create true if is a caso creation, or false is update
+     * @param changeList list of changes
+    */
+    public void notifyCasoEventListeners(Caso caso, boolean create, List<AuditLog> changeList) {
+        if (getCasoChangeListener() != null) {
+            if(create)
+            {
+                getCasoChangeListener().casoCreated(caso);
+            }
+            else
+            {
+                getCasoChangeListener().casoChanged(caso, changeList);
+            }
+        } else {
+            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.WARNING, "\n*** WARNING *** CasoChangeListener NOT configured!\n");
+        }
     }
 
     public Caso mergeCasoWithoutNotify(Caso caso) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
