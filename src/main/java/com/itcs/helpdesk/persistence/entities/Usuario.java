@@ -120,6 +120,20 @@ public class Usuario implements Serializable {
     @Transient
     private String randomColor;
 
+    //notifications
+    @Column(name = "notify_when_ticket_assigned")
+    private Boolean notifyWhenTicketAssigned;
+    @Column(name = "notify_when_new_ticket_in_group")
+    private Boolean notifyWhenNewTicketInGroup;
+    @Column(name = "notify_when_ticket_alert")
+    private Boolean notifyWhenTicketAlert;
+    @Column(name = "notify_when_ticket_is_updated")
+    private Boolean notifyWhenTicketIsUpdated;
+    @Column(name = "email_notifications_enabled")
+    private Boolean emailNotificationsEnabled;
+     @Column(name = "email_notifications_enabled")
+    private Boolean desktopNotificationsEnabled;
+	
     public Usuario() {
     }
 
@@ -415,5 +429,89 @@ public class Usuario implements Serializable {
      */
     public void setRandomColor(String randomColor) {
         this.randomColor = randomColor;
+    }
+
+    /**
+     * @return the notifyWhenTicketAssigned
+     */
+    public Boolean getNotifyWhenTicketAssigned() {
+        return notifyWhenTicketAssigned;
+    }
+
+    /**
+     * @param notifyWhenTicketAssigned the notifyWhenTicketAssigned to set
+     */
+    public void setNotifyWhenTicketAssigned(Boolean notifyWhenTicketAssigned) {
+        this.notifyWhenTicketAssigned = notifyWhenTicketAssigned;
+    }
+
+    /**
+     * @return the notifyWhenNewTicketInGroup
+     */
+    public Boolean getNotifyWhenNewTicketInGroup() {
+        return notifyWhenNewTicketInGroup;
+    }
+
+    /**
+     * @param notifyWhenNewTicketInGroup the notifyWhenNewTicketInGroup to set
+     */
+    public void setNotifyWhenNewTicketInGroup(Boolean notifyWhenNewTicketInGroup) {
+        this.notifyWhenNewTicketInGroup = notifyWhenNewTicketInGroup;
+    }
+
+    /**
+     * @return the notifyWhenTicketAlert
+     */
+    public Boolean getNotifyWhenTicketAlert() {
+        return notifyWhenTicketAlert;
+    }
+
+    /**
+     * @param notifyWhenTicketAlert the notifyWhenTicketAlert to set
+     */
+    public void setNotifyWhenTicketAlert(Boolean notifyWhenTicketAlert) {
+        this.notifyWhenTicketAlert = notifyWhenTicketAlert;
+    }
+
+    /**
+     * @return the notifyWhenTicketIsUpdated
+     */
+    public Boolean getNotifyWhenTicketIsUpdated() {
+        return notifyWhenTicketIsUpdated;
+    }
+
+    /**
+     * @param notifyWhenTicketIsUpdated the notifyWhenTicketIsUpdated to set
+     */
+    public void setNotifyWhenTicketIsUpdated(Boolean notifyWhenTicketIsUpdated) {
+        this.notifyWhenTicketIsUpdated = notifyWhenTicketIsUpdated;
+    }
+
+    /**
+     * @return the emailNotificationsEnabled
+     */
+    public Boolean getEmailNotificationsEnabled() {
+        return emailNotificationsEnabled;
+    }
+
+    /**
+     * @param emailNotificationsEnabled the emailNotificationsEnabled to set
+     */
+    public void setEmailNotificationsEnabled(Boolean emailNotificationsEnabled) {
+        this.emailNotificationsEnabled = emailNotificationsEnabled;
+    }
+
+    /**
+     * @return the desktopNotificationsEnabled
+     */
+    public Boolean getDesktopNotificationsEnabled() {
+        return desktopNotificationsEnabled;
+    }
+
+    /**
+     * @param desktopNotificationsEnabled the desktopNotificationsEnabled to set
+     */
+    public void setDesktopNotificationsEnabled(Boolean desktopNotificationsEnabled) {
+        this.desktopNotificationsEnabled = desktopNotificationsEnabled;
     }
 }
