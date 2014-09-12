@@ -131,7 +131,7 @@ public class Usuario implements Serializable {
     private Boolean notifyWhenTicketIsUpdated;
     @Column(name = "email_notifications_enabled")
     private Boolean emailNotificationsEnabled;
-     @Column(name = "email_notifications_enabled")
+     @Column(name = "desktop_notifications_enabled")
     private Boolean desktopNotificationsEnabled;
 	
     public Usuario() {

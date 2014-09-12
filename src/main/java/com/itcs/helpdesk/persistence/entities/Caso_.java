@@ -17,6 +17,7 @@ public class Caso_ {
     public static final String CATEGORIA_FIELD_NAME = "idCategoria";
     public static final String AREA_FIELD_NAME = "idArea";
     public static final String FECHA_CREACION_FIELD_NAME = "fechaCreacion";
+    public static final String ES_PRIORITARIO_FIELD_NAME = "esPrioritario";
     public static volatile SingularAttribute<Caso, Date> fechaModif;
     public static volatile ListAttribute<Caso, Caso> casosHijosList;
     public static volatile SingularAttribute<Caso, Prioridad> idPrioridad;

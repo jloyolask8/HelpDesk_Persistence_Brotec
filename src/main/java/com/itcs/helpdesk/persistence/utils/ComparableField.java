@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Belongs to future ITCS JPA Filter API. 
  * @author jonathan
  */
-public class ComparableField implements Serializable{
+public class ComparableField implements Serializable, Comparable<ComparableField>{
 
     private static final long serialVersionUID = 1L;
     private Class baseClass;
@@ -178,6 +178,11 @@ public class ComparableField implements Serializable{
      */
     public void setListGenericType(Class listGenericType) {
         this.listGenericType = listGenericType;
+    }
+
+    @Override
+    public int compareTo(ComparableField o) {
+        return this.getLabel().compareTo(o.getLabel());
     }
     
     

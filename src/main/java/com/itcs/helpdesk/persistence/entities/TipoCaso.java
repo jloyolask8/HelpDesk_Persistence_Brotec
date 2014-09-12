@@ -7,15 +7,17 @@ package com.itcs.helpdesk.persistence.entities;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -47,6 +49,9 @@ public class TipoCaso implements Serializable {
     private List<SubEstadoCaso> subEstadoCasoList;
 //    @OneToMany(mappedBy = "tipoCaso")
 //    private List<Prioridad> prioridadList;
+    
+    @ManyToMany(mappedBy = "tipoCasoList", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<CustomField> customFieldList;
 
     public TipoCaso() {
     }
@@ -136,6 +141,20 @@ public class TipoCaso implements Serializable {
      */
     public void setSubEstadoCasoList(List<SubEstadoCaso> subEstadoCasoList) {
         this.subEstadoCasoList = subEstadoCasoList;
+    }
+
+    /**
+     * @return the customFieldList
+     */
+    public List<CustomField> getCustomFieldList() {
+        return customFieldList;
+    }
+
+    /**
+     * @param customFieldList the customFieldList to set
+     */
+    public void setCustomFieldList(List<CustomField> customFieldList) {
+        this.customFieldList = customFieldList;
     }
 
 }

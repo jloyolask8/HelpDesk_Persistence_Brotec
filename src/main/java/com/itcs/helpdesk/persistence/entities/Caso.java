@@ -242,6 +242,10 @@ public class Caso implements Serializable {
     //Schedule Events
     @OneToMany(mappedBy = "idCaso")
     private List<ScheduleEvent> scheduleEventList;
+    
+     //custom fields list
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCaso")
+    private List<CasoCustomField> casoCustomFieldList;
 
     @Transient
     public boolean hasNotas() {
@@ -929,5 +933,19 @@ public class Caso implements Serializable {
      */
     public void setHasScheduledEvents(boolean hasScheduledEvents) {
         this.hasScheduledEvents = hasScheduledEvents;
+    }
+
+    /**
+     * @return the casoCustomFieldList
+     */
+    public List<CasoCustomField> getCasoCustomFieldList() {
+        return casoCustomFieldList;
+    }
+
+    /**
+     * @param casoCustomFieldList the casoCustomFieldList to set
+     */
+    public void setCasoCustomFieldList(List<CasoCustomField> casoCustomFieldList) {
+        this.casoCustomFieldList = casoCustomFieldList;
     }
 }

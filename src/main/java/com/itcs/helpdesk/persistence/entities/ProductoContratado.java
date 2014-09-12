@@ -31,15 +31,16 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ProductoContratado.findByIdCliente", query = "SELECT p FROM ProductoContratado p WHERE p.productoContratadoPK.idCliente = :idCliente"),
     @NamedQuery(name = "ProductoContratado.findByIdProducto", query = "SELECT p FROM ProductoContratado p WHERE p.productoContratadoPK.idProducto = :idProducto")})
 public class ProductoContratado implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected ProductoContratadoPK productoContratadoPK;
     @Size(max = 64)
     @Column(name = "vendedor")
     private String vendedor;
-    @Column(name = "fecha_compra")
-    @Temporal(TemporalType.DATE)
-    private Date fechaCompra;
+//    @Column(name = "fecha_compra")
+//    @Temporal(TemporalType.DATE)
+//    private Date fechaCompra;
     @Size(max = 2147483647)
     @Column(name = "observaciones")
     private String observaciones;
@@ -55,6 +56,9 @@ public class ProductoContratado implements Serializable {
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Cliente cliente;
+//  EnumTipoAsocClienteProducto
+    @Column(name = "tipo_asociacion")
+    private String tipoAsociacion;
 
     public ProductoContratado() {
     }
@@ -83,14 +87,13 @@ public class ProductoContratado implements Serializable {
         this.vendedor = vendedor;
     }
 
-    public Date getFechaCompra() {
-        return fechaCompra;
-    }
-
-    public void setFechaCompra(Date fechaCompra) {
-        this.fechaCompra = fechaCompra;
-    }
-
+//    public Date getFechaCompra() {
+//        return fechaCompra;
+//    }
+//
+//    public void setFechaCompra(Date fechaCompra) {
+//        this.fechaCompra = fechaCompra;
+//    }
     public String getObservaciones() {
         return observaciones;
     }
@@ -155,5 +158,19 @@ public class ProductoContratado implements Serializable {
     public String toString() {
         return "ProductoContratado[ productoContratadoPK=" + productoContratadoPK + " ]";
     }
-    
+
+    /**
+     * @return the tipoAsociacion
+     */
+    public String getTipoAsociacion() {
+        return tipoAsociacion;
+    }
+
+    /**
+     * @param tipoAsociacion the tipoAsociacion to set
+     */
+    public void setTipoAsociacion(String tipoAsociacion) {
+        this.tipoAsociacion = tipoAsociacion;
+    }
+
 }

@@ -89,10 +89,13 @@ import com.itcs.jpautils.EasyCriteriaQuery;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.CacheStoreMode;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
@@ -106,6 +109,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.resource.NotSupportedException;
 import javax.transaction.UserTransaction;
+import org.eclipse.persistence.config.HintValues;
+import org.eclipse.persistence.config.QueryHints;
 
 public class JPAServiceFacade extends AbstractJPAController {
 
@@ -165,7 +170,26 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     public <T extends Object> T find(Class<T> entityClass, Object id) {
-        return getEntityManager().find(entityClass, id);
+        return find(entityClass, id, false);
+    }
+
+    /**
+     * Finds an Entity and Refresh the state of the instance from the database, overwriting changes made to the entity, if any.
+     * @param <T>
+     * @param entityClass
+     * @param primaryKey
+     * @param refresh set to true if you want to Refresh the state of the instance from the database. False otherwise goes to the cache.
+     * @return 
+     */
+    public <T extends Object> T find(Class<T> entityClass, Object primaryKey, boolean refresh) {
+        if (refresh) {
+            Map<String, Object> properties = new HashMap<String, Object>();
+            properties.put("javax.persistence.cache.storeMode", CacheStoreMode.REFRESH);
+            properties.put(QueryHints.REFRESH, HintValues.TRUE);
+            return getEntityManager().find(entityClass, primaryKey, properties);
+        } else {
+            return getEntityManager().find(entityClass, primaryKey);
+        }
     }
 
     public <T extends Object> T getReference(Class<T> entityClass, Object id) throws EntityNotFoundException {
@@ -217,6 +241,25 @@ public class JPAServiceFacade extends AbstractJPAController {
             em = getEntityManager();
             //em.remove(emf.getPersistenceUnitUtil().getIdentifier(o));
             em.remove(em.getReference(clazz, emf.getPersistenceUnitUtil().getIdentifier(o)));
+            utx.commit();
+        } catch (Exception ex) {
+            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+
+    }
+
+    public void removeFromPK(Class clazz, Object pk) throws Exception {
+        EntityManager em = null;
+        try {
+            utx.begin();
+            em = getEntityManager();
+            //em.remove(emf.getPersistenceUnitUtil().getIdentifier(o));
+            em.remove(em.getReference(clazz, pk));
             utx.commit();
         } catch (Exception ex) {
             Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);
@@ -541,11 +584,10 @@ public class JPAServiceFacade extends AbstractJPAController {
 //        return query.getResultList();
 //    }
     /**
-     * @deprecated 
-     * @param entityClazz
+     * @deprecated @param entityClazz
      * @param maxResults
      * @param firstResult
-     * @return 
+     * @return
      */
     public List queryByRange(Class entityClazz, int maxResults, int firstResult) {
         EntityManager em = emf.createEntityManager();
@@ -595,6 +637,10 @@ public class JPAServiceFacade extends AbstractJPAController {
 
     public int getCasoCount(Usuario usuario, TipoAlerta tipo_alerta) {
         return getCasoJpa().getCasoCountByTipoAlerta(usuario, tipo_alerta);
+    }
+
+    public int getCasoCountPrioritarieOpen(Usuario usuario) {
+        return getCasoJpa().getCasoCountByEstadoAndPrio(usuario, EnumEstadoCaso.ABIERTO.getEstado());
     }
 
     public int getCasoCountOpen(Usuario usuario) {
@@ -673,18 +719,16 @@ public class JPAServiceFacade extends AbstractJPAController {
 
     /**
      * Notify to all event listeners
+     *
      * @param caso caso que cambia
      * @param create true if is a caso creation, or false is update
      * @param changeList list of changes
-    */
+     */
     public void notifyCasoEventListeners(Caso caso, boolean create, List<AuditLog> changeList) {
         if (getCasoChangeListener() != null) {
-            if(create)
-            {
+            if (create) {
                 getCasoChangeListener().casoCreated(caso);
-            }
-            else
-            {
+            } else {
                 getCasoChangeListener().casoChanged(caso, changeList);
             }
         } else {
@@ -1752,7 +1796,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //    public List<Categoria> getCategoriaFindByNombreLike(String nombre) {
 //        return getEntityManager().createNamedQuery("Categoria.findByNombreLike").setParameter("nombre", "%" + nombre + "%").getResultList();
 //    }
-
     public void persistItem(Item current) throws PreexistingEntityException, RollbackFailureException, Exception {
         getItemJpaController().create(current);
     }
@@ -1779,7 +1822,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //    public List<Categoria> getCategoriaFindAll() {
 //        return getCategoriaJpaController().findCategoriaEntities();
 //    }
-
 //    /**
 //     * <
 //     * code>SELECT c FROM Categoria c WHERE c.idCategoria = :idCategoria</code>
@@ -1788,7 +1830,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //        return getCategoriaJpaController().findCategoria(idCategoria);
 ////        return getEntityManager().createNamedQuery("Categoria.findByIdCategoria").setParameter("idCategoria", idCategoria).getResultList();
 //    }
-
     public Item getItemFindByIdItem(Integer idItem) {
         return getItemJpaController().findItem(idItem);
 //        return getEntityManager().createNamedQuery("Categoria.findByIdCategoria").setParameter("idCategoria", idCategoria).getResultList();
@@ -1798,7 +1839,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //        return (Categoria) getEntityManager().createNamedQuery("Categoria.findByNombre").setParameter("nombre", nombreCategoria).getSingleResult();
 ////        return getEntityManager().createNamedQuery("Categoria.findByIdCategoria").setParameter("idCategoria", idCategoria).getResultList();
 //    }
-
 //    public Object findById(Class aClass, Object key) {
 //    }
     public void persistCliente(Cliente current) throws PreexistingEntityException, RollbackFailureException, Exception {
@@ -1980,8 +2020,6 @@ public class JPAServiceFacade extends AbstractJPAController {
         }
         return itemJpaController;
     }
-
-   
 
     /**
      * @return the areaJpaController

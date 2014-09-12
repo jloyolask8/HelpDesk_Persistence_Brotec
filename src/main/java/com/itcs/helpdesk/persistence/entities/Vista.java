@@ -46,30 +46,28 @@ public class Vista implements Serializable {
     @Basic(optional = false)
     @Column(name = "id_vista", nullable = false)
     private Integer idVista;
-     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Nombre", fieldIdFull = "nombre", fieldTypeFull = String.class)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Nombre", fieldIdFull = "nombre", fieldTypeFull = String.class)
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 40)
-    @Column(name = "nombre", nullable = false, length = 40)
+    @Column(name = "nombre", nullable = false)
     private String nombre;
-     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Descripción", fieldIdFull = "descripcion", fieldTypeFull = String.class)
-    @Size(max = 40)
-    @Column(name = "descripcion", length = 40)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Descripción", fieldIdFull = "descripcion", fieldTypeFull = String.class)
+    @Column(name = "descripcion")
     private String descripcion;
     @FilterField(fieldTypeId = EnumFieldType.CHECKBOX, label = "Visible a todos", fieldIdFull = "visibleToAll", fieldTypeFull = Boolean.class)
     @Basic(optional = false)
     @NotNull
     @Column(name = "visible_to_all", nullable = false)
     private boolean visibleToAll;
-    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Creada por", fieldIdFull = "idUsuarioCreadaPor.capitalName",  fieldTypeFull = String.class)
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Creada por", fieldIdFull = "idUsuarioCreadaPor.capitalName", fieldTypeFull = String.class)
     @JoinColumn(name = "id_usuario_creada_por", referencedColumnName = "id_usuario", nullable = false)
     @ManyToOne(optional = false)
     private Usuario idUsuarioCreadaPor;
-    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Grupo", fieldIdFull = "idGrupo.idGrupo",  fieldTypeFull = String.class)
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Grupo", fieldIdFull = "idGrupo.idGrupo", fieldTypeFull = String.class)
     @JoinColumn(name = "id_grupo", referencedColumnName = "id_grupo")
     @ManyToOne
     private Grupo idGrupo;
-    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Area", fieldIdFull = "idArea.idArea",  fieldTypeFull = String.class)
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Area", fieldIdFull = "idArea.idArea", fieldTypeFull = String.class)
     @JoinColumn(name = "id_area", referencedColumnName = "id_area")
     @ManyToOne
     private Area idArea;
@@ -186,14 +184,14 @@ public class Vista implements Serializable {
         return "Vista [" + "Criterios: " + filtrosVistaList + (idArea != null ? " Area: " + idArea : "") + (idArea != null ? " Grupo: " + idGrupo : "") + " visibleToAll: " + visibleToAll + " creadaPor:" + this.idUsuarioCreadaPor + "]";
     }
 
-    public void addFiltroVista(FiltroVista filtro) {                      
+    public void addFiltroVista(FiltroVista filtro) {
         if (this.getFiltrosVistaList() == null || this.getFiltrosVistaList().isEmpty()) {
             this.setFiltrosVistaList(new ArrayList<FiltroVista>());
         }
         this.getFiltrosVistaList().add(filtro);
         filtro.setIdVista(this);
     }
-    
+
     public void addNewFiltroVista() {
         FiltroVista filtro = new FiltroVista();
         Random randomGenerator = new Random();

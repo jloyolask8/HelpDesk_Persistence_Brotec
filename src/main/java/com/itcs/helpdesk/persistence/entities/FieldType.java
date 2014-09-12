@@ -26,9 +26,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "FieldType.findAll", query = "SELECT f FROM FieldType f"),
     @NamedQuery(name = "FieldType.findByFieldTypeId", query = "SELECT f FROM FieldType f WHERE f.fieldTypeId = :fieldTypeId"),
-    @NamedQuery(name = "FieldType.findByName", query = "SELECT f FROM FieldType f WHERE f.name = :name"),
-    @NamedQuery(name = "FieldType.findByDescription", query = "SELECT f FROM FieldType f WHERE f.description = :description"),
-    @NamedQuery(name = "FieldType.findByJavaType", query = "SELECT f FROM FieldType f WHERE f.javaType = :javaType")})
+    @NamedQuery(name = "FieldType.findByIsCustomField", query = "SELECT f FROM FieldType f WHERE f.isCustomField = :isCustomField")
+})
 public class FieldType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,7 +45,8 @@ public class FieldType implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "description", length = 2147483647)
     private String description;
-    
+    @Column(name = "is_custom_field")
+    private Boolean isCustomField;
     @Size(max = 40)
     @Column(name = "java_type", length = 40)
     private String javaType;
@@ -61,6 +61,12 @@ public class FieldType implements Serializable {
     public FieldType(String fieldTypeId, String name) {
         this.fieldTypeId = fieldTypeId;
         this.name = name;
+    }
+    
+    public FieldType(String fieldTypeId, String name, Boolean isCustomField) {
+        this.fieldTypeId = fieldTypeId;
+        this.name = name;
+        this.isCustomField = isCustomField;
     }
 
     public String getFieldTypeId() {
@@ -117,6 +123,20 @@ public class FieldType implements Serializable {
 
     @Override
     public String toString() {
-        return "EnumFieldType." + fieldTypeId ;
+        return "EnumFieldType." + fieldTypeId;
+    }
+
+    /**
+     * @return the isCustomField
+     */
+    public Boolean getIsCustomField() {
+        return isCustomField;
+    }
+
+    /**
+     * @param isCustomField the isCustomField to set
+     */
+    public void setIsCustomField(Boolean isCustomField) {
+        this.isCustomField = isCustomField;
     }
 }

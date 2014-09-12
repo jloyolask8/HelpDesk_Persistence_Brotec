@@ -135,6 +135,30 @@ public class CasoJPACustomController extends CasoJpaController {
         }
         return 0;
     }
+    
+    public int getCasoCountByEstadoAndPrio(Usuario usuario, EstadoCaso estadoCaso) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+
+            Root<Caso> rt = cq.from(Caso.class);
+//            ParameterExpression<TipoAlerta> pAlerta = cb.parameter(TipoAlerta.class);
+            cq.select(cb.count(rt)).where(
+                    cb.equal(rt.get("owner"), usuario),
+                    cb.equal(rt.get("esPrioritario"), Boolean.TRUE),
+                    cb.equal(rt.get("idEstado"), estadoCaso));
+            Query q = em.createQuery(cq);
+            int retorno = ((Long) q.getSingleResult()).intValue();
+            return retorno;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+            em.close();
+        }
+        return 0;
+    }
 
     public int countCasos(Predicate predicate, EntityManager em, CriteriaBuilder cb, CriteriaQuery cq, Root<Caso> rt) {
         if (predicate == null) {
