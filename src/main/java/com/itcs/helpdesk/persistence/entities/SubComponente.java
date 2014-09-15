@@ -10,8 +10,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -65,8 +67,9 @@ public class SubComponente implements Serializable {
         @JoinColumn(name = "id_producto", referencedColumnName = "id_producto")})
     @ManyToOne
     private ModeloProducto modelo;
-    
-    
+
+    @OneToMany(mappedBy = "subComponente")
+    private List<ProductoContratado> productoContratadoList;
 
     //new
     @Column(name = "direccion_municipal")
@@ -135,7 +138,6 @@ public class SubComponente implements Serializable {
 //    public void setCasoList(List<Caso> casoList) {
 //        this.casoList = casoList;
 //    }
-
     public Componente getIdComponente() {
         return idComponente;
     }
@@ -166,7 +168,7 @@ public class SubComponente implements Serializable {
 
     @Override
     public String toString() {
-        return this.getNombre() + "(" +this.getIdComponente().getIdProducto().getNombre()+ ")";
+        return this.getNombre() + "(" + this.getIdComponente().getIdProducto().getNombre() + ")";
     }
 
     /**
@@ -321,5 +323,19 @@ public class SubComponente implements Serializable {
      */
     public void setIdArchivoCartaEntrega(Long idArchivoCartaEntrega) {
         this.idArchivoCartaEntrega = idArchivoCartaEntrega;
+    }
+
+    /**
+     * @return the productoContratadoList
+     */
+    public List<ProductoContratado> getProductoContratadoList() {
+        return productoContratadoList;
+    }
+
+    /**
+     * @param productoContratadoList the productoContratadoList to set
+     */
+    public void setProductoContratadoList(List<ProductoContratado> productoContratadoList) {
+        this.productoContratadoList = productoContratadoList;
     }
 }

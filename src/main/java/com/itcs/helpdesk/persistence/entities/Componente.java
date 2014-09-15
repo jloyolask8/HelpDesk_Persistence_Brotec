@@ -62,6 +62,9 @@ public class Componente implements Serializable {
     private List<SubComponente> subComponenteList;
     @OneToMany(mappedBy = "idComponente")
     private List<ModeloProducto> modeloProductoList;
+    
+    @OneToMany(mappedBy = "componente")
+    private List<ProductoContratado> productoContratadoList;
 
     public Componente() {
     }
@@ -152,5 +155,19 @@ public class Componente implements Serializable {
     @Override
     public String toString() {
         return "" + nombre;
+    }
+
+    /**
+     * @return the productoContratadoList
+     */
+    public List<ProductoContratado> getProductoContratadoList() {
+        return productoContratadoList;
+    }
+
+    /**
+     * @param productoContratadoList the productoContratadoList to set
+     */
+    public void setProductoContratadoList(List<ProductoContratado> productoContratadoList) {
+        this.productoContratadoList = productoContratadoList;
     }
 }

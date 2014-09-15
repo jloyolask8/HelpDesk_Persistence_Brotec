@@ -60,18 +60,25 @@ public class Cliente implements Serializable {
     @Size(max = 40)
     private String fono2;
     @Size(max = 400)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Dirección Particular", fieldIdFull = "dirParticular", fieldTypeFull = String.class)
     @Column(name = "DIR_PARTICULAR")
     private String dirParticular;
     @Size(max = 400)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Dirección Comercial", fieldIdFull = "dirComercial", fieldTypeFull = String.class)
     @Column(name = "DIR_COMERCIAL")
     private String dirComercial;
-    @OneToMany(mappedBy = "cliente", fetch= FetchType.EAGER)
+    //emails
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
     private List<EmailCliente> emailClienteList;
+    //casos
     @OneToMany(mappedBy = "idCliente", fetch = FetchType.EAGER)
     private List<Caso> casoList;
-    private String theme;
-    @OneToMany(cascade = CascadeType.ALL, fetch= FetchType.EAGER, mappedBy = "cliente")
+    //productos Contratados
+//    @FilterField(fieldTypeId = EnumFieldType.COMMA_SEPARATED_VALUELIST, label = "productos Contratados", fieldIdFull = "productoContratadoList", fieldTypeFull = List.class)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "cliente")
     private List<ProductoContratado> productoContratadoList;
+
+    private String theme;
 
     public Cliente() {
     }
@@ -144,7 +151,6 @@ public class Cliente implements Serializable {
         this.dirComercial = dirComercial;
     }
 
-    
     public List<EmailCliente> getEmailClienteList() {
         return emailClienteList;
     }
@@ -218,13 +224,13 @@ public class Cliente implements Serializable {
     public void setProductoContratadoList(List<ProductoContratado> productoContratadoList) {
         this.productoContratadoList = productoContratadoList;
     }
-    
+
     public String getCapitalName() {
         String capitalName = "";
-        final String trimmedName = StringUtils.trim(nombres);        
+        final String trimmedName = StringUtils.trim(nombres);
         final String trimmedApellidos = StringUtils.trim(apellidos);
-        
-        String[] names = new String[]{StringUtils.isEmpty(trimmedName) ? "" : trimmedName.split(" ")[0], StringUtils.isEmpty(trimmedApellidos) ? "" :  trimmedApellidos.split(" ")[0]};
+
+        String[] names = new String[]{StringUtils.isEmpty(trimmedName) ? "" : trimmedName.split(" ")[0], StringUtils.isEmpty(trimmedApellidos) ? "" : trimmedApellidos.split(" ")[0]};
         for (int i = 0; i < names.length; i++) {
             if (!(names[i].trim().isEmpty())) {
                 if (i > 0) {

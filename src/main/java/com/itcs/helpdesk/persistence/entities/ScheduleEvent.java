@@ -8,10 +8,12 @@ package com.itcs.helpdesk.persistence.entities;
 import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
 import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -47,8 +49,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "ScheduleEvent.findByEventId", query = "SELECT s FROM ScheduleEvent s WHERE s.eventId = :eventId"),
     @NamedQuery(name = "ScheduleEvent.findByTitle", query = "SELECT s FROM ScheduleEvent s WHERE s.title = :title"),
     @NamedQuery(name = "ScheduleEvent.findByPublicEvent", query = "SELECT s FROM ScheduleEvent s WHERE s.publicEvent = :publicEvent")})
-public class ScheduleEvent implements Serializable {
+public class ScheduleEvent implements Serializable, Comparable<ScheduleEvent> {
 
+    private static final Locale LOCALE_ES_CL = new Locale("es", "CL");
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -86,7 +89,7 @@ public class ScheduleEvent implements Serializable {
     @Column(name = "email_invitados_csv")
     private String emailInvitadosCsv;
     @Column(name = "public_event")
-    private Boolean publicEvent = Boolean.TRUE;//default
+    private Boolean publicEvent = Boolean.FALSE;//default
     @Size(max = 2000)
     @Column(name = "lugar")
     private String lugar;
@@ -114,8 +117,6 @@ public class ScheduleEvent implements Serializable {
     @Column(name = "quartz_job_id")
     private String quartzJobId;
 
-    
-
     @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL)
     private List<ScheduleEventReminder> scheduleEventReminderList;
 
@@ -142,16 +143,35 @@ public class ScheduleEvent implements Serializable {
     //invited clients
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "scheduleEvent", fetch = FetchType.LAZY)
     private List<ScheduleEventClient> scheduleEventClientList;
-    
+
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Caso", fieldIdFull = "idCaso.idCaso", fieldTypeFull = Long.class)
     @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")
     @ManyToOne
     private Caso idCaso;
 
+    //new cupos inscripciones
+    @Column(name = "max_clientes_inscritos")
+    private Integer maxClientesInscritos;
+
+    @Column(name = "max_usuarios_inscritos")
+    private Integer maxUsuariosInscritos;
+
     public ScheduleEvent() {
 
     }
 
+//    public boolean isCupoAvailable() {
+//        if (getMaxClientesInscritos() > 0) {
+//            if (getScheduleEventClientList() != null) {
+//                if (getScheduleEventClientList().size() < getMaxClientesInscritos()) {
+//                    return true;
+//                }
+//            } else {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
     public ScheduleEvent(Integer eventId) {
         this.eventId = eventId;
     }
@@ -376,9 +396,23 @@ public class ScheduleEvent implements Serializable {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "ScheduleEvent{" + "eventId=" + eventId + ", title=" + title + ", startDate=" + startDate + ", endDate=" + endDate + ", allDay=" + allDay + ", fechaCreacion=" + fechaCreacion + ", colorStyleClass=" + colorStyleClass + ", emailInvitadosCsv=" + emailInvitadosCsv + ", publicEvent=" + publicEvent + ", lugar=" + lugar + ", descripcion=" + descripcion + ", idUsuario=" + idUsuario + ", executeAction=" + executeAction + ", idTipoAccion=" + idTipoAccion + ", parametrosAccion=" + parametrosAccion + ", quartzJobId=" + quartzJobId + ", idCaso=" + idCaso + '}';
+    public String toDateString() {
+
+        SimpleDateFormat sdf0 = new SimpleDateFormat("EEE, dd MMM HH:mm 'hrs.'", LOCALE_ES_CL);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm 'hrs.'", LOCALE_ES_CL);
+
+        String formattedDate = "fecha de evento desconocida";
+
+        if (getStartDate() != null) {
+            if (getEndDate() == null || getStartDate().after(getEndDate())) {
+                //illegal!!
+                formattedDate = sdf0.format(getStartDate());
+            } else {
+                formattedDate = sdf0.format(getStartDate()) + " a " + sdf1.format(getEndDate());
+            }
+        }
+
+        return getTitle() + ": " + formattedDate;
     }
 
     /**
@@ -449,6 +483,38 @@ public class ScheduleEvent implements Serializable {
      */
     public void setScheduleEventClientList(List<ScheduleEventClient> scheduleEventClientList) {
         this.scheduleEventClientList = scheduleEventClientList;
+    }
+
+    /**
+     * @return the maxClientesInscritos
+     */
+    public Integer getMaxClientesInscritos() {
+        return maxClientesInscritos;
+    }
+
+    /**
+     * @param maxClientesInscritos the maxClientesInscritos to set
+     */
+    public void setMaxClientesInscritos(Integer maxClientesInscritos) {
+        this.maxClientesInscritos = maxClientesInscritos;
+    }
+
+    /**
+     * @return the maxUsuariosInscritos
+     */
+    public Integer getMaxUsuariosInscritos() {
+        return maxUsuariosInscritos;
+    }
+
+    /**
+     * @param maxUsuariosInscritos the maxUsuariosInscritos to set
+     */
+    public void setMaxUsuariosInscritos(Integer maxUsuariosInscritos) {
+        this.maxUsuariosInscritos = maxUsuariosInscritos;
+    }
+
+    public int compareTo(ScheduleEvent o) {
+        return this.getStartDate().compareTo(o.getStartDate());
     }
 
 }

@@ -52,23 +52,26 @@ public class ProductoJpaController implements Serializable {
             em = getEntityManager();
 
             List<Componente> attachedComponenteList = new ArrayList<Componente>();
+            System.out.println("producto.getComponenteList():"+producto.getComponenteList());
             for (Componente componente : producto.getComponenteList()) {
                 Componente persistentComponent = em.find(componente.getClass(), componente.getIdComponente());
                 if (persistentComponent == null) {
                     //component do not exist!
+                    System.out.println("(Persist) component do not exist in local DB: " + componente);
                     em.persist(componente);
                     List<SubComponente> subComponentList = new ArrayList<SubComponente>();
+                    System.out.println("componente.getSubComponenteList():"+componente.getSubComponenteList());
                     for (SubComponente subComponent : componente.getSubComponenteList()) {
                         SubComponente persistentSubComponent = em.find(SubComponente.class, subComponent.getIdSubComponente());
                         if (persistentSubComponent == null) {
                             //sub component do not exist!
-                            System.out.println("sub component do not exist!:"+subComponent);
+                            System.out.println("(Persist) sub component do not exist!:" + subComponent);
                             em.persist(subComponent);
                         }
                         subComponentList.add(subComponent);
                     }
                     componente.setSubComponenteList(subComponentList);
-                   componente = em.merge(componente);
+                    componente = em.merge(componente);
                 }
                 attachedComponenteList.add(componente);
             }
@@ -95,7 +98,7 @@ public class ProductoJpaController implements Serializable {
             }
         }
     }
-    
+
     public void create(Producto producto) throws PreexistingEntityException, RollbackFailureException, Exception {
 //        if (producto.getCasoList() == null) {
 //            producto.setCasoList(new ArrayList<Caso>());

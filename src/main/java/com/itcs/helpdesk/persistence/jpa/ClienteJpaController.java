@@ -7,6 +7,7 @@ package com.itcs.helpdesk.persistence.jpa;
 import com.itcs.helpdesk.persistence.entities.Cliente;
 import com.itcs.helpdesk.persistence.entities.Cliente_;
 import com.itcs.helpdesk.persistence.entities.EmailCliente;
+import com.itcs.helpdesk.persistence.entities.ProductoContratado;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
@@ -69,10 +70,10 @@ public class ClienteJpaController implements Serializable {
         Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT).join("subComponente", JoinType.LEFT).get("direccionMunicipal"); //.get("subComponente").get("direccionMunicipal");
 
         Predicate predicate = criteriaBuilder.or(
-                criteriaBuilder.like(criteriaBuilder.upper(expresionNombre), "%" +searchPattern.toUpperCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.upper(expresionApellido), "%" +searchPattern.toUpperCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.upper(expresionRut), "%" +searchPattern.toUpperCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.upper(expresionEmail), "%" +searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionNombre), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionApellido), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionRut), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionEmail), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionM), "%" + searchPattern.toUpperCase() + "%"));
         return predicate;
     }
@@ -115,8 +116,8 @@ public class ClienteJpaController implements Serializable {
             Predicate predicate = createSearchExpression(root, criteriaBuilder, searchPattern);
 
             criteriaQuery.where(predicate).distinct(true);
-            
-            criteriaQuery.orderBy(criteriaBuilder.asc(root.get("nombres")),criteriaBuilder.asc(root.get("apellidos")));
+
+            criteriaQuery.orderBy(criteriaBuilder.asc(root.get("nombres")), criteriaBuilder.asc(root.get("apellidos")));
 
             Query q = em.createQuery(criteriaQuery);
             q.setHint("eclipselink.query-results-cache", true);
@@ -261,6 +262,9 @@ public class ClienteJpaController implements Serializable {
             List<EmailCliente> emailClienteListOld = persistentCliente.getEmailClienteList();
             List<EmailCliente> emailClienteListNew = cliente.getEmailClienteList();
 
+            List<ProductoContratado> productoContratadoListOld = persistentCliente.getProductoContratadoList();
+            List<ProductoContratado> productoContratadoListNew = cliente.getProductoContratadoList();
+
             Cliente existentCliente = null;
             try {
                 if (cliente.getRut() != null && !cliente.getRut().isEmpty()) {
@@ -281,7 +285,17 @@ public class ClienteJpaController implements Serializable {
             }
             emailClienteListNew = attachedEmailClienteListNew;
             cliente.setEmailClienteList(emailClienteListNew);
+
+            List<ProductoContratado> attachedProductoContratadoListNew = new ArrayList<ProductoContratado>();
+            for (ProductoContratado toAttach : productoContratadoListNew) {
+                toAttach = em.getReference(toAttach.getClass(), toAttach.getProductoContratadoPK());
+                attachedProductoContratadoListNew.add(toAttach);
+            }
+            productoContratadoListNew = attachedProductoContratadoListNew;
+            cliente.setProductoContratadoList(productoContratadoListNew);
+
             cliente = em.merge(cliente);
+
             for (EmailCliente emailClienteListOldEmailCliente : emailClienteListOld) {
                 if (!emailClienteListNew.contains(emailClienteListOldEmailCliente)) {
                     emailClienteListOldEmailCliente.setCliente(null);
@@ -299,6 +313,22 @@ public class ClienteJpaController implements Serializable {
                     }
                 }
             }
+            
+            for (ProductoContratado oldPc : productoContratadoListOld) {
+                if (!productoContratadoListNew.contains(oldPc)) {
+//                    oldPc.setCliente(null);
+//                    oldPc = em.merge(oldPc);
+                    em.remove(oldPc);
+                }
+            }
+//            for (ProductoContratado newPc : productoContratadoListNew) {
+//                if (!productoContratadoListOld.contains(newPc)) {
+//                    if (oldIdClienteOfEmailClienteListNewEmailCliente != null && !oldIdClienteOfEmailClienteListNewEmailCliente.equals(cliente)) {
+//                        oldIdClienteOfEmailClienteListNewEmailCliente.getEmailClienteList().remove(newPc);
+//                        oldIdClienteOfEmailClienteListNewEmailCliente = em.merge(oldIdClienteOfEmailClienteListNewEmailCliente);
+//                    }
+//                }
+//            }
             utx.commit();
         } catch (Exception ex) {
             try {

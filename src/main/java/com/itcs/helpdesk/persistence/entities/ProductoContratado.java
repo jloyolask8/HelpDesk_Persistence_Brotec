@@ -4,6 +4,8 @@
  */
 package com.itcs.helpdesk.persistence.entities;
 
+import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
+import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -38,21 +40,28 @@ public class ProductoContratado implements Serializable {
     @Size(max = 64)
     @Column(name = "vendedor")
     private String vendedor;
-//    @Column(name = "fecha_compra")
-//    @Temporal(TemporalType.DATE)
-//    private Date fechaCompra;
+    @Column(name = "fecha_compra")
+    @Temporal(TemporalType.DATE)
+    private Date fechaCompra;
     @Size(max = 2147483647)
     @Column(name = "observaciones")
     private String observaciones;
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "SubComponente", fieldIdFull = "subComponente.idSubComponente",
+            fieldTypeFull = String.class)
     @JoinColumn(name = "id_sub_componente", referencedColumnName = "id_sub_componente", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private SubComponente subComponente;
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Proyecto", fieldIdFull = "producto.idProducto",
+            fieldTypeFull = String.class)
     @JoinColumn(name = "id_producto", referencedColumnName = "id_producto", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Producto producto;
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Componente", fieldIdFull = "componente.idComponente",
+            fieldTypeFull = String.class)
     @JoinColumn(name = "id_componente", referencedColumnName = "id_componente", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Componente componente;
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Cliente", fieldIdFull = "cliente.idCliente", fieldTypeFull = Integer.class)
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Cliente cliente;
@@ -156,7 +165,7 @@ public class ProductoContratado implements Serializable {
 
     @Override
     public String toString() {
-        return "ProductoContratado[ productoContratadoPK=" + productoContratadoPK + " ]";
+        return "cliente=" + cliente + ", tipoAsociacion=" + tipoAsociacion;
     }
 
     /**
@@ -171,6 +180,20 @@ public class ProductoContratado implements Serializable {
      */
     public void setTipoAsociacion(String tipoAsociacion) {
         this.tipoAsociacion = tipoAsociacion;
+    }
+
+    /**
+     * @return the fechaCompra
+     */
+    public Date getFechaCompra() {
+        return fechaCompra;
+    }
+
+    /**
+     * @param fechaCompra the fechaCompra to set
+     */
+    public void setFechaCompra(Date fechaCompra) {
+        this.fechaCompra = fechaCompra;
     }
 
 }
