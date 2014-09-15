@@ -242,8 +242,8 @@ public class Caso implements Serializable {
     //Schedule Events
     @OneToMany(mappedBy = "idCaso")
     private List<ScheduleEvent> scheduleEventList;
-    
-     //custom fields list
+
+    //custom fields list
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCaso")
     private List<CasoCustomField> casoCustomFieldList;
 
@@ -481,7 +481,6 @@ public class Caso implements Serializable {
 //    public void setIdCategoria(Categoria idCategoria) {
 //        this.idCategoria = idCategoria;
 //    }
-
     @XmlTransient
     public List<Caso> getCasosHijosList() {
         return casosHijosList;
@@ -856,7 +855,12 @@ public class Caso implements Serializable {
                 return getIdCliente().getCapitalName();
             }
         }
-        return getEmailCliente().getEmailCliente();
+
+        if (getEmailCliente() != null) {
+            return getEmailCliente().getEmailCliente();
+        }
+        
+        return "";
     }
 
     @Transient
