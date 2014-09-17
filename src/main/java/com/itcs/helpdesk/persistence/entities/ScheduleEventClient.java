@@ -41,7 +41,7 @@ public class ScheduleEventClient implements Serializable {
     @Column(name = "invitation_sent_to_address")
     private String invitationSentToAddress;
     @Column(name = "will_assist")
-    private Boolean willAssist = null;
+    private String willAssist; //Null means NO SÉ si asistiré!! three states
     @JoinColumn(name = "event_id", referencedColumnName = "event_id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private ScheduleEvent scheduleEvent;
@@ -84,11 +84,11 @@ public class ScheduleEventClient implements Serializable {
         this.invitationSentToAddress = invitationSentToAddress;
     }
 
-    public Boolean getWillAssist() {
+    public String getWillAssist() {
         return willAssist;
     }
 
-    public void setWillAssist(Boolean willAssist) {
+    public void setWillAssist(String willAssist) {
         this.willAssist = willAssist;
     }
 

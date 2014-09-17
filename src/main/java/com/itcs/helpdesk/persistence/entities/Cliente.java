@@ -7,6 +7,8 @@ package com.itcs.helpdesk.persistence.entities;
 import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
 import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -152,6 +154,9 @@ public class Cliente implements Serializable {
     }
 
     public List<EmailCliente> getEmailClienteList() {
+        if (emailClienteList == null) {
+            emailClienteList = new LinkedList<EmailCliente>();
+        }
         return emailClienteList;
     }
 

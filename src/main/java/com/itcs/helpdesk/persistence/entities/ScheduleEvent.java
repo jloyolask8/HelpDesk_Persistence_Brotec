@@ -8,12 +8,10 @@ package com.itcs.helpdesk.persistence.entities;
 import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
 import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -51,7 +49,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "ScheduleEvent.findByPublicEvent", query = "SELECT s FROM ScheduleEvent s WHERE s.publicEvent = :publicEvent")})
 public class ScheduleEvent implements Serializable, Comparable<ScheduleEvent> {
 
-    private static final Locale LOCALE_ES_CL = new Locale("es", "CL");
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -396,24 +393,24 @@ public class ScheduleEvent implements Serializable, Comparable<ScheduleEvent> {
         return true;
     }
 
-    public String toDateString() {
-
-        SimpleDateFormat sdf0 = new SimpleDateFormat("EEE, dd MMM HH:mm 'hrs.'", LOCALE_ES_CL);
-        SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm 'hrs.'", LOCALE_ES_CL);
-
-        String formattedDate = "fecha de evento desconocida";
-
-        if (getStartDate() != null) {
-            if (getEndDate() == null || getStartDate().after(getEndDate())) {
-                //illegal!!
-                formattedDate = sdf0.format(getStartDate());
-            } else {
-                formattedDate = sdf0.format(getStartDate()) + " a " + sdf1.format(getEndDate());
-            }
-        }
-
-        return getTitle() + ": " + formattedDate;
-    }
+//    public String toDateString() {
+//
+//        SimpleDateFormat sdf0 = new SimpleDateFormat("dd MMM HH:mm 'hrs.'", LOCALE_ES_CL);
+//        SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm 'hrs.'", LOCALE_ES_CL);
+//
+//        String formattedDate = "fecha de evento desconocida";
+//
+//        if (getStartDate() != null) {
+//            if (getEndDate() == null || getStartDate().after(getEndDate())) {
+//                //illegal!!
+//                formattedDate = sdf0.format(getStartDate());
+//            } else {
+//                formattedDate = sdf0.format(getStartDate()) + " a " + sdf1.format(getEndDate());
+//            }
+//        }
+//
+//        return formattedDate;
+//    }
 
     /**
      * @return the executeAction
