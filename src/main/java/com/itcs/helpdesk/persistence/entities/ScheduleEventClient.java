@@ -130,7 +130,31 @@ public class ScheduleEventClient implements Serializable {
 
     @Override
     public String toString() {
-        return "com.itcs.helpdesk.persistence.entities.ScheduleEventClient[ scheduleEventClientPK=" + scheduleEventClientPK + " ]";
+        return "ScheduleEventClient[ scheduleEventClientPK=" + scheduleEventClientPK + " ]";
     }
-    
+
+    public String getWillAssistString() {
+        if (willAssist == null) {
+            return "Confirmación Pendiente";
+        } else {
+            String state;
+            switch (willAssist) {
+                case "0":
+                    state = "Confirmación Pendiente";
+                    break;
+                case "1":
+                    state = "Confirmado";
+                    break;
+                case "2":
+                    state = "No Asistirá";
+                    break;
+                default:
+                    state = willAssist;
+                    break;
+            }
+            return state;
+        }
+
+    }
+
 }

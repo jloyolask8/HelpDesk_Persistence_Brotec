@@ -82,14 +82,14 @@ public class Usuario implements Serializable {
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Rut", fieldIdFull = "rut", fieldTypeFull = String.class)
     private String rut;
     @ManyToMany(mappedBy = "usuarioList")
-    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Rol(es)", fieldIdFull = "rolList", fieldTypeFull = List.class, listGenericTypeFieldId="idRol")
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Rol(es)", fieldIdFull = "rolList", fieldTypeFull = List.class, listGenericTypeFieldId = "idRol")
     private List<Rol> rolList;
     @OneToMany(mappedBy = "owner")
     private List<Caso> casoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdBy")
     private List<Documento> documentoList;
     @OneToMany(mappedBy = "supervisor")
-    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Supervisor de", fieldIdFull = "usuarioList", fieldTypeFull = List.class, listGenericTypeFieldId="idUsuario")
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Supervisor de", fieldIdFull = "usuarioList", fieldTypeFull = List.class, listGenericTypeFieldId = "idUsuario")
     private List<Usuario> usuarioList;
     @JoinColumn(name = "supervisor", referencedColumnName = "id_usuario")
     @ManyToOne
@@ -104,7 +104,7 @@ public class Usuario implements Serializable {
         @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")}, inverseJoinColumns = {
         @JoinColumn(name = "id_grupo", referencedColumnName = "id_grupo")})
     @ManyToMany
-    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Grupo(s)", fieldIdFull = "grupoList", fieldTypeFull = List.class, listGenericTypeFieldId="idGrupo")
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Grupo(s)", fieldIdFull = "grupoList", fieldTypeFull = List.class, listGenericTypeFieldId = "idGrupo")
     private List<Grupo> grupoList;
     @Column(name = "theme")
     @Size(max = 40)
@@ -116,7 +116,7 @@ public class Usuario implements Serializable {
     private String pageLayoutState;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuarioCreadaPor")
     private List<Clipping> clippingList;
-    
+
     @Transient
     private String randomColor;
 
@@ -131,9 +131,20 @@ public class Usuario implements Serializable {
     private Boolean notifyWhenTicketIsUpdated;
     @Column(name = "email_notifications_enabled")
     private Boolean emailNotificationsEnabled;
-     @Column(name = "desktop_notifications_enabled")
+    @Column(name = "desktop_notifications_enabled")
     private Boolean desktopNotificationsEnabled;
-	
+
+    /**
+     * ALTER TABLE usuario ADD COLUMN prefer_firma_enabled boolean; 
+     * ALTER TABLE usuario ADD COLUMN firma text;
+     */
+    @Column(name = "prefer_firma_enabled")
+    private boolean firmaEnabled;
+
+    @Column(name = "firma")
+    @Size(max = 2147483647)
+    private String firma;
+
     public Usuario() {
     }
 
@@ -513,5 +524,33 @@ public class Usuario implements Serializable {
      */
     public void setDesktopNotificationsEnabled(Boolean desktopNotificationsEnabled) {
         this.desktopNotificationsEnabled = desktopNotificationsEnabled;
+    }
+
+    /**
+     * @return the firmaEnabled
+     */
+    public boolean isFirmaEnabled() {
+        return firmaEnabled;
+    }
+
+    /**
+     * @param firmaEnabled the firmaEnabled to set
+     */
+    public void setFirmaEnabled(boolean firmaEnabled) {
+        this.firmaEnabled = firmaEnabled;
+    }
+
+    /**
+     * @return the firma
+     */
+    public String getFirma() {
+        return firma;
+    }
+
+    /**
+     * @param firma the firma to set
+     */
+    public void setFirma(String firma) {
+        this.firma = firma;
     }
 }
