@@ -7,6 +7,7 @@ package com.itcs.helpdesk.persistence.entities;
 import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
 import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -26,6 +27,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 /**
  *
@@ -135,8 +137,8 @@ public class Usuario implements Serializable {
     private Boolean desktopNotificationsEnabled;
 
     /**
-     * ALTER TABLE usuario ADD COLUMN prefer_firma_enabled boolean; 
-     * ALTER TABLE usuario ADD COLUMN firma text;
+     * ALTER TABLE usuario ADD COLUMN prefer_firma_enabled boolean; ALTER TABLE
+     * usuario ADD COLUMN firma text;
      */
     @Column(name = "prefer_firma_enabled")
     private boolean firmaEnabled;
@@ -145,7 +147,18 @@ public class Usuario implements Serializable {
     @Size(max = 2147483647)
     private String firma;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuario")
+    @CascadeOnDelete
+    private List<UsuarioSessionLog> usuarioSessionLogList;
+
     public Usuario() {
+    }
+    
+    public void addUsuarioSessionLog(UsuarioSessionLog sessionLog){
+        if(usuarioSessionLogList == null){
+            usuarioSessionLogList = new LinkedList<>();
+        }
+        usuarioSessionLogList.add(sessionLog);
     }
 
     public Usuario(String idUsuario) {
@@ -552,5 +565,19 @@ public class Usuario implements Serializable {
      */
     public void setFirma(String firma) {
         this.firma = firma;
+    }
+
+    /**
+     * @return the usuarioSessionLogList
+     */
+    public List<UsuarioSessionLog> getUsuarioSessionLogList() {
+        return usuarioSessionLogList;
+    }
+
+    /**
+     * @param usuarioSessionLogList the usuarioSessionLogList to set
+     */
+    public void setUsuarioSessionLogList(List<UsuarioSessionLog> usuarioSessionLogList) {
+        this.usuarioSessionLogList = usuarioSessionLogList;
     }
 }

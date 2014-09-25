@@ -153,7 +153,8 @@ public enum EnumSettingsBase {
             "Cuando un cliente se inscriba en un evento este mensaje de recepción será enviado.", true)),
     
     
-    DEBUG_ENABLED(new AppSetting("DEBUG_ENABLED", "AppDebug", "false", "admin", "booleanchoice", 50, "Habilitar esta opcion para realizar un diagnostico de la ejecucion del sistema (Herramienta de diagnostico de problemas para Soporte).", true));
+    DEBUG_ENABLED(new AppSetting("DEBUG_ENABLED", "AppDebug", "false", "admin", "booleanchoice", 50, "Habilitar esta opcion para realizar un diagnostico de la ejecucion del sistema (Herramienta de diagnostico de problemas para Soporte).", true)),
+    COMPANY_LOGIN_BACKGROUND_URL(new AppSetting("COMPANY_LOGIN_BACKGROUND_URL", "Background Image (Login)", "", "app", "input", 5, "URL de una imagen de fondo a usar en la pagina de login.", false));
 //    SEND_GROUP_NOTIFICATION_ON_NEW_CASE(new AppSetting("SEND_GROUP_NOTIFICATION_ON_NEW_CASE", "Notificar a el/los Grupo(s)", "true", "app", "booleanchoice", 22, "Notificar a el/los Grupo(s) encargado(s) del producto cuando llegue un nuevo caso", true));
     private AppSetting appSetting;
 

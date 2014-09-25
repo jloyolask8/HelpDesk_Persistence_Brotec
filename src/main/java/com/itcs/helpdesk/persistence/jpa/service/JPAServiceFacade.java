@@ -324,7 +324,11 @@ public class JPAServiceFacade extends AbstractJPAController {
         em.setProperty("javax.persistence.cache.storeMode", javax.persistence.CacheRetrieveMode.USE);
 
         try {
-            final Class<?> clazz = Class.forName(vista.getBaseEntityType());
+            if(vista == null || vista.getBaseEntityType() == null){
+                return 0L;
+            }
+            final String baseEntityType = vista.getBaseEntityType();
+            final Class<?> clazz = Class.forName(baseEntityType);
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
             CriteriaQuery criteriaQuery = em.getCriteriaBuilder().createQuery();
             Root root = criteriaQuery.from(clazz);
