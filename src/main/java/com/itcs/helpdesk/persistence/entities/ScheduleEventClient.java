@@ -7,6 +7,7 @@
 package com.itcs.helpdesk.persistence.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -15,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -48,6 +51,9 @@ public class ScheduleEventClient implements Serializable {
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Cliente cliente;
+    @Column(name = "timestamp_creacion")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timestampCreacion;
 
     public ScheduleEventClient() {
     }
@@ -155,6 +161,20 @@ public class ScheduleEventClient implements Serializable {
             return state;
         }
 
+    }
+
+    /**
+     * @return the timestampCreacion
+     */
+    public Date getTimestampCreacion() {
+        return timestampCreacion;
+    }
+
+    /**
+     * @param timestampCreacion the timestampCreacion to set
+     */
+    public void setTimestampCreacion(Date timestampCreacion) {
+        this.timestampCreacion = timestampCreacion;
     }
 
 }
