@@ -27,7 +27,6 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -38,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "SubComponente.findAll", query = "SELECT s FROM SubComponente s"),
+    @NamedQuery(name = "SubComponente.findAllByQuery", query = "SELECT o FROM SubComponente o WHERE (LOWER(o.nombre) LIKE CONCAT(LOWER(:q), '%')) "),
     @NamedQuery(name = "SubComponente.findByIdSubComponente", query = "SELECT s FROM SubComponente s WHERE s.idSubComponente = :idSubComponente"),
     @NamedQuery(name = "SubComponente.findByNombre", query = "SELECT s FROM SubComponente s WHERE s.nombre = :nombre"),
     @NamedQuery(name = "SubComponente.findByDescripcion", query = "SELECT s FROM SubComponente s WHERE s.descripcion = :descripcion")})

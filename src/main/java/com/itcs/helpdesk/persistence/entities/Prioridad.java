@@ -7,7 +7,6 @@ package com.itcs.helpdesk.persistence.entities;
 import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
 import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,11 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -29,6 +26,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Prioridad.findAll", query = "SELECT p FROM Prioridad p"),
+    @NamedQuery(name = "Prioridad.findAllByQuery", query = "SELECT o FROM Prioridad o WHERE (LOWER(o.nombre) LIKE CONCAT(LOWER(:q), '%')) "),
     @NamedQuery(name = "Prioridad.findByIdPrioridad", query = "SELECT p FROM Prioridad p WHERE p.idPrioridad = :idPrioridad"),
 //    @NamedQuery(name = "Prioridad.findByTipoCaso", query = "SELECT p FROM Prioridad p WHERE p.tipoCaso = :tipoCaso"),
     @NamedQuery(name = "Prioridad.findByNombre", query = "SELECT p FROM Prioridad p WHERE p.nombre = :nombre"),
@@ -113,7 +111,6 @@ public class Prioridad implements Serializable {
 //    public void setCasoList(List<Caso> casoList) {
 //        this.casoList = casoList;
 //    }
-
     @Override
     public int hashCode() {
         int hash = 0;

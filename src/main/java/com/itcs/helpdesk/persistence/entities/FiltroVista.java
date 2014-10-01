@@ -7,6 +7,7 @@ package com.itcs.helpdesk.persistence.entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.faces.model.SelectItem;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -60,6 +62,11 @@ public class FiltroVista implements Serializable {
     private String valor2;
     @Column(name = "visible_to_agents", nullable = false)
     private boolean visibleToAgents;
+
+    @Column(name = "valor_label")
+    private String valorLabel;
+    @Column(name = "valor2_label")
+    private String valor2Label;
 
     public FiltroVista() {
     }
@@ -189,5 +196,67 @@ public class FiltroVista implements Serializable {
                 valor += "," + string;
             }
         }
+    }
+
+    /**
+     * @return the valorAsSelectItem
+     */
+    @Transient
+    public SelectItem getValorAsSelectItem() {
+        return new SelectItem(valor, valorLabel);
+    }
+
+    /**
+     * @param valorAsSelectItem the valorAsSelectItem to set
+     */
+    @Transient
+    public void setValorAsSelectItem(SelectItem valorAsSelectItem) {
+        this.valor = valorAsSelectItem.getValue().toString();
+        this.valorLabel = (String) valorAsSelectItem.getLabel();
+    }
+
+    /**
+     * @return the valor2AsSelectItem
+     */
+    @Transient
+    public SelectItem getValor2AsSelectItem() {
+        return new SelectItem(valor2, valor2Label);
+    }
+
+    /**
+     * @param valor2AsSelectItem the valor2AsSelectItem to set
+     */
+    @Transient
+    public void setValor2AsSelectItem(SelectItem valor2AsSelectItem) {
+        this.valor2 = valor2AsSelectItem.getValue().toString();
+        this.valor2Label = (String) valor2AsSelectItem.getLabel();
+    }
+
+    /**
+     * @return the valorLabel
+     */
+    public String getValorLabel() {
+        return valorLabel;
+    }
+
+    /**
+     * @param valorLabel the valorLabel to set
+     */
+    public void setValorLabel(String valorLabel) {
+        this.valorLabel = valorLabel;
+    }
+
+    /**
+     * @return the valor2Label
+     */
+    public String getValor2Label() {
+        return valor2Label;
+    }
+
+    /**
+     * @param valor2Label the valor2Label to set
+     */
+    public void setValor2Label(String valor2Label) {
+        this.valor2Label = valor2Label;
     }
 }

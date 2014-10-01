@@ -9,7 +9,6 @@ import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -35,6 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "EmailCliente.findAll", query = "SELECT e FROM EmailCliente e"),
+    @NamedQuery(name = "EmailCliente.findAllByQuery", query = "SELECT o FROM EmailCliente o WHERE (LOWER(o.emailCliente) LIKE CONCAT(LOWER(:q), '%')) "),
     @NamedQuery(name = "EmailCliente.findByEmailCliente", query = "SELECT e FROM EmailCliente e WHERE e.emailCliente = :emailCliente")})
 public class EmailCliente implements Serializable {
 

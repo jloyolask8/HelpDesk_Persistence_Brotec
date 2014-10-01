@@ -70,7 +70,7 @@ public abstract class AbstractJPAController {
             cq.select(rt);
 
             if (orderBy != null && orderBy.length > 0) {
-                ArrayList<Order> orderList = new ArrayList<Order>(orderBy.length);
+                ArrayList<Order> orderList = new ArrayList<>(orderBy.length);
                 for (String field : orderBy) {
                     orderList.add(criteriaBuilder.asc(rt.get(field)));
                 }
@@ -375,17 +375,17 @@ public abstract class AbstractJPAController {
 //
 //        return predicate;
 //    }
-    
     /**
-     * 
+     *
      * @param em
      * @param criteriaBuilder
      * @param root
      * @param vista
-     * @param whoIsApplyingView THIS CAN BE NULL. when filtering being used outside user context.
+     * @param whoIsApplyingView THIS CAN BE NULL. when filtering being used
+     * outside user context.
      * @return
      * @throws IllegalStateException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     protected Predicate createPredicate(EntityManager em, CriteriaBuilder criteriaBuilder, Root<?> root, Vista vista, Usuario whoIsApplyingView) throws IllegalStateException, ClassNotFoundException {
 
@@ -522,8 +522,8 @@ public abstract class AbstractJPAController {
 //                            valores.remove(PLACE_HOLDER_NULL);
                             addPlaceHolderNullFilter = true;
                         }
-                        
-                          if (valores.contains(PLACE_HOLDER_ANY)) {
+
+                        if (valores.contains(PLACE_HOLDER_ANY)) {
                             valores.remove(PLACE_HOLDER_ANY);
                             //nothig, just dont send this string to the "in" criteria Predicate.
                         }
@@ -745,9 +745,10 @@ public abstract class AbstractJPAController {
 
     /**
      * try Keep this code for godesk
+     *
      * @param comparableField
      * @param userWhoIsAsking
-     * @return 
+     * @return
      */
     public List<?> findPosibleDBOptionsFor(ComparableField comparableField, Usuario userWhoIsAsking) {
         FieldType fieldType = comparableField.getFieldTypeId();
@@ -798,4 +799,47 @@ public abstract class AbstractJPAController {
     protected abstract Predicate createSpecialPredicate(FiltroVista filtro);
 
     protected abstract boolean isThereSpecialFiltering(FiltroVista filtro);
+
+    public List<?> findEntitiesByQuery(Class entityClass, boolean all, int maxResults, String query) {
+        EntityManager em = getEntityManager();
+        try {
+            System.out.println("**** getSimpleName:"+entityClass.getSimpleName() );
+            Query q = em.createNamedQuery(entityClass.getSimpleName() + ".findAllByQuery")
+                    .setParameter("q", query);
+
+            if (!all) {
+                q.setMaxResults(maxResults);
+            }
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    //TODO
+    public List<?> findEntitiesBySearchQuery(String query, ComparableField comparableField, Usuario userWhoIsAsking) {
+        FieldType fieldType = comparableField.getFieldTypeId();
+
+        if (fieldType == null) {
+            return null;
+        }
+
+        List<?> entities;
+
+        if (comparableField.getTipo().equals(List.class)) {
+            entities = findEntitiesByQuery(comparableField.getListGenericType(), false, 10, query);
+            if (comparableField.getListGenericType().equals(Usuario.class)) {
+                entities.remove(EnumUsuariosBase.SISTEMA.getUsuario());
+            }
+        } else {
+
+            entities = findEntitiesByQuery(comparableField.getTipo(), false, 10, query);
+            //Usuario entity has a special place holder that others entities do not have
+            if (comparableField.getTipo().equals(Usuario.class)) {
+                entities.remove(EnumUsuariosBase.SISTEMA.getUsuario());
+            }
+        }
+        return entities;
+
+    }
 }

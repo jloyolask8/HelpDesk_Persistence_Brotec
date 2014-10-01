@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "SubEstadoCaso.findAll", query = "SELECT s FROM SubEstadoCaso s"),
+    @NamedQuery(name = "SubEstadoCaso.findAllByQuery", query = "SELECT o FROM SubEstadoCaso o WHERE (LOWER(o.nombre) LIKE CONCAT(LOWER(:q), '%')) "),
     @NamedQuery(name = "SubEstadoCaso.findByIdSubEstado", query = "SELECT s FROM SubEstadoCaso s WHERE s.idSubEstado = :idSubEstado"),
     @NamedQuery(name = "SubEstadoCaso.findByIdEstado", query = "SELECT s FROM SubEstadoCaso s WHERE s.idEstado.idEstado = :idEstado"),
     @NamedQuery(name = "SubEstadoCaso.findByIdEstadoTipoCaso", query = "SELECT s FROM SubEstadoCaso s WHERE s.idEstado = :idEstado AND s.tipoCaso = :tipoCaso"),
@@ -141,7 +142,6 @@ public class SubEstadoCaso implements Serializable {
 //    public void setCasoList(List<Caso> casoList) {
 //        this.casoList = casoList;
 //    }
-
     public EstadoCaso getIdEstado() {
         return idEstado;
     }

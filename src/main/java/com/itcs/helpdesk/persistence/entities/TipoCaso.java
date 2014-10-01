@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -26,6 +28,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "tipo_caso")
 @XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "TipoCaso.findAll", query = "SELECT o FROM TipoCaso o"),
+    @NamedQuery(name = "TipoCaso.findAllByQuery", query = "SELECT o FROM TipoCaso o WHERE (LOWER(o.nombre) LIKE CONCAT(LOWER(:q), '%')) ")
+})
 public class TipoCaso implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,7 +55,7 @@ public class TipoCaso implements Serializable {
     private List<SubEstadoCaso> subEstadoCasoList;
 //    @OneToMany(mappedBy = "tipoCaso")
 //    private List<Prioridad> prioridadList;
-    
+
     @ManyToMany(mappedBy = "tipoCasoList", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<CustomField> customFieldList;
 
@@ -103,7 +109,6 @@ public class TipoCaso implements Serializable {
 //    public void setCasoList(List<Caso> casoList) {
 //        this.casoList = casoList;
 //    }
-
     @Override
     public int hashCode() {
         int hash = 0;

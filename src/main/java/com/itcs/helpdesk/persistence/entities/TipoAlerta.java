@@ -25,9 +25,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TipoAlerta.findAll", query = "SELECT t FROM TipoAlerta t"),
+    @NamedQuery(name = "TipoAlerta.findAllByQuery", query = "SELECT o FROM TipoAlerta o WHERE (LOWER(o.nombre) LIKE CONCAT(LOWER(:q), '%')) "),
     @NamedQuery(name = "TipoAlerta.findByIdalerta", query = "SELECT t FROM TipoAlerta t WHERE t.idalerta = :idalerta"),
     @NamedQuery(name = "TipoAlerta.findByNombre", query = "SELECT t FROM TipoAlerta t WHERE t.nombre = :nombre")})
 public class TipoAlerta implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -47,8 +49,8 @@ public class TipoAlerta implements Serializable {
     public TipoAlerta(Integer idalerta) {
         this.idalerta = idalerta;
     }
-    
-     public TipoAlerta(Integer idalerta, String nombre, String descripcion) {
+
+    public TipoAlerta(Integer idalerta, String nombre, String descripcion) {
         this.idalerta = idalerta;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -86,7 +88,6 @@ public class TipoAlerta implements Serializable {
 //    public void setCasoList(List<Caso> casoList) {
 //        this.casoList = casoList;
 //    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -111,5 +112,5 @@ public class TipoAlerta implements Serializable {
     public String toString() {
         return nombre;
     }
-    
+
 }

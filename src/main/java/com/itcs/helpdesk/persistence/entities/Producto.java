@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p"),
+    @NamedQuery(name = "Producto.findAllByQuery", query = "SELECT o FROM Producto o WHERE (LOWER(o.nombre) LIKE CONCAT(LOWER(:q), '%')) "),
     @NamedQuery(name = "Producto.findByIdProducto", query = "SELECT p FROM Producto p WHERE p.idProducto = :idProducto"),
     @NamedQuery(name = "Producto.findByNombre", query = "SELECT p FROM Producto p WHERE p.nombre = :nombre"),
     @NamedQuery(name = "Producto.findByDescripcion", query = "SELECT p FROM Producto p WHERE p.descripcion = :descripcion")})
@@ -64,7 +65,7 @@ public class Producto implements Serializable {
     //
     @Column(name = "id_logo")
     private Long idLogo;
-    
+
     @JoinColumn(name = "id_out_canal", referencedColumnName = "id_canal")
     @ManyToOne
     private Canal idOutCanal;
@@ -108,7 +109,6 @@ public class Producto implements Serializable {
 //    public void setCasoList(List<Caso> casoList) {
 //        this.casoList = casoList;
 //    }
-
     @XmlTransient
     public List<Componente> getComponenteList() {
         return componenteList;

@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Area.findAll", query = "SELECT a FROM Area a"),
+    @NamedQuery(name = "Area.findAllByQuery", query = "SELECT o FROM Area o WHERE (LOWER(o.nombre) LIKE CONCAT(LOWER(:q), '%')) "),
     @NamedQuery(name = "Area.findByIdArea", query = "SELECT a FROM Area a WHERE a.idArea = :idArea"),
     @NamedQuery(name = "Area.findByNombre", query = "SELECT a FROM Area a WHERE a.nombre = :nombre"),
     @NamedQuery(name = "Area.findByEditable", query = "SELECT a FROM Area a WHERE a.editable = :editable")})
@@ -396,6 +397,7 @@ public class Area implements Serializable {
 //        this.emailFrecuencia = emailFrecuencia;
 //    }
 //
+
     public boolean getEmailAcusederecibo() {
         return emailAcusederecibo;
     }
@@ -511,7 +513,6 @@ public class Area implements Serializable {
         return nombre + " (" + idArea + ")";
     }
 
-
 //    /**
 //     * @return the reglaTriggerList
 //     */
@@ -525,7 +526,6 @@ public class Area implements Serializable {
 //    public void setReglaTriggerList(List<ReglaTrigger> reglaTriggerList) {
 //        this.reglaTriggerList = reglaTriggerList;
 //    }
-
     @XmlTransient
     public List<Clipping> getClippingList() {
         return clippingList;
@@ -538,16 +538,14 @@ public class Area implements Serializable {
     /**
      * @return the itemList
      */
-    public List<Item> getItemList()
-    {
+    public List<Item> getItemList() {
         return itemList;
     }
 
     /**
      * @param itemList the itemList to set
      */
-    public void setItemList(List<Item> itemList)
-    {
+    public void setItemList(List<Item> itemList) {
         this.itemList = itemList;
     }
 
@@ -593,5 +591,4 @@ public class Area implements Serializable {
         this.textoRespAutomatica = textoRespAutomatica;
     }
 
-  
 }
