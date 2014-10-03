@@ -197,6 +197,44 @@ public class FiltroVista implements Serializable {
             }
         }
     }
+    
+    /**
+     * @return the valoresList
+     */
+    public List<SelectItem> getValoresAsSelectItemList() {
+        final List<SelectItem> result = new ArrayList<>();
+        if (valor != null && valorLabel != null ) {
+            final String[] splitValues = valor.split(",", -1);
+            final String[] splitLabels = valorLabel.split(",", -1);
+            
+            for (int i = 0; i< splitValues.length ; i++ ) {
+                String value = splitValues[i].trim();
+                String label = splitLabels[i].trim();
+                
+                result.add(new SelectItem(value, label));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @param valoresList the valoresList to set
+     */
+    public void setValoresAsSelectItemList(List<SelectItem> valoresList) {
+        valor = "";
+        valorLabel = "";
+        boolean first = true;
+        for (SelectItem selectItem : valoresList) {
+            if (first) {
+                first = false;
+                valor += selectItem.getValue().toString();
+                valorLabel += selectItem.getLabel();
+            } else {
+                valor += "," + selectItem.getValue().toString();
+                valorLabel += "," + selectItem.getLabel();
+            }
+        }
+    }
 
     /**
      * @return the valorAsSelectItem
@@ -212,7 +250,7 @@ public class FiltroVista implements Serializable {
     @Transient
     public void setValorAsSelectItem(SelectItem valorAsSelectItem) {
         this.valor = valorAsSelectItem.getValue().toString();
-        this.valorLabel = (String) valorAsSelectItem.getLabel();
+        this.valorLabel = valorAsSelectItem.getLabel();
     }
 
     /**
@@ -229,7 +267,7 @@ public class FiltroVista implements Serializable {
     @Transient
     public void setValor2AsSelectItem(SelectItem valor2AsSelectItem) {
         this.valor2 = valor2AsSelectItem.getValue().toString();
-        this.valor2Label = (String) valor2AsSelectItem.getLabel();
+        this.valor2Label = valor2AsSelectItem.getLabel();
     }
 
     /**
