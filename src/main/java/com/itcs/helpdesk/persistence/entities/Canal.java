@@ -179,6 +179,10 @@ public class Canal implements Serializable {
         return getMapSetting().containsKey(key);
     }
     
+    public void reloadSettings(){
+        propertieSettings = null;
+    }
+    
     private Map<String, String> getMapSetting()
     {
         if(propertieSettings == null)
