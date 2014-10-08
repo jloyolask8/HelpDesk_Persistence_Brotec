@@ -21,6 +21,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.UserTransaction;
@@ -333,11 +334,14 @@ public class VistaJpaController implements Serializable {
             //Add Criteria here
             Predicate predicate = criteriaBuilder.equal(root.get("idUsuarioCreadaPor"), user);
             Predicate predicate2 = criteriaBuilder.equal(root.get("visibleToAll"), Boolean.FALSE);
+            Predicate predicate3 = criteriaBuilder.isNull(root.get("idGrupo"));
+            Predicate predicate4 = criteriaBuilder.isNull(root.get("idArea"));
+            
             predicate = CriteriaQueryHelper.addPredicate(predicate, predicate2, criteriaBuilder);
+            predicate = CriteriaQueryHelper.addPredicate(predicate, predicate3, criteriaBuilder);
+            predicate = CriteriaQueryHelper.addPredicate(predicate, predicate4, criteriaBuilder);
             criteriaQuery.where(predicate);
-//            Expression<Date> expresion = root.get("visibleToAll");
             //Get Results
-
             Query q = em.createQuery(criteriaQuery);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -357,7 +361,7 @@ public class VistaJpaController implements Serializable {
         
         EntityManager em = getEntityManager();
         try {
-            List<String> gruposUser = new ArrayList<String>();
+            List<String> gruposUser = new ArrayList<>();
             for (Grupo g : user.getGrupoList()) {
                 if (!gruposUser.contains(g.getIdGrupo())) {
                     gruposUser.add(g.getIdGrupo());

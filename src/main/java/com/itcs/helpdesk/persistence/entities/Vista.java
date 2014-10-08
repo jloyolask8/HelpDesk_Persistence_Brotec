@@ -25,6 +25,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 /**
  *
@@ -71,6 +72,7 @@ public class Vista implements Serializable {
     @JoinColumn(name = "id_area", referencedColumnName = "id_area")
     @ManyToOne
     private Area idArea;
+    @CascadeOnDelete
     @OneToMany(mappedBy = "idVista", cascade = CascadeType.MERGE)
     private List<FiltroVista> filtrosVistaList;
     @Size(max = 1000)
@@ -82,7 +84,7 @@ public class Vista implements Serializable {
 
     public Vista(Class clazz) {
         this.baseEntityType = clazz.getName();
-        filtrosVistaList = new ArrayList<FiltroVista>();
+        filtrosVistaList = new ArrayList<>();
     }
 
     public Vista(Integer idVista) {
