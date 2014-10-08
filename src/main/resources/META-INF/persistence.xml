@@ -50,6 +50,7 @@
     <class>com.itcs.helpdesk.persistence.entities.TipoNota</class>
     <class>com.itcs.helpdesk.persistence.entities.Usuario</class>
     <class>com.itcs.helpdesk.persistence.entities.Vista</class>
+    <class>com.itcs.helpdesk.persistence.entities.ArchivoNa</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>${shared-cache-mode}</shared-cache-mode>
     <properties>

@@ -174,12 +174,15 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     /**
-     * Finds an Entity and Refresh the state of the instance from the database, overwriting changes made to the entity, if any.
+     * Finds an Entity and Refresh the state of the instance from the database,
+     * overwriting changes made to the entity, if any.
+     *
      * @param <T>
      * @param entityClass
      * @param primaryKey
-     * @param refresh set to true if you want to Refresh the state of the instance from the database. False otherwise goes to the cache.
-     * @return 
+     * @param refresh set to true if you want to Refresh the state of the
+     * instance from the database. False otherwise goes to the cache.
+     * @return
      */
     public <T extends Object> T find(Class<T> entityClass, Object primaryKey, boolean refresh) {
         if (refresh) {
@@ -2394,4 +2397,5 @@ public class JPAServiceFacade extends AbstractJPAController {
             em.close();
         }
     }
+
 }
