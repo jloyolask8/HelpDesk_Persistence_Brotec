@@ -56,9 +56,11 @@ public class UsuarioSessionLog implements Serializable {
     @Column(name = "ip", nullable = false, length = 64)
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "IP", fieldIdFull = "ip", fieldTypeFull = String.class)
     private String ip;
+    @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "Fecha Login", fieldIdFull = "timestampLogin", fieldTypeFull = Date.class)
     @Column(name = "timestamp_login")
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestampLogin;
+    @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "Fecha Logout", fieldIdFull = "timestampLogout", fieldTypeFull = Date.class)
     @Column(name = "timestamp_logout")
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestampLogout;
@@ -81,7 +83,7 @@ public class UsuarioSessionLog implements Serializable {
     private String userLocation;
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", nullable = false)
     @ManyToOne(optional = false)
-     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Usuario", fieldIdFull = "idUsuario.idUsuario", fieldTypeFull = String.class)
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Usuario", fieldIdFull = "idUsuario.idUsuario", fieldTypeFull = String.class)
     private Usuario idUsuario;
 
     public UsuarioSessionLog() {
