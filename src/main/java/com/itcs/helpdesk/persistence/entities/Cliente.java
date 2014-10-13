@@ -78,7 +78,7 @@ public class Cliente implements Serializable {
     @OneToMany(mappedBy = "idCliente", fetch = FetchType.EAGER)
     private List<Caso> casoList;
     //productos Contratados
-//    @FilterField(fieldTypeId = EnumFieldType.COMMA_SEPARATED_VALUELIST, label = "productos Contratados", fieldIdFull = "productoContratadoList", fieldTypeFull = List.class)
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_PLACE_HOLDER, label = "productos Contratados", fieldIdFull = "productoContratadoList", fieldTypeFull = List.class)
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "cliente")
     private List<ProductoContratado> productoContratadoList;
 

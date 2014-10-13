@@ -4,6 +4,8 @@
  */
 package com.itcs.helpdesk.persistence.entities;
 
+import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
+import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
@@ -11,6 +13,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -80,11 +83,11 @@ public class Nota implements Serializable, Comparable<Nota> {
     private Boolean enviado;
 
     @JoinTable(name = "nota_attachments", joinColumns = {
-        @JoinColumn(name = "id_nota", referencedColumnName = "id_nota")
-    }, inverseJoinColumns = {
+        @JoinColumn(name = "id_nota", referencedColumnName = "id_nota")}, inverseJoinColumns = {
         @JoinColumn(name = "id_attachment", referencedColumnName = "id_attachment")
     })
-    @ManyToMany
+    
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<Attachment> attachmentList;
 
     @Column(name = "has_attachments")

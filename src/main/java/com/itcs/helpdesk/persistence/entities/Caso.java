@@ -50,6 +50,7 @@ import org.eclipse.persistence.annotations.CascadeOnDelete;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Caso.findAll", query = "SELECT c FROM Caso c"),
+    @NamedQuery(name = "Caso.findAllByQuery", query = "SELECT o FROM Caso o WHERE (LOWER(o.tema) LIKE CONCAT('%', LOWER(:q), '%')) or (LOWER(o.descripcion) LIKE CONCAT('%', LOWER(:q), '%'))"),
     @NamedQuery(name = "Caso.findByIdCaso", query = "SELECT c FROM Caso c WHERE c.idCaso = :idCaso"),
     @NamedQuery(name = "Caso.findByEmailCliente", query = "SELECT c FROM Caso c WHERE c.emailCliente.emailCliente = :emailCliente"),
     @NamedQuery(name = "Caso.findByEsPrioritario", query = "SELECT c FROM Caso c WHERE c.esPrioritario = :esPrioritario")})

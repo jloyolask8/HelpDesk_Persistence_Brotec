@@ -75,6 +75,7 @@ import com.itcs.helpdesk.persistence.jpa.UsuarioJpaController;
 import com.itcs.helpdesk.persistence.jpa.VistaJpaController;
 import com.itcs.helpdesk.persistence.jpa.custom.AuditLogJpaCustomController;
 import com.itcs.helpdesk.persistence.jpa.custom.CasoJPACustomController;
+import com.itcs.helpdesk.persistence.jpa.custom.CriteriaQueryHelper;
 import com.itcs.helpdesk.persistence.jpa.custom.EmailClienteJpaCustomController;
 import com.itcs.helpdesk.persistence.jpa.custom.UsuarioJpaCustomController;
 import com.itcs.helpdesk.persistence.jpa.exceptions.IllegalOrphanException;
@@ -109,6 +110,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.resource.NotSupportedException;
 import javax.transaction.UserTransaction;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
 
@@ -319,15 +321,15 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     public Long countEntities(Vista vista) throws ClassNotFoundException {
-        return countEntities(vista, null);
+        return countEntities(vista, null, null);
     }
 
-    public Long countEntities(Vista vista, Usuario who) throws ClassNotFoundException {
+    public Long countEntities(Vista vista, Usuario who, String query) throws ClassNotFoundException {
         EntityManager em = getEntityManager();
         em.setProperty("javax.persistence.cache.storeMode", javax.persistence.CacheRetrieveMode.USE);
 
         try {
-            if(vista == null || vista.getBaseEntityType() == null){
+            if (vista == null || vista.getBaseEntityType() == null) {
                 return 0L;
             }
             final String baseEntityType = vista.getBaseEntityType();
@@ -336,6 +338,18 @@ public class JPAServiceFacade extends AbstractJPAController {
             CriteriaQuery criteriaQuery = em.getCriteriaBuilder().createQuery();
             Root root = criteriaQuery.from(clazz);
             Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, who);
+            
+             if (!StringUtils.isEmpty(query)) {
+                //build predicate to select by query, all TEXT & TEXTAREA fields
+                final Predicate predicatesForQuery = createPredicatesForQuery(criteriaBuilder, root, query);
+                if (predicatesForQuery != null) {
+                    if (predicate != null) {
+                        predicate = CriteriaQueryHelper.addPredicate(predicate, predicatesForQuery, criteriaBuilder);
+                    } else {
+                        predicate = predicatesForQuery;
+                    }
+                }
+            }
 
             if (predicate != null) {
                 criteriaQuery.select(criteriaBuilder.count(root)).where(predicate).distinct(true);
@@ -357,14 +371,18 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     public List<?> findAllEntities(Class entityClass, Vista vista, OrderBy orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
-        return findEntities(entityClass, vista, true, -1, -1, orderBy, who);
+        return findEntities(entityClass, vista, true, -1, -1, orderBy, null, who);
     }
 
     public List<?> findEntities(Class entityClass, Vista vista, int maxResults, int firstResult, OrderBy orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
-        return findEntities(entityClass, vista, false, maxResults, firstResult, orderBy, who);
+        return findEntities(entityClass, vista, false, maxResults, firstResult, orderBy, null, who);
     }
 
-    private List<?> findEntities(Class entityClass, Vista vista, boolean all, int maxResults, int firstResult, OrderBy orderBy, Usuario who) throws IllegalStateException, ClassNotFoundException {
+    public List<?> findEntities(Class entityClass, Vista vista, int maxResults, int firstResult, OrderBy orderBy, Usuario who, String query) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
+        return findEntities(entityClass, vista, false, maxResults, firstResult, orderBy, query, who);
+    }
+
+    private List<?> findEntities(Class entityClass, Vista vista, boolean all, int maxResults, int firstResult, OrderBy orderBy, String query, Usuario who) throws IllegalStateException, ClassNotFoundException {
         EntityManager em = getEntityManager();
 
         try {
@@ -374,6 +392,17 @@ public class JPAServiceFacade extends AbstractJPAController {
             Root root = criteriaQuery.from(entityClass);
 
             Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, who);
+            if (!StringUtils.isEmpty(query)) {
+                //build predicate to select by query, all TEXT & TEXTAREA fields
+                final Predicate predicatesForQuery = createPredicatesForQuery(criteriaBuilder, root, query);
+                if (predicatesForQuery != null) {
+                    if (predicate != null) {
+                        predicate = CriteriaQueryHelper.addPredicate(predicate, predicatesForQuery, criteriaBuilder);
+                    } else {
+                        predicate = predicatesForQuery;
+                    }
+                }
+            }
 
             if (predicate != null) {
                 criteriaQuery.where(predicate).distinct(true);
@@ -625,23 +654,19 @@ public class JPAServiceFacade extends AbstractJPAController {
     /*
      * Caso helper Methods
      */
-    public List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, int maxResults, int firstResult, OrderBy orderBy) throws IllegalStateException, javax.resource.NotSupportedException, ClassNotFoundException {
-        return findCasoEntities(view, userWhoIsApplying, false, maxResults, firstResult, orderBy);
-    }
-
-    public List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, OrderBy orderBy) throws IllegalStateException, ClassNotFoundException {
-        return findCasoEntities(view, userWhoIsApplying, true, 0, 0, orderBy);
-    }
-
-    public int countCasoEntities(Vista view, Usuario userWhoIsApplying) throws javax.resource.NotSupportedException, ClassNotFoundException {
-        return countEntities(view, userWhoIsApplying).intValue();
-    }
-
-    private List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, boolean all, int maxResults, int firstResult, OrderBy orderBy) throws IllegalStateException, ClassNotFoundException {
-        return (List<Caso>) findEntities(Caso.class, view, all, maxResults, firstResult, orderBy, userWhoIsApplying);
-
-    }
-
+//    public List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, int maxResults, int firstResult, OrderBy orderBy) throws IllegalStateException, javax.resource.NotSupportedException, ClassNotFoundException {
+//        return findCasoEntities(view, userWhoIsApplying, false, maxResults, firstResult, orderBy);
+//    }
+//    public List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, OrderBy orderBy) throws IllegalStateException, ClassNotFoundException {
+//        return findCasoEntities(view, userWhoIsApplying, true, 0, 0, orderBy);
+//    }
+//    public int countCasoEntities(Vista view, Usuario userWhoIsApplying) throws javax.resource.NotSupportedException, ClassNotFoundException {
+//        return countEntities(view, userWhoIsApplying).intValue();
+//    }
+//    private List<Caso> findCasoEntities(Vista view, Usuario userWhoIsApplying, boolean all, int maxResults, int firstResult, OrderBy orderBy) throws IllegalStateException, ClassNotFoundException {
+//        return (List<Caso>) findEntities(Caso.class, view, all, maxResults, firstResult, orderBy, userWhoIsApplying);
+//
+//    }
     public int getCasoCount(Usuario usuario, TipoAlerta tipo_alerta) {
         return getCasoJpa().getCasoCountByTipoAlerta(usuario, tipo_alerta);
     }

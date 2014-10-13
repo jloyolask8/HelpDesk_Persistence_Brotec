@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Grupo.findAll", query = "SELECT g FROM Grupo g"),
+    @NamedQuery(name = "Grupo.findAllByQuery", query = "SELECT o FROM Grupo o WHERE (LOWER(o.nombre) LIKE CONCAT(LOWER(:q), '%')) "),
     @NamedQuery(name = "Grupo.findByIdGrupo", query = "SELECT g FROM Grupo g WHERE g.idGrupo = :idGrupo"),
     @NamedQuery(name = "Grupo.findByNombre", query = "SELECT g FROM Grupo g WHERE g.nombre = :nombre")})
 public class Grupo implements Serializable {

@@ -67,8 +67,6 @@ public class VistaJpaController implements Serializable {
                 vista.setIdArea(idArea);
             }
 
-
-
             List<FiltroVista> attachedFiltrosVistaList = new ArrayList<FiltroVista>();
             for (FiltroVista filtrosVistaListFiltroVistaToAttach : vista.getFiltrosVistaList()) {
                 if (filtrosVistaListFiltroVistaToAttach.getIdFiltro() == null) {
@@ -286,7 +284,7 @@ public class VistaJpaController implements Serializable {
         }
     }
 
-    public List<Vista> findVistaEntitiesVisibleForAll() {
+    public List<Vista> findVistaEntitiesVisibleForAll(String baseEntityType) {
         EntityManager em = getEntityManager();
         try {
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
@@ -294,6 +292,9 @@ public class VistaJpaController implements Serializable {
             Root<Vista> root = criteriaQuery.from(Vista.class);
             //Add Criteria here
             Predicate predicate = criteriaBuilder.equal(root.get("visibleToAll"), Boolean.TRUE);
+            Predicate predicate2 = criteriaBuilder.equal(root.get("baseEntityType"), baseEntityType);
+            predicate = CriteriaQueryHelper.addPredicate(predicate, predicate2, criteriaBuilder);
+
             criteriaQuery.where(predicate);
             //Get Results
             Query q = em.createQuery(criteriaQuery);
@@ -303,29 +304,29 @@ public class VistaJpaController implements Serializable {
         }
     }
 
-    public List<Vista> findVistasOwnedBy(Usuario user, boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
-        try {
-            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-            CriteriaQuery<Vista> criteriaQuery = criteriaBuilder.createQuery(Vista.class);
-            Root<Vista> root = criteriaQuery.from(Vista.class);
-            //Add Criteria here
-            Predicate predicate = criteriaBuilder.equal(root.get("idUsuarioCreadaPor"), user);
-            criteriaQuery.where(predicate);
-            //Get Results
+//    public List<Vista> findVistasOwnedBy(Usuario user, boolean all, int maxResults, int firstResult) {
+//        EntityManager em = getEntityManager();
+//        try {
+//            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+//            CriteriaQuery<Vista> criteriaQuery = criteriaBuilder.createQuery(Vista.class);
+//            Root<Vista> root = criteriaQuery.from(Vista.class);
+//            //Add Criteria here
+//            Predicate predicate = criteriaBuilder.equal(root.get("idUsuarioCreadaPor"), user);
+//            criteriaQuery.where(predicate);
+//            //Get Results
+//
+//            Query q = em.createQuery(criteriaQuery);
+//            if (!all) {
+//                q.setMaxResults(maxResults);
+//                q.setFirstResult(firstResult);
+//            }
+//            return q.getResultList();
+//        } finally {
+//            em.close();
+//        }
+//    }
 
-            Query q = em.createQuery(criteriaQuery);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-    
-    public List<Vista> findVistaEntitiesCreatedByUser(Usuario user, boolean all, int maxResults, int firstResult) {
+    public List<Vista> findVistaEntitiesCreatedByUser(Usuario user, String baseEntityType) {
         EntityManager em = getEntityManager();
         try {
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
@@ -336,29 +337,28 @@ public class VistaJpaController implements Serializable {
             Predicate predicate2 = criteriaBuilder.equal(root.get("visibleToAll"), Boolean.FALSE);
             Predicate predicate3 = criteriaBuilder.isNull(root.get("idGrupo"));
             Predicate predicate4 = criteriaBuilder.isNull(root.get("idArea"));
-            
+            Predicate predicate5 = criteriaBuilder.equal(root.get("baseEntityType"), baseEntityType);
+
             predicate = CriteriaQueryHelper.addPredicate(predicate, predicate2, criteriaBuilder);
             predicate = CriteriaQueryHelper.addPredicate(predicate, predicate3, criteriaBuilder);
             predicate = CriteriaQueryHelper.addPredicate(predicate, predicate4, criteriaBuilder);
+            predicate = CriteriaQueryHelper.addPredicate(predicate, predicate5, criteriaBuilder);
+
             criteriaQuery.where(predicate);
             //Get Results
             Query q = em.createQuery(criteriaQuery);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
+           
             return q.getResultList();
         } finally {
             em.close();
         }
     }
 
-    public List<Vista> findVistaEntitiesVisibleForGroupsOfUser(Usuario user) {
-        if(user == null)
-        {
+    public List<Vista> findVistaEntitiesVisibleForGroupsOfUser(Usuario user, String baseEntityType) {
+        if (user == null) {
             return null;
         }
-        
+
         EntityManager em = getEntityManager();
         try {
             List<String> gruposUser = new ArrayList<>();
@@ -373,7 +373,10 @@ public class VistaJpaController implements Serializable {
                 Root<Vista> root = criteriaQuery.from(Vista.class);
                 //Add Criteria here
 //                Predicate predicate = criteriaBuilder.isTrue(root.get("idGrupo").get("idGrupo").in(gruposUser));
-                 Predicate predicate = criteriaBuilder.equal(root.get("idGrupo").get("idGrupo").in(gruposUser), Boolean.TRUE);
+                Predicate predicate = criteriaBuilder.equal(root.get("idGrupo").get("idGrupo").in(gruposUser), Boolean.TRUE);
+                Predicate predicate2 = criteriaBuilder.equal(root.get("baseEntityType"), baseEntityType);
+                predicate = CriteriaQueryHelper.addPredicate(predicate, predicate2, criteriaBuilder);
+
                 criteriaQuery.where(predicate);
 //            Expression<Date> expresion = root.get("visibleToAll");
                 //Get Results
@@ -388,14 +391,13 @@ public class VistaJpaController implements Serializable {
         }
     }
 
-    public List<Vista> findVistaEntitiesVisibleForAreasOfUser(Usuario user) {
-        if(user == null)
-        {
+    public List<Vista> findVistaEntitiesVisibleForAreasOfUser(Usuario user, String baseEntityType) {
+        if (user == null) {
             return null;
         }
         EntityManager em = getEntityManager();
         try {
-            List<String> areasUser = new ArrayList<String>();
+            List<String> areasUser = new ArrayList<>();
             for (Grupo g : user.getGrupoList()) {
                 if (!areasUser.contains(g.getIdArea().getIdArea())) {
                     areasUser.add(g.getIdArea().getIdArea());
@@ -407,7 +409,10 @@ public class VistaJpaController implements Serializable {
                 Root<Vista> root = criteriaQuery.from(Vista.class);
                 //Add Criteria here
 //                Predicate predicate = criteriaBuilder.isTrue(root.get("idArea").get("idArea").in(areasUser));
-                 Predicate predicate = criteriaBuilder.equal(root.get("idArea").get("idArea").in(areasUser), Boolean.TRUE);
+                Predicate predicate = criteriaBuilder.equal(root.get("idArea").get("idArea").in(areasUser), Boolean.TRUE);
+                Predicate predicate2 = criteriaBuilder.equal(root.get("baseEntityType"), baseEntityType);
+                predicate = CriteriaQueryHelper.addPredicate(predicate, predicate2, criteriaBuilder);
+
                 criteriaQuery.where(predicate);
 //            Expression<Date> expresion = root.get("visibleToAll");
                 //Get Results
