@@ -36,6 +36,8 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  *
@@ -105,277 +107,6 @@ public abstract class AbstractJPAController {
     }
 
     /**
-     * ALTER TABLE vista ADD COLUMN base_entity_type character varying(1000) NOT
-     * NULL DEFAULT 'class';
-     *
-     * @param em
-     * @param criteriaBuilder
-     * @param root
-     * @param vista
-     * @param whoIsApplyingView
-     * @return
-     * @throws IllegalStateException
-     * @throws ClassNotFoundException
-     */
-//    protected Predicate createPredicate(EntityManager em, CriteriaBuilder criteriaBuilder, Root<?> root, Vista vista, Usuario whoIsApplyingView) throws IllegalStateException, ClassNotFoundException {
-//        Predicate predicate = null;
-//        if (vista == null) {
-//            throw new IllegalStateException("La vista no puede ser null!");
-//        }
-//        Class baseClass = Class.forName(vista.getBaseEntityType());
-//        Map<String, ComparableField> annotatedFields = getAnnotatedComparableFieldsMap(baseClass);
-//
-//        for (FiltroVista filtro : vista.getFiltrosVistaList()) {
-//
-//            final ComparableField comparableField = annotatedFields.get(filtro.getIdCampo());
-//
-//            if (comparableField == null) {
-//                throw new IllegalStateException("Los valores de los filtros de la vista no cumplen con los requisitos minimos!. Debe especificar un campo comparable. atraves de annotaciones en el bean. " + vista.toString());
-//            }
-//
-//            TipoComparacion operador = filtro.getIdComparador();
-//
-//            String valorAttributo = filtro.getValor();
-//
-//            if (operador == null || valorAttributo == null || filtro == null) {
-//                throw new IllegalStateException("Los valores de los filtros de la vista no cumplen con los requisitos minimos. " + vista.toString());
-//            }
-//
-//            final FieldType fieldType = comparableField.getFieldTypeId();
-//
-//            if (fieldType == null) {
-//                throw new IllegalStateException("Los valores de los filtros de la vista no cumplen con los requisitos minimos!. Debe especificar un tipo de campo, ejemplo TEXT. " + vista.toString());
-//            }
-//
-//            Predicate localPredicate = null;
-//
-//            if (fieldType.equals(EnumFieldType.TEXT.getFieldType()) || fieldType.equals(EnumFieldType.TEXTAREA.getFieldType())) {
-//                //El valor es de tipo String, usarlo tal como esta
-//                if (operador.equals(EnumTipoComparacion.EQ.getTipoComparacion())) {
-//                    localPredicate = criteriaBuilder.equal(root.get(filtro.getIdCampo()), valorAttributo);
-//                } else if (operador.equals(EnumTipoComparacion.NE.getTipoComparacion())) {
-//                    localPredicate = criteriaBuilder.notEqual(root.get(filtro.getIdCampo()), valorAttributo);
-//                } else if (operador.equals(EnumTipoComparacion.CO.getTipoComparacion())) {
-//                    Expression<String> expresion = root.get(filtro.getIdCampo());
-//
-//                    if (!valorAttributo.contains("*")) {
-//                        localPredicate = criteriaBuilder.like(expresion, "%" + valorAttributo + "%");
-//                    } else {
-//                        localPredicate = criteriaBuilder.like(expresion, valorAttributo.replace("*", "%"));
-//                    }
-//
-//                } else {
-//                    throw new IllegalStateException("Comparador " + operador.getIdComparador() + " is not supported!!");
-//                }
-//
-//            } else if (fieldType.equals(EnumFieldType.CALENDAR.getFieldType())) {
-//                //El valor es de tipo Fecha, usar el String parseado a una fecha
-//                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//
-//                try {
-//                    if (valorAttributo != null && !valorAttributo.isEmpty()) {
-//                        Date fecha1 = sdf.parse(valorAttributo);
-//                        if (fecha1 != null) {
-//                            Expression<Date> expresion = root.get(filtro.getIdCampo());
-//                            if (operador.equals(EnumTipoComparacion.EQ.getTipoComparacion())) {
-//                                localPredicate = criteriaBuilder.equal(expresion, fecha1);
-//                            } else if (operador.equals(EnumTipoComparacion.NE.getTipoComparacion())) {
-//                                localPredicate = criteriaBuilder.notEqual(expresion, fecha1);
-//                            } else if (operador.equals(EnumTipoComparacion.LE.getTipoComparacion())) {
-//                                localPredicate = criteriaBuilder.lessThanOrEqualTo(expresion, fecha1);
-//                            } else if (operador.equals(EnumTipoComparacion.GE.getTipoComparacion())) {
-//                                localPredicate = criteriaBuilder.greaterThanOrEqualTo(expresion, fecha1);
-//                            } else if (operador.equals(EnumTipoComparacion.LT.getTipoComparacion())) {
-//                                localPredicate = criteriaBuilder.lessThan(expresion, fecha1);
-//                            } else if (operador.equals(EnumTipoComparacion.GT.getTipoComparacion())) {
-//                                localPredicate = criteriaBuilder.greaterThan(expresion, fecha1);
-//                            } else if (operador.equals(EnumTipoComparacion.BW.getTipoComparacion())) {
-//                                Date fecha2 = sdf.parse(filtro.getValor2());
-//                                localPredicate = criteriaBuilder.between(expresion, fecha1, fecha2);
-//                            } else {
-//                                throw new IllegalStateException("Comparador " + operador.getIdComparador() + " is not supported!!");
-//                            }
-//                        } else {
-//                            Logger.getLogger(AbstractJPAController.class.getName()).log(Level.SEVERE, "filtro descartado [CALENDAR] No se puede parsear la fecha {0}", valorAttributo);
-//                            continue;
-//                        }
-//                    } else {
-//                        Expression<Date> expresion = root.get(filtro.getIdCampo());
-//                        if (operador.equals(EnumTipoComparacion.EQ.getTipoComparacion())) {
-//                            localPredicate = criteriaBuilder.isNull(expresion);
-//                        } else if (operador.equals(EnumTipoComparacion.NE.getTipoComparacion())) {
-//                            localPredicate = criteriaBuilder.isNotNull(expresion);
-//                        } else {
-//                            throw new IllegalStateException("Comparador " + operador.getIdComparador() + " is not supported!!");
-//                        }
-//                    }
-//
-//                } catch (ParseException ex) {
-//                    //ignore and do not add this filter to the query
-//                    Logger.getLogger(AbstractJPAController.class.getName()).log(Level.SEVERE, "filtro descartado [CALENDAR] No se puede parsear la fecha " + valorAttributo, ex);
-//                    continue;
-//                }
-//
-//            } else if (fieldType.equals(EnumFieldType.SELECTONE_ENTITY.getFieldType())) {
-//                //El valor es el id de un entity, que tipo de Entity?= comparableField.tipo
-//                //One or more values??
-//                if (operador.equals(EnumTipoComparacion.SC.getTipoComparacion())) {
-//
-//                    //One or more values, as list select many.
-//                    final List<String> valores = filtro.getValoresList();
-//
-//                    if (comparableField.getTipoCampoFullPath().equals(List.class)) {
-//
-//                        localPredicate = root.joinList(filtro.getIdCampo()).get(comparableField.getListParameterFieldId()).in(valores);
-//
-//                    } else {
-//
-//                        Expression expresion2 = createExpression(root, comparableField.getIdCampoFullPath()).as(comparableField.getTipoCampoFullPath());
-//                        localPredicate = criteriaBuilder.equal(expresion2.in(valores), Boolean.TRUE);
-//
-//                        //handle PLACEHOLDERS! in valores
-//                        System.out.println("//PLACEHOLDERS! valores" + valores);
-//                        if (valores.contains(PLACE_HOLDER_CURRENT_USER)) {
-//
-//                            if (comparableField.getTipo().equals(Usuario.class)) {
-//                                Expression expresion = root.get(filtro.getIdCampo()).as(comparableField.getTipo());
-////                                localPredicate = criteriaBuilder.equal(expresion, em.find(comparableField.getTipo(), whoIsApplyingView.getIdUsuario()));
-//                                localPredicate = CriteriaQueryHelper.addOrPredicate(criteriaBuilder.equal(expresion, em.find(comparableField.getTipo(), whoIsApplyingView.getIdUsuario())), localPredicate, criteriaBuilder);
-//                            }
-//                        }
-//
-//                        if (valores.contains(PLACE_HOLDER_NULL)) {
-//                            Expression expresion = root.get(filtro.getIdCampo()).as(comparableField.getTipo());
-//                            localPredicate = CriteriaQueryHelper.addOrPredicate(localPredicate, criteriaBuilder.isNull(expresion), criteriaBuilder);
-//                        }
-//                        
-//
-//                    }
-//
-//                } else {
-//
-//                    Expression expresion = root.get(filtro.getIdCampo()).as(comparableField.getTipo());
-//
-//                    //some entities may have special place holder that others entities do not have, so here we should call the special method
-//                    if (isThereSpecialFiltering(filtro)) {
-//                        localPredicate = createSpecialPredicate(filtro);
-//                    } else {
-//                        //Owner has a special place holder that others entities do not have
-//                        if (comparableField.getTipo().equals(Usuario.class)
-//                                //                        if (filtro.getIdCampo().equals(EnumCampoCompCaso.OWNER.getCampoCompCaso().getIdCampo())
-//                                && PLACE_HOLDER_CURRENT_USER.equalsIgnoreCase(valorAttributo)) {
-//                            if (operador.equals(EnumTipoComparacion.EQ.getTipoComparacion())) {
-//                                localPredicate = criteriaBuilder.equal(expresion, em.find(comparableField.getTipo(), whoIsApplyingView.getIdUsuario()));
-//                            } else if (operador.equals(EnumTipoComparacion.NE.getTipoComparacion())) {
-//                                localPredicate = criteriaBuilder.notEqual(expresion, em.find(comparableField.getTipo(), whoIsApplyingView.getIdUsuario()));
-//                            } else {
-//                                throw new IllegalStateException("Tipo comparacion " + operador.getIdComparador() + " is not supported here!!");
-//                            }
-//
-//                        } else if (PLACE_HOLDER_ANY.equalsIgnoreCase(valorAttributo)) {
-//                            if (operador.equals(EnumTipoComparacion.EQ.getTipoComparacion())) {
-//                                localPredicate = criteriaBuilder.isNotNull(expresion);
-//                            } else if (operador.equals(EnumTipoComparacion.NE.getTipoComparacion())) {
-//                                localPredicate = criteriaBuilder.isNull(expresion);
-//                            } else {
-//                                throw new IllegalStateException("Tipo comparacion " + operador.getIdComparador() + " is not supported here!!");
-//                            }
-//                        } else if (PLACE_HOLDER_NULL.equalsIgnoreCase(valorAttributo)) {
-//                            if (operador.equals(EnumTipoComparacion.EQ.getTipoComparacion())) {
-//                                localPredicate = criteriaBuilder.isNull(expresion);
-//                            } else if (operador.equals(EnumTipoComparacion.NE.getTipoComparacion())) {
-//                                localPredicate = criteriaBuilder.isNotNull(expresion);
-//                            } else {
-//                                throw new IllegalStateException("Tipo comparacion " + operador.getIdComparador() + " is not supported here!!");
-//                            }
-//                        } else {
-//                            if (operador.equals(EnumTipoComparacion.EQ.getTipoComparacion())) {
-//                                try {
-//                                    localPredicate = criteriaBuilder.equal(expresion, em.find(comparableField.getTipo(), valorAttributo));
-//                                } catch (java.lang.IllegalArgumentException e) {
-//                                    localPredicate = criteriaBuilder.equal(expresion, em.find(comparableField.getTipo(), Integer.valueOf(valorAttributo)));
-//                                }
-//                            } else if (operador.equals(EnumTipoComparacion.NE.getTipoComparacion())) {
-//                                try {
-//                                    localPredicate = criteriaBuilder.notEqual(expresion, em.find(comparableField.getTipo(), valorAttributo));
-//                                } catch (java.lang.IllegalArgumentException e) {
-//                                    localPredicate = criteriaBuilder.notEqual(expresion, em.find(comparableField.getTipo(), Integer.valueOf(valorAttributo)));
-//                                }
-//
-//                            } else {
-//                                throw new IllegalStateException("Tipo comparacion " + operador.getIdComparador() + " is not supported here!!");
-//                            }
-//                        }
-//                    }
-//                }
-//
-//            } else if (fieldType.equals(EnumFieldType.SELECTONE_PLACE_HOLDER.getFieldType())) {
-//
-//                Expression expresion = root.get(filtro.getIdCampo()).as(comparableField.getTipo());
-//
-//                //some entities may have special place holder that others entities do not have, so here we should call the special method
-//                if (isThereSpecialFiltering(filtro)) {
-//                    localPredicate = createSpecialPredicate(filtro);
-//                } else {
-//                    if (PLACE_HOLDER_ANY.equalsIgnoreCase(valorAttributo)) {
-//                        if (operador.equals(EnumTipoComparacion.EQ.getTipoComparacion())) {
-//                            localPredicate = criteriaBuilder.isNotNull(expresion);
-//                        } else if (operador.equals(EnumTipoComparacion.NE.getTipoComparacion())) {
-//                            localPredicate = criteriaBuilder.isNull(expresion);
-//                        } else {
-//                            throw new IllegalStateException("Tipo comparacion " + operador.getIdComparador() + " is not supported here!!");
-//                        }
-//                    } else if (PLACE_HOLDER_NULL.equalsIgnoreCase(valorAttributo)) {
-//                        if (operador.equals(EnumTipoComparacion.EQ.getTipoComparacion())) {
-//                            localPredicate = criteriaBuilder.isNull(expresion);
-//                        } else if (operador.equals(EnumTipoComparacion.NE.getTipoComparacion())) {
-//                            localPredicate = criteriaBuilder.isNotNull(expresion);
-//                        } else {
-//                            throw new IllegalStateException("Tipo comparacion " + operador.getIdComparador() + " is not supported here!!");
-//                        }
-//                    } else {
-//                        throw new IllegalStateException("valor Attributo " + valorAttributo + " is not supported here!!");
-//                    }
-//                }
-//
-//            } else if (fieldType.equals(EnumFieldType.CHECKBOX.getFieldType())) {
-//                //Boolean comparation
-//                //El valor es de tipo boolean, usar el String parseado a un boolean
-//                Expression<Boolean> expresion = root.get(filtro.getIdCampo());
-//                boolean boolValue = Boolean.valueOf(valorAttributo);
-//
-//                if (operador.equals(EnumTipoComparacion.EQ.getTipoComparacion())) {
-//                    localPredicate = criteriaBuilder.equal(expresion, boolValue);
-//                } else if (operador.equals(EnumTipoComparacion.NE.getTipoComparacion())) {
-//                    localPredicate = criteriaBuilder.notEqual(expresion, boolValue);
-//                } else {
-//                    throw new IllegalStateException("Comparador " + operador.getIdComparador() + " is not supported!!");
-//                }
-//
-//            } else if (fieldType.equals(EnumFieldType.COMMA_SEPARATED_VALUELIST.getFieldType())) {
-//                if (operador.equals(EnumTipoComparacion.IM.getTipoComparacion())) {
-////                    Expression<List> expresion = root.get(filtro.getIdCampo());
-//                    final List<String> valoresList = filtro.getValoresList();
-////                    ListJoin<Caso, Etiqueta> tags = root.joinList(filtro.getIdCampo());
-////                    localPredicate = root.joinList(filtro.getIdCampo()).get("tagId").in(valoresList);
-//                    localPredicate = root.joinList(filtro.getIdCampo()).get("tagId").in(valoresList);
-//
-////                      Expression expresion2 = createExpression(root, comparableField.getIdCampoFullPath()).as(comparableField.getTipoCampoFullPath());
-////                    localPredicate = criteriaBuilder.isTrue(expresion2.in(valoresList));
-//                } else {
-//                    throw new IllegalStateException("Comparador " + operador.getIdComparador() + " is not supported!!");
-//                }
-//
-//            } else {
-//                throw new IllegalStateException("fieldType " + fieldType.getFieldTypeId() + " is not supported yet!!");
-//            }
-//
-//            predicate = CriteriaQueryHelper.addPredicate(predicate, localPredicate, criteriaBuilder);
-//        }
-//
-//        return predicate;
-//    }
-    /**
      *
      * @param em
      * @param criteriaBuilder
@@ -387,7 +118,7 @@ public abstract class AbstractJPAController {
      * @throws IllegalStateException
      * @throws ClassNotFoundException
      */
-    protected Predicate createPredicate(EntityManager em, CriteriaBuilder criteriaBuilder, Root<?> root, Vista vista, Usuario whoIsApplyingView) throws IllegalStateException, ClassNotFoundException {
+    protected Predicate createPredicate(EntityManager em, CriteriaBuilder criteriaBuilder, Root<?> root, Vista vista, Usuario whoIsApplyingView, String query) throws IllegalStateException, ClassNotFoundException {
 
         Predicate predicate = null;
 
@@ -715,14 +446,37 @@ public abstract class AbstractJPAController {
                 }
             }
 
+            if (!StringUtils.isEmpty(query)) {
+                //build predicate to select by query, all TEXT & TEXTAREA fields
+                final Predicate predicatesForQuery = createCustomPredicatesForQuery(criteriaBuilder, root, query);
+                if (predicatesForQuery != null) {
+                    if (predicate != null) {
+                        predicate = CriteriaQueryHelper.addPredicate(predicate, predicatesForQuery, criteriaBuilder);
+                    } else {
+                        predicate = predicatesForQuery;
+                    }
+                }
+            }
+
         } catch (java.lang.IllegalArgumentException iae) {
-            System.err.println("***failed on vista:" + vista);
+            System.err.println("*** create Predicate failed on vista:" + vista);
             iae.printStackTrace();
         }
         return predicate;
     }
 
-    protected Predicate createPredicatesForQuery(CriteriaBuilder criteriaBuilder, Root<?> root, String query) throws IllegalStateException, ClassNotFoundException {
+    /**
+     * Default implementation for searching by query, it creates one criteria
+     * for each Text field, as a "field LIKE %query%" operation.
+     *
+     * @param criteriaBuilder
+     * @param root
+     * @param query
+     * @return
+     * @throws IllegalStateException
+     * @throws ClassNotFoundException
+     */
+    private Predicate createCustomPredicatesForQuery(CriteriaBuilder criteriaBuilder, Root<?> root, String query) throws IllegalStateException, ClassNotFoundException {
 
         Predicate predicate = null;
         if (query == null) {
@@ -742,16 +496,24 @@ public abstract class AbstractJPAController {
                 //El valor es de tipo String, usarlo tal como esta pero case insensitive
 
                 Expression<String> expresion = root.get(comparableField.getIdCampo());
-                System.out.println("comparableField.getIdCampo():" + comparableField.getIdCampo());
-                System.out.println("Query:" + query);
+
+                query = query.trim().replace(" ", "%").toLowerCase();
 
                 if (!query.contains("*")) {
-                    localPredicate = criteriaBuilder.like(criteriaBuilder.lower(expresion), "%" + query.trim().toLowerCase() + "%");
+                    localPredicate = criteriaBuilder.like(criteriaBuilder.lower(expresion), "%" + query + "%");
                 } else {
-                    localPredicate = criteriaBuilder.like(criteriaBuilder.lower(expresion), query.trim().toLowerCase().replace("*", "%"));
+                    localPredicate = criteriaBuilder.like(criteriaBuilder.lower(expresion), query.replace("*", "%"));
                 }
 
                 predicate = CriteriaQueryHelper.addOrPredicate(predicate, localPredicate, criteriaBuilder);
+            } else if (fieldType.equals(EnumFieldType.NUMBER.getFieldType())) {
+
+                if (NumberUtils.isNumber(query.trim())) {
+                    Expression<Number> expresion = root.get(comparableField.getIdCampo());
+                    localPredicate = criteriaBuilder.equal((expresion), query);
+                    predicate = CriteriaQueryHelper.addOrPredicate(predicate, localPredicate, criteriaBuilder);
+                }
+
             }
 
         }
@@ -822,24 +584,6 @@ public abstract class AbstractJPAController {
 
         List<?> entities;
 
-        //need to filter what categories you can see
-//        if (comparableField.getTipo().equals(Categoria.class)) {
-//            List<Categoria> lista = new LinkedList<Categoria>();
-//            for (Grupo grupo : userWhoIsAsking.getGrupoList()) {
-//                for (Categoria cat : grupo.getCategoriaList()) {
-//                    if (!lista.contains(cat)) {
-//                        lista.add(cat);
-//                    }
-//                }
-//            }
-//            Collections.sort(lista, new Comparator<Categoria>() {
-//                @Override
-//                public int compare(Categoria o1, Categoria o2) {
-//                    return o1.getOrden() - o2.getOrden();
-//                }
-//            });
-//            entities = lista;
-//        } else
         if (comparableField.getTipo().equals(List.class)) {
             entities = findAll(comparableField.getListGenericType());
             if (comparableField.getListGenericType().equals(Usuario.class)) {

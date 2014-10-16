@@ -172,7 +172,7 @@ public class SubEstadoCaso implements Serializable {
 
     @Override
     public String toString() {
-        return getTipoCaso().getNombre() + "->" + nombre;
+        return nombre;
     }
 
     /**

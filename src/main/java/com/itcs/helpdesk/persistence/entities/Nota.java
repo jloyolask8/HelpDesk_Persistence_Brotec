@@ -194,11 +194,12 @@ public class Nota implements Serializable, Comparable<Nota> {
 
     @Override
     public int compareTo(Nota o) {
-        if (equals(o)) {
-            return 0;
-        }
-        long resultado = (o.getFechaCreacion().getTime() - this.getFechaCreacion().getTime());
-        return (resultado < 0 ? -1 : 1);
+        return o.getFechaCreacion().compareTo(this.getFechaCreacion());
+//        if (this.equals(o)) {
+//            return 0;
+//        }
+//        long resultado = (o.getFechaCreacion().getTime() - this.getFechaCreacion().getTime());
+//        return (resultado < 0 ? -1 : 1);
     }
 
     /**

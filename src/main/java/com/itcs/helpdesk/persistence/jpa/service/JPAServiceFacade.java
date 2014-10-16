@@ -110,7 +110,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.resource.NotSupportedException;
 import javax.transaction.UserTransaction;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
 
@@ -337,19 +336,19 @@ public class JPAServiceFacade extends AbstractJPAController {
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
             CriteriaQuery criteriaQuery = em.getCriteriaBuilder().createQuery();
             Root root = criteriaQuery.from(clazz);
-            Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, who);
+            Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, who, query);
             
-             if (!StringUtils.isEmpty(query)) {
-                //build predicate to select by query, all TEXT & TEXTAREA fields
-                final Predicate predicatesForQuery = createPredicatesForQuery(criteriaBuilder, root, query);
-                if (predicatesForQuery != null) {
-                    if (predicate != null) {
-                        predicate = CriteriaQueryHelper.addPredicate(predicate, predicatesForQuery, criteriaBuilder);
-                    } else {
-                        predicate = predicatesForQuery;
-                    }
-                }
-            }
+//             if (!StringUtils.isEmpty(query)) {
+//                //build predicate to select by query, all TEXT & TEXTAREA fields
+//                final Predicate predicatesForQuery = createPredicatesForQuery(criteriaBuilder, root, query);
+//                if (predicatesForQuery != null) {
+//                    if (predicate != null) {
+//                        predicate = CriteriaQueryHelper.addPredicate(predicate, predicatesForQuery, criteriaBuilder);
+//                    } else {
+//                        predicate = predicatesForQuery;
+//                    }
+//                }
+//            }
 
             if (predicate != null) {
                 criteriaQuery.select(criteriaBuilder.count(root)).where(predicate).distinct(true);
@@ -391,18 +390,7 @@ public class JPAServiceFacade extends AbstractJPAController {
             CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(entityClass);
             Root root = criteriaQuery.from(entityClass);
 
-            Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, who);
-            if (!StringUtils.isEmpty(query)) {
-                //build predicate to select by query, all TEXT & TEXTAREA fields
-                final Predicate predicatesForQuery = createPredicatesForQuery(criteriaBuilder, root, query);
-                if (predicatesForQuery != null) {
-                    if (predicate != null) {
-                        predicate = CriteriaQueryHelper.addPredicate(predicate, predicatesForQuery, criteriaBuilder);
-                    } else {
-                        predicate = predicatesForQuery;
-                    }
-                }
-            }
+            Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, who, query);
 
             if (predicate != null) {
                 criteriaQuery.where(predicate).distinct(true);
@@ -717,7 +705,7 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     public Caso mergeCaso(Caso caso, AuditLog log, boolean notifyListeners) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
-        List<AuditLog> changeList = new LinkedList<AuditLog>();
+        List<AuditLog> changeList = new LinkedList<>();
         changeList.add(log);
         return mergeCaso(caso, changeList, notifyListeners);
     }

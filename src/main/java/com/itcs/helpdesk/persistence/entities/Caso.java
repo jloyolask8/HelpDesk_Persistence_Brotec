@@ -60,6 +60,7 @@ public class Caso implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_caso")
+    @FilterField(fieldTypeId = EnumFieldType.NUMBER, label = "Número de Caso", fieldIdFull = "idCaso", fieldTypeFull = Long.class)
     private Long idCaso;
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Asunto", fieldIdFull = "tema", fieldTypeFull = String.class)
     @Basic(optional = false)
@@ -186,7 +187,7 @@ public class Caso implements Serializable {
     @JoinColumn(name = "id_canal", referencedColumnName = "id_canal")
     @ManyToOne
     private Canal idCanal;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCaso")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "idCaso")
     @CascadeOnDelete
     @OrderBy("fechaCreacion DESC")
     private List<Nota> notaList;
@@ -508,7 +509,6 @@ public class Caso implements Serializable {
     }
 
     public List<Nota> getNotaList() {
-//        Collections.sort(notaList);
         return notaList;
     }
 
@@ -860,7 +860,7 @@ public class Caso implements Serializable {
         if (getEmailCliente() != null) {
             return getEmailCliente().getEmailCliente();
         }
-        
+
         return "";
     }
 
@@ -868,7 +868,7 @@ public class Caso implements Serializable {
     public List<Attachment> getAttachmentsNotEmbedded() {
         try {
             if (getAttachmentList() != null) {
-                List<Attachment> lista = new ArrayList<Attachment>();
+                List<Attachment> lista = new ArrayList<>();
                 for (Attachment attachment : getAttachmentList()) {
                     if (attachment.getContentId() == null) {
                         lista.add(attachment);
