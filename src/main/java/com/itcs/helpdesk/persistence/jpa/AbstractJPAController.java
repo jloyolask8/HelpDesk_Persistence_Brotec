@@ -63,7 +63,7 @@ public abstract class AbstractJPAController {
         return findEntities(entityClass, all, maxResults, firstResult, (String[]) null);
     }
 
-    public List<?> findEntities(Class entityClass, boolean all, int maxResults, int firstResult, String... orderBy) {
+    private List<?> findEntities(Class entityClass, boolean all, int maxResults, int firstResult, String... orderBy) {
         EntityManager em = getEntityManager();
         try {
             final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();

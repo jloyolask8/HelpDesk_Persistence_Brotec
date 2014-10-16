@@ -142,8 +142,8 @@ public class Usuario implements Serializable {
      * ALTER TABLE usuario ADD COLUMN prefer_firma_enabled boolean; ALTER TABLE
      * usuario ADD COLUMN firma text;
      */
-    @Column(name = "prefer_firma_enabled")
-    private boolean firmaEnabled;
+//    @Column(name = "prefer_firma_enabled")
+//    private boolean firmaEnabled;
 
     @Column(name = "firma")
     @Size(max = 2147483647)
@@ -541,19 +541,19 @@ public class Usuario implements Serializable {
         this.desktopNotificationsEnabled = desktopNotificationsEnabled;
     }
 
-    /**
-     * @return the firmaEnabled
-     */
-    public boolean isFirmaEnabled() {
-        return firmaEnabled;
-    }
-
-    /**
-     * @param firmaEnabled the firmaEnabled to set
-     */
-    public void setFirmaEnabled(boolean firmaEnabled) {
-        this.firmaEnabled = firmaEnabled;
-    }
+//    /**
+//     * @return the firmaEnabled
+//     */
+//    public boolean isFirmaEnabled() {
+//        return firmaEnabled;
+//    }
+//
+//    /**
+//     * @param firmaEnabled the firmaEnabled to set
+//     */
+//    public void setFirmaEnabled(boolean firmaEnabled) {
+//        this.firmaEnabled = firmaEnabled;
+//    }
 
     /**
      * @return the firma
