@@ -40,21 +40,15 @@ public class Prioridad implements Serializable {
     @Size(min = 1, max = 40)
     @Column(name = "id_prioridad")
     private String idPrioridad;
-    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Nombre", fieldIdFull = "nombre", fieldTypeFull = String.class)
-    @Size(max = 40)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Nombre", fieldIdFull = "nombre", fieldTypeFull = String.class)
     private String nombre;
-    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Descripción", fieldIdFull = "descripcion", fieldTypeFull = String.class)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Descripción", fieldIdFull = "descripcion", fieldTypeFull = String.class)
     @Lob
     @Size(max = 2147483647)
     private String descripcion;
+    @FilterField(fieldTypeId = EnumFieldType.NUMBER, label = "SLA Horas", fieldIdFull = "slaHoras", fieldTypeFull = Integer.class)
     @Column(name = "sla_horas")
     private Integer slaHoras;
-//    @OneToMany(mappedBy = "idPrioridad")
-//    private List<Caso> casoList;
-//    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Tipo", fieldIdFull = "tipoCaso.idTipoCaso")
-//    @JoinColumn(name = "id_tipo_caso", referencedColumnName = "id_tipo_caso")
-//    @ManyToOne
-//    private TipoCaso tipoCaso;
 
     public Prioridad() {
     }

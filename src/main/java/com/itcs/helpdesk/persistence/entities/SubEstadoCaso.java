@@ -44,16 +44,14 @@ public class SubEstadoCaso implements Serializable {
     @NotNull
     @Size(min = 1, max = 40)
     @Column(name = "id_sub_estado")
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Id Sub Estado", fieldIdFull = "idSubEstado", fieldTypeFull = String.class)
     private String idSubEstado;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 40)
+    @NotNull    
+     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Nombre", fieldIdFull = "nombre", fieldTypeFull = String.class)
     private String nombre;
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Descripción", fieldIdFull = "descripcion", fieldTypeFull = String.class)
     private String descripcion;
-//    @ManyToMany(mappedBy = "subEstadoCasoList")
-//    private List<Categoria> categoriaList;
-//    @OneToMany(mappedBy = "idSubEstado")
-//    private List<Caso> casoList;
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Estado", fieldIdFull = "idEstado.idEstado", fieldTypeFull = String.class)
     @JoinColumn(name = "id_estado", referencedColumnName = "id_estado")
     @ManyToOne
