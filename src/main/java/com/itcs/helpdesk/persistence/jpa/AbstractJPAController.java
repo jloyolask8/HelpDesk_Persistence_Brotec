@@ -4,8 +4,12 @@
  */
 package com.itcs.helpdesk.persistence.jpa;
 
+import com.itcs.helpdesk.persistence.entities.Caso;
+import com.itcs.helpdesk.persistence.entities.Caso_;
+import com.itcs.helpdesk.persistence.entities.Cliente;
 import com.itcs.helpdesk.persistence.entities.FieldType;
 import com.itcs.helpdesk.persistence.entities.FiltroVista;
+import com.itcs.helpdesk.persistence.entities.Nota_;
 import com.itcs.helpdesk.persistence.entities.TipoComparacion;
 import com.itcs.helpdesk.persistence.entities.Usuario;
 import com.itcs.helpdesk.persistence.entities.Vista;
@@ -32,6 +36,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -462,6 +467,7 @@ public abstract class AbstractJPAController {
             System.err.println("*** create Predicate failed on vista:" + vista);
             iae.printStackTrace();
         }
+
         return predicate;
     }
 
@@ -482,41 +488,79 @@ public abstract class AbstractJPAController {
         if (query == null) {
             return null;
         }
-        List<ComparableField> annotatedFields = getAnnotatedComparableFieldsByClass(root.getJavaType());
 
-        for (ComparableField comparableField : annotatedFields) {
-            final FieldType fieldType = comparableField.getFieldTypeId();
-            if (fieldType == null) {
-                throw new IllegalStateException("Los filtros de la vista no cumplen con los requisitos minimos!. Debe especificar un tipo de campo.");
-            }
+        //TODO cuero del pene de una pulga. temporal para el problema de buscar clientes
+        if (root.getJavaType().getName().equals(Cliente.class.getName()) && !StringUtils.isEmpty(query)) {
+            Predicate predicateCliente = ClienteJpaController.createSearchExpression((Root<Cliente>) root, criteriaBuilder, query);
+            predicate = CriteriaQueryHelper.addOrPredicate(predicate, predicateCliente, criteriaBuilder);
+        } else //fin cpdp
+        //TODO cuero del pene de una pulga. temporal para el problema de buscar en los casos
+        if (root.getJavaType().getName().equals(Caso.class.getName()) && !StringUtils.isEmpty(query)) {
+            Predicate predicateCaso = createCasoSearchExpression((Root<Caso>) root, criteriaBuilder, query);
+            predicate = CriteriaQueryHelper.addOrPredicate(predicate, predicateCaso, criteriaBuilder);
+        } else {//fin cpdp
 
-            Predicate localPredicate = null;
+            //All other entities only seach on text and number fields
+            List<ComparableField> annotatedFields = getAnnotatedComparableFieldsByClass(root.getJavaType());
 
-            if (fieldType.equals(EnumFieldType.TEXT.getFieldType()) || fieldType.equals(EnumFieldType.TEXTAREA.getFieldType())) {
-                //El valor es de tipo String, usarlo tal como esta pero case insensitive
-
-                Expression<String> expresion = root.get(comparableField.getIdCampo());
-
-                query = query.trim().replace(" ", "%").toLowerCase();
-
-                if (!query.contains("*")) {
-                    localPredicate = criteriaBuilder.like(criteriaBuilder.lower(expresion), "%" + query + "%");
-                } else {
-                    localPredicate = criteriaBuilder.like(criteriaBuilder.lower(expresion), query.replace("*", "%"));
+            for (ComparableField comparableField : annotatedFields) {
+                final FieldType fieldType = comparableField.getFieldTypeId();
+                if (fieldType == null) {
+                    throw new IllegalStateException("Los filtros de la vista no cumplen con los requisitos minimos!. Debe especificar un tipo de campo.");
                 }
 
-                predicate = CriteriaQueryHelper.addOrPredicate(predicate, localPredicate, criteriaBuilder);
-            } else if (fieldType.equals(EnumFieldType.NUMBER.getFieldType())) {
+                Predicate localPredicate = null;
 
-                if (NumberUtils.isNumber(query.trim())) {
-                    Expression<Number> expresion = root.get(comparableField.getIdCampo());
-                    localPredicate = criteriaBuilder.equal((expresion), query);
+                if (fieldType.equals(EnumFieldType.TEXT.getFieldType()) || fieldType.equals(EnumFieldType.TEXTAREA.getFieldType())) {
+                    //El valor es de tipo String, usarlo tal como esta pero case insensitive
+
+                    Expression<String> expresion = root.get(comparableField.getIdCampo());
+
+                    query = query.trim().replace(" ", "%").toLowerCase();
+
+                    if (!query.contains("*")) {
+                        localPredicate = criteriaBuilder.like(criteriaBuilder.lower(expresion), "%" + query + "%");
+                    } else {
+                        localPredicate = criteriaBuilder.like(criteriaBuilder.lower(expresion), query.replace("*", "%"));
+                    }
+
                     predicate = CriteriaQueryHelper.addOrPredicate(predicate, localPredicate, criteriaBuilder);
+                } else if (fieldType.equals(EnumFieldType.NUMBER.getFieldType())) {
+
+                    if (NumberUtils.isNumber(query.trim())) {
+                        Expression<Number> expresion = root.get(comparableField.getIdCampo());
+                        localPredicate = criteriaBuilder.equal((expresion), query);
+                        predicate = CriteriaQueryHelper.addOrPredicate(predicate, localPredicate, criteriaBuilder);
+                    }
+
                 }
 
             }
 
         }
+
+        return predicate;
+    }
+
+    public static Predicate createCasoSearchExpression(Root<Caso> root, CriteriaBuilder criteriaBuilder, String query) {
+        Expression<Long> expresion1 = root.get(Caso_.idCaso);
+        Expression<String> expresion2 = root.get(Caso_.tema);
+        Expression<String> expresion3 = root.get(Caso_.descripcion);
+
+        Expression<String> expresionNotaList = root.joinList(Caso_.notaList.getName(), JoinType.LEFT).get("texto");
+//        Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT)
+//                .join("subComponente", JoinType.LEFT).get("direccionMunicipal"); 
+        //.get("subComponente").get("direccionMunicipal");
+        Predicate predicate = criteriaBuilder.or(
+                criteriaBuilder.like(criteriaBuilder.lower(expresion2), "%" + query.toLowerCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.lower(expresion3), "%" + query.toLowerCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.lower(expresionNotaList), "%" + query.toLowerCase() + "%"));
+
+        if (NumberUtils.isNumber(query.trim())) {
+            Predicate localPredicate = criteriaBuilder.equal(expresion1, query);
+            predicate = CriteriaQueryHelper.addOrPredicate(predicate, localPredicate, criteriaBuilder);
+        }
+
         return predicate;
     }
 

@@ -28,6 +28,7 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.UserTransaction;
+import org.eclipse.persistence.config.QueryHints;
 
 /**
  *
@@ -62,7 +63,8 @@ public class ClienteJpaController implements Serializable {
         }
     }
 
-    private Predicate createSearchExpression(Root<Cliente> root, CriteriaBuilder criteriaBuilder, String searchPattern) {
+    //TODO remove direccion municipal field from sub componente, use id as product code and nombre as product label or direccion
+    public static Predicate createSearchExpression(Root<Cliente> root, CriteriaBuilder criteriaBuilder, String searchPattern) {
         Expression<String> expresionNombre = root.get(Cliente_.nombres);
         Expression<String> expresionApellido = root.get(Cliente_.apellidos);
         Expression<String> expresionRut = root.get(Cliente_.rut);
@@ -95,7 +97,7 @@ public class ClienteJpaController implements Serializable {
                 criteriaQuery.select(criteriaBuilder.count(root));
             }
             Query q = em.createQuery(criteriaQuery);
-            q.setHint("eclipselink.query-results-cache", true);
+            q.setHint(QueryHints.QUERY_RESULTS_CACHE, true);
             return ((Long) q.getSingleResult());
         } catch (Exception e) {
             Logger.getLogger(ClienteJpaController.class.getName()).log(Level.SEVERE, "countSearchEntities " + searchPattern, e);

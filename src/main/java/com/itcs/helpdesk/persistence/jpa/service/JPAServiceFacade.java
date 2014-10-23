@@ -337,7 +337,7 @@ public class JPAServiceFacade extends AbstractJPAController {
             CriteriaQuery criteriaQuery = em.getCriteriaBuilder().createQuery();
             Root root = criteriaQuery.from(clazz);
             Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, who, query);
-            
+
 //             if (!StringUtils.isEmpty(query)) {
 //                //build predicate to select by query, all TEXT & TEXTAREA fields
 //                final Predicate predicatesForQuery = createPredicatesForQuery(criteriaBuilder, root, query);
@@ -349,7 +349,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //                    }
 //                }
 //            }
-
             if (predicate != null) {
                 criteriaQuery.select(criteriaBuilder.count(root)).where(predicate).distinct(true);
             } else {
@@ -423,6 +422,11 @@ public class JPAServiceFacade extends AbstractJPAController {
             em.close();
         }
     }
+    
+    private Predicate createCustomPredicatesForQuery(CriteriaBuilder criteriaBuilder, Root<?> root, String query) throws IllegalStateException, ClassNotFoundException {
+        return null;
+    }
+
 
     public Long countCasosByCreatedBetween(Date from, Date to) {
         EasyCriteriaQuery q = new EasyCriteriaQuery(emf, Caso.class);
