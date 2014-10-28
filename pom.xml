@@ -54,9 +54,18 @@
         </profile>  
         
         <profile>
-            <id>brotecFINE</id>
+            <id>beltec</id>
             <properties>
                 <jta-data-source>jdbc/brotec</jta-data-source>
+                <eclipselink.logging.level.sql>SEVERE</eclipselink.logging.level.sql>
+                <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
+            </properties>
+        </profile>  
+        
+        <profile>
+            <id>brotecFINE</id>
+            <properties>
+                <jta-data-source>jdbc/beltec</jta-data-source>
                 <eclipselink.logging.level.sql>FINE</eclipselink.logging.level.sql>
                 <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
             </properties>
@@ -84,7 +93,7 @@
             <id>local-develpment</id>
             <properties>
                 <jta-data-source>jdbc/helpdesk_dev_ds</jta-data-source>
-                <eclipselink.logging.level.sql>FINE</eclipselink.logging.level.sql>
+                <eclipselink.logging.level.sql>SEVERE</eclipselink.logging.level.sql>
                 <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
             </properties>
         </profile>
