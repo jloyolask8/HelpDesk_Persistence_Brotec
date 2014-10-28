@@ -56,7 +56,7 @@
         <profile>
             <id>beltec</id>
             <properties>
-                <jta-data-source>jdbc/brotec</jta-data-source>
+                <jta-data-source>jdbc/beltec</jta-data-source>
                 <eclipselink.logging.level.sql>SEVERE</eclipselink.logging.level.sql>
                 <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
             </properties>
@@ -65,7 +65,7 @@
         <profile>
             <id>brotecFINE</id>
             <properties>
-                <jta-data-source>jdbc/beltec</jta-data-source>
+                <jta-data-source>jdbc/brotec</jta-data-source>
                 <eclipselink.logging.level.sql>FINE</eclipselink.logging.level.sql>
                 <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
             </properties>
