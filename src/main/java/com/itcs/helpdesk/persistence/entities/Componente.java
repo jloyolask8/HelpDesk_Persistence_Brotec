@@ -56,6 +56,7 @@ public class Componente implements Serializable {
     private String descripcion;
     @OneToMany(mappedBy = "idComponente")
     private List<Caso> casoList;
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Proyecto::", fieldIdFull = "idProducto.idProducto", fieldTypeFull = String.class)
     @JoinColumn(name = "ID_PRODUCTO", referencedColumnName = "ID_PRODUCTO")
     @ManyToOne
     private Producto idProducto;
@@ -63,7 +64,8 @@ public class Componente implements Serializable {
     private List<SubComponente> subComponenteList;
     @OneToMany(mappedBy = "idComponente")
     private List<ModeloProducto> modeloProductoList;
-    
+
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_PLACE_HOLDER, label = "Clientes relacionados", fieldIdFull = "productoContratadoList", fieldTypeFull = List.class)
     @OneToMany(mappedBy = "componente")
     private List<ProductoContratado> productoContratadoList;
 

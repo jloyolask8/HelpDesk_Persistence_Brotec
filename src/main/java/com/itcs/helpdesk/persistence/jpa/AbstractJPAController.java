@@ -543,23 +543,27 @@ public abstract class AbstractJPAController {
     }
 
     public static Predicate createCasoSearchExpression(Root<Caso> root, CriteriaBuilder criteriaBuilder, String query) {
-        Expression<Long> expresion1 = root.get(Caso_.idCaso);
+//        Expression<Long> expresion1 = root.get(Caso_.idCaso);
         Expression<String> expresion2 = root.get(Caso_.tema);
         Expression<String> expresion3 = root.get(Caso_.descripcion);
 
-        Expression<String> expresionNotaList = root.joinList(Caso_.notaList.getName(), JoinType.LEFT).get("texto");
+        Expression<String> expresionNotaList = root.joinList(Caso_.notaList.getName(), JoinType.INNER).get("texto");
+//        Expression<Long> expresionNotaIDCaso = root.joinList(Caso_.notaList.getName(), JoinType.LEFT).get("idCaso").get("idCaso");
 //        Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT)
 //                .join("subComponente", JoinType.LEFT).get("direccionMunicipal"); 
         //.get("subComponente").get("direccionMunicipal");
+//        Predicate predicate = criteriaBuilder.equal(expresionNotaIDCaso, expresion1);
+
         Predicate predicate = criteriaBuilder.or(
                 criteriaBuilder.like(criteriaBuilder.lower(expresion2), "%" + query.toLowerCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.lower(expresion3), "%" + query.toLowerCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.lower(expresionNotaList), "%" + query.toLowerCase() + "%"));
 
-        if (NumberUtils.isNumber(query.trim())) {
-            Predicate localPredicate = criteriaBuilder.equal(expresion1, query);
-            predicate = CriteriaQueryHelper.addOrPredicate(predicate, localPredicate, criteriaBuilder);
-        }
+//        if (NumberUtils.isNumber(query.trim())) {
+//            Predicate localPredicate = criteriaBuilder.equal(expresion1, query);
+//            criteriaBuilder.and(predicate, localPredicate);
+////            predicate = CriteriaQueryHelper.addOrPredicate(predicate, localPredicate, criteriaBuilder);
+//        }
 
         return predicate;
     }

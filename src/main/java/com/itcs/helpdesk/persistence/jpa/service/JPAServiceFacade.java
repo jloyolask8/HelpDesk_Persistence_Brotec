@@ -332,23 +332,14 @@ public class JPAServiceFacade extends AbstractJPAController {
                 return 0L;
             }
             final String baseEntityType = vista.getBaseEntityType();
-            final Class<?> clazz = Class.forName(baseEntityType);
+            final Class<?> entityClass = Class.forName(baseEntityType);
+
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-            CriteriaQuery criteriaQuery = em.getCriteriaBuilder().createQuery();
-            Root root = criteriaQuery.from(clazz);
+            CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(entityClass);
+            Root root = criteriaQuery.from(entityClass);
+
             Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, who, query);
 
-//             if (!StringUtils.isEmpty(query)) {
-//                //build predicate to select by query, all TEXT & TEXTAREA fields
-//                final Predicate predicatesForQuery = createPredicatesForQuery(criteriaBuilder, root, query);
-//                if (predicatesForQuery != null) {
-//                    if (predicate != null) {
-//                        predicate = CriteriaQueryHelper.addPredicate(predicate, predicatesForQuery, criteriaBuilder);
-//                    } else {
-//                        predicate = predicatesForQuery;
-//                    }
-//                }
-//            }
             if (predicate != null) {
                 criteriaQuery.select(criteriaBuilder.count(root)).where(predicate).distinct(true);
             } else {
@@ -368,23 +359,26 @@ public class JPAServiceFacade extends AbstractJPAController {
         }
     }
 
-    public List<?> findAllEntities(Class entityClass, Vista vista, OrderBy orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
-        return findEntities(entityClass, vista, true, -1, -1, orderBy, null, who);
+    public List<?> findAllEntities(Vista vista, OrderBy orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
+        return findEntities(vista, true, -1, -1, orderBy, null, who);
     }
 
-    public List<?> findEntities(Class entityClass, Vista vista, int maxResults, int firstResult, OrderBy orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
-        return findEntities(entityClass, vista, false, maxResults, firstResult, orderBy, null, who);
+    public List<?> findEntities(Vista vista, int maxResults, int firstResult, OrderBy orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
+        return findEntities(vista, false, maxResults, firstResult, orderBy, null, who);
     }
 
-    public List<?> findEntities(Class entityClass, Vista vista, int maxResults, int firstResult, OrderBy orderBy, Usuario who, String query) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
-        return findEntities(entityClass, vista, false, maxResults, firstResult, orderBy, query, who);
+    public List<?> findEntities(Vista vista, int maxResults, int firstResult, OrderBy orderBy, Usuario who, String query) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
+        return findEntities(vista, false, maxResults, firstResult, orderBy, query, who);
     }
 
-    private List<?> findEntities(Class entityClass, Vista vista, boolean all, int maxResults, int firstResult, OrderBy orderBy, String query, Usuario who) throws IllegalStateException, ClassNotFoundException {
+    private List<?> findEntities(Vista vista, boolean all, int maxResults, int firstResult, OrderBy orderBy, String query, Usuario who) throws IllegalStateException, ClassNotFoundException {
         EntityManager em = getEntityManager();
 
         try {
 
+            final String baseEntityType = vista.getBaseEntityType();
+            final Class<?> entityClass = Class.forName(baseEntityType);
+            
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
             CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(entityClass);
             Root root = criteriaQuery.from(entityClass);
@@ -422,11 +416,6 @@ public class JPAServiceFacade extends AbstractJPAController {
             em.close();
         }
     }
-    
-    private Predicate createCustomPredicatesForQuery(CriteriaBuilder criteriaBuilder, Root<?> root, String query) throws IllegalStateException, ClassNotFoundException {
-        return null;
-    }
-
 
     public Long countCasosByCreatedBetween(Date from, Date to) {
         EasyCriteriaQuery q = new EasyCriteriaQuery(emf, Caso.class);

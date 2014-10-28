@@ -62,16 +62,23 @@ public class SubComponente implements Serializable {
     @ManyToOne(optional = false)
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Componente", fieldIdFull = "idComponente.idComponente", fieldTypeFull = String.class)
     private Componente idComponente;
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Modelo", fieldIdFull = "modelo.modeloProductoPK", fieldTypeFull = ModeloProductoPK.class)
     @JoinColumns({
         @JoinColumn(name = "id_modelo", referencedColumnName = "id_modelo"),
         @JoinColumn(name = "id_producto", referencedColumnName = "id_producto")})
     @ManyToOne
     private ModeloProducto modelo;
+    
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Proyecto::", fieldIdFull = "idProducto.idProducto", fieldTypeFull = String.class)
+    @JoinColumn(name = "id_producto", referencedColumnName = "id_producto", insertable = false, updatable = false)
+    @ManyToOne
+    private Producto idProducto;
 
+      @FilterField(fieldTypeId = EnumFieldType.SELECTONE_PLACE_HOLDER, label = "Clientes relacionados", fieldIdFull = "productoContratadoList", fieldTypeFull = List.class)
     @OneToMany(mappedBy = "subComponente")
     private List<ProductoContratado> productoContratadoList;
 
-    //new
+    //TODO brotec specific =(
     @Column(name = "direccion_municipal")
     private String direccionMunicipal;
     @Column(name = "fecha_reserva")
@@ -337,5 +344,19 @@ public class SubComponente implements Serializable {
      */
     public void setProductoContratadoList(List<ProductoContratado> productoContratadoList) {
         this.productoContratadoList = productoContratadoList;
+    }
+
+    /**
+     * @return the idProducto
+     */
+    public Producto getIdProducto() {
+        return idProducto;
+    }
+
+    /**
+     * @param idProducto the idProducto to set
+     */
+    public void setIdProducto(Producto idProducto) {
+        this.idProducto = idProducto;
     }
 }
