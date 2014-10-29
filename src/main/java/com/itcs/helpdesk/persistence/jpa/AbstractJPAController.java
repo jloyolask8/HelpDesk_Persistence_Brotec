@@ -183,18 +183,20 @@ public abstract class AbstractJPAController {
                         }
                     } else if (fieldType.equals(EnumFieldType.NUMBER.getFieldType())) {
 
+                         Expression<Long> expresion = root.get(filtro.getIdCampo());
+                         
                         if (operador.equals(EnumTipoComparacion.EQ.getTipoComparacion())) {
-                            localPredicate = criteriaBuilder.equal(root.get(filtro.getIdCampo()), valorAttributo.trim());
+                            localPredicate = criteriaBuilder.equal(expresion, NumberUtils.createLong(valorAttributo.trim()));
                         } else if (operador.equals(EnumTipoComparacion.NE.getTipoComparacion())) {
-                            localPredicate = criteriaBuilder.notEqual(root.get(filtro.getIdCampo()), valorAttributo.trim());
-                        } else if (operador.equals(EnumTipoComparacion.CO.getTipoComparacion())) {
-                            Expression<String> expresion = root.get(filtro.getIdCampo());
-                            if (!valorAttributo.contains("*")) {
-                                localPredicate = criteriaBuilder.like(expresion, "%" + valorAttributo.trim().toLowerCase() + "%");
-                            } else {
-                                localPredicate = criteriaBuilder.like(expresion, valorAttributo.trim().toLowerCase().replace("*", "%"));
-                            }
-
+                            localPredicate = criteriaBuilder.notEqual(expresion, NumberUtils.createLong(valorAttributo.trim()));
+                        } else if (operador.equals(EnumTipoComparacion.LE.getTipoComparacion())) {
+                            localPredicate = criteriaBuilder.lessThanOrEqualTo(expresion, NumberUtils.createLong(valorAttributo.trim()) );
+                        } else if (operador.equals(EnumTipoComparacion.LT.getTipoComparacion())) {
+                            localPredicate = criteriaBuilder.lessThan(expresion, NumberUtils.createLong(valorAttributo.trim()));
+                        } else if (operador.equals(EnumTipoComparacion.GE.getTipoComparacion())) {
+                            localPredicate = criteriaBuilder.greaterThanOrEqualTo(expresion, NumberUtils.createLong(valorAttributo.trim()));
+                        } else if (operador.equals(EnumTipoComparacion.GT.getTipoComparacion())) {
+                            localPredicate = criteriaBuilder.greaterThan(expresion, NumberUtils.createLong(valorAttributo.trim()));
                         } else {
                             throw new IllegalStateException("Comparador " + operador.getIdComparador() + " is not supported!!");
                         }
@@ -564,7 +566,6 @@ public abstract class AbstractJPAController {
 //            criteriaBuilder.and(predicate, localPredicate);
 ////            predicate = CriteriaQueryHelper.addOrPredicate(predicate, localPredicate, criteriaBuilder);
 //        }
-
         return predicate;
     }
 

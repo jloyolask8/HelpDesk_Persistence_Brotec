@@ -216,7 +216,7 @@ public class CasoJPACustomController extends CasoJpaController {
 //            query.setParameter("tipoCaso", tipoCaso.getIdTipoCaso());
             //query.setParameter("idProducto", idProducto);
 
-            EasyCriteriaQuery<Caso> ecq = new EasyCriteriaQuery<Caso>(emf, Caso.class);
+            EasyCriteriaQuery<Caso> ecq = new EasyCriteriaQuery<>(emf, Caso.class);
             ecq.addEqualPredicate(Caso_.idEstado.getName(), idEstado);
             ecq.addEqualPredicate("emailCliente", emailCliente);
             ecq.addEqualPredicate("tipoCaso", tipoCaso);
