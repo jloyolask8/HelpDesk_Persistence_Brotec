@@ -250,6 +250,27 @@ public class Cliente implements Serializable {
         return capitalName;
     }
 
+    public String getCapitalFullName() {
+        String capitalName = "";
+        final String trimmed = StringUtils.trim(nombres) + " " + StringUtils.trim(apellidos);
+
+        String[] names = StringUtils.isEmpty(trimmed) ? null : trimmed.split(" ");
+        if (names != null) {
+            for (int i = 0; i < names.length; i++) {
+                if (!(names[i].trim().isEmpty())) {
+                    if (i > 0) {
+                        capitalName += " ";
+                    }
+                    if (!names[i].isEmpty()) {
+                        capitalName += names[i].substring(0, 1).toUpperCase() + names[i].substring(1).toLowerCase();
+                    }
+                }
+            }
+        }
+
+        return capitalName;
+    }
+
     /**
      * @return the casoList
      */
