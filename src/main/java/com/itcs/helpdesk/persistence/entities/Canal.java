@@ -183,7 +183,7 @@ public class Canal implements Serializable {
         propertieSettings = null;
     }
     
-    private Map<String, String> getMapSetting()
+    public Map<String, String> getMapSetting()
     {
         if(propertieSettings == null)
         {
