@@ -28,7 +28,6 @@
     <class>com.itcs.helpdesk.persistence.entities.Grupo</class>
     <class>com.itcs.helpdesk.persistence.entities.Item</class>
     <class>com.itcs.helpdesk.persistence.entities.ModeloProducto</class>
-    <class>com.itcs.helpdesk.persistence.entities.NombreAccion</class>
     <class>com.itcs.helpdesk.persistence.entities.Nota</class>
     <class>com.itcs.helpdesk.persistence.entities.Prioridad</class>
     <class>com.itcs.helpdesk.persistence.entities.Producto</class>
@@ -51,6 +50,7 @@
     <class>com.itcs.helpdesk.persistence.entities.Usuario</class>
     <class>com.itcs.helpdesk.persistence.entities.Vista</class>
     <class>com.itcs.helpdesk.persistence.entities.ArchivoNa</class>
+    <class>com.itcs.helpdesk.persistence.entities.TipoAccion</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>${shared-cache-mode}</shared-cache-mode>
     <properties>

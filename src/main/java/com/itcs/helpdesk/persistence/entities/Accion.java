@@ -43,7 +43,7 @@ public class Accion implements Serializable {
     private ReglaTrigger idTrigger;
     @JoinColumn(name = "id_nombre_accion", referencedColumnName = "id_nombre_accion")
     @ManyToOne(optional = false)
-    private NombreAccion idNombreAccion;
+    private TipoAccion idNombreAccion;
 
     public Accion() {
     }
@@ -76,11 +76,11 @@ public class Accion implements Serializable {
         this.idTrigger = idTrigger;
     }
 
-    public NombreAccion getIdNombreAccion() {
+    public TipoAccion getIdNombreAccion() {
         return idNombreAccion;
     }
 
-    public void setIdNombreAccion(NombreAccion idNombreAccion) {
+    public void setIdNombreAccion(TipoAccion idNombreAccion) {
         this.idNombreAccion = idNombreAccion;
     }
 

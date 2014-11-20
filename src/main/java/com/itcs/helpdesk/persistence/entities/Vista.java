@@ -8,6 +8,7 @@ import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
 import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import javax.persistence.Basic;
@@ -23,6 +24,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
@@ -78,6 +81,15 @@ public class Vista implements Serializable {
     @Size(max = 1000)
     @Column(name = "base_entity_type", nullable = false, length = 1000)
     private String baseEntityType;
+    
+     @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "fecha Creacion", fieldIdFull = "fechaCreacion", fieldTypeFull = Date.class)
+    @Column(name = "fecha_creacion")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaCreacion;
+    @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "fecha Modificacion", fieldIdFull = "fechaModif", fieldTypeFull = Date.class)
+    @Column(name = "fecha_modif")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaModif;
 
     public Vista() {
     }
@@ -230,5 +242,33 @@ public class Vista implements Serializable {
      */
     public void setBaseEntityType(String baseEntityType) {
         this.baseEntityType = baseEntityType;
+    }
+
+    /**
+     * @return the fechaCreacion
+     */
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    /**
+     * @param fechaCreacion the fechaCreacion to set
+     */
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    /**
+     * @return the fechaModif
+     */
+    public Date getFechaModif() {
+        return fechaModif;
+    }
+
+    /**
+     * @param fechaModif the fechaModif to set
+     */
+    public void setFechaModif(Date fechaModif) {
+        this.fechaModif = fechaModif;
     }
 }

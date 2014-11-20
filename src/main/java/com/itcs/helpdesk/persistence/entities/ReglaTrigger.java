@@ -4,21 +4,24 @@
  */
 package com.itcs.helpdesk.persistence.entities;
 
+import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
+import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -68,7 +71,15 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
     @Basic(optional = false)
     @NotNull
     private Integer orden;
-    
+
+    @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "fecha Creacion", fieldIdFull = "fechaCreacion", fieldTypeFull = Date.class)
+    @Column(name = "fecha_creacion")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaCreacion;
+    @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "fecha Modificacion", fieldIdFull = "fechaModif", fieldTypeFull = Date.class)
+    @Column(name = "fecha_modif")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaModif;
 
     public ReglaTrigger() {
         condicionList = new ArrayList<Condicion>();
@@ -119,7 +130,6 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
 //    public void setIdArea(Area idArea) {
 //        this.idArea = idArea;
 //    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -142,15 +152,14 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
 
     @Override
     public String toString() {
-        
-        return (evento.equalsIgnoreCase("CREATE") ? "<b>Cuando se cree un caso</b>":
-                (evento.equalsIgnoreCase("UPDATE OR CREATE")?"<b>Cuando se cree o modifique un caso</b>":"<b>Cuando se modifique un caso</b>")) 
-                + " y se cumplan <b>"+((anyOrAll == null)?"todas":(anyOrAll.equals("ANY")?"cualquiera de":"todas"))+" las Condiciones </b>(" + getCondicionList().size() + "):<br/>"+
-                formatList(getCondicionList()) + " <br/><b>Ejecutar Acciones</b> (" + getAccionList().size() + "):<br/>" + formatList(getAccionList());
+
+        return (evento.equalsIgnoreCase("CREATE") ? "<b>Cuando se cree un caso</b>"
+                : (evento.equalsIgnoreCase("UPDATE OR CREATE") ? "<b>Cuando se cree o modifique un caso</b>" : "<b>Cuando se modifique un caso</b>"))
+                + " y se cumplan <b>" + ((anyOrAll == null) ? "todas" : (anyOrAll.equals("ANY") ? "cualquiera de" : "todas")) + " las Condiciones </b>(" + getCondicionList().size() + "):<br/>"
+                + formatList(getCondicionList()) + " <br/><b>Ejecutar Acciones</b> (" + getAccionList().size() + "):<br/>" + formatList(getAccionList());
     }
-    
-    public String formatList(List lista)
-    {
+
+    public String formatList(List lista) {
         StringBuilder sb = new StringBuilder("<ul>");
         for (Object object : lista) {
             sb.append("<li>");
@@ -160,8 +169,6 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
         sb.append("</ul>");
         return sb.toString();
     }
-
-  
 
     /**
      * @return the reglaActiva
@@ -207,7 +214,7 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
 
     public int compareTo(ReglaTrigger o) {
         //ascending order
-       return this.orden - o.orden;
+        return this.orden - o.orden;
     }
 
     /**
@@ -222,5 +229,33 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
      */
     public void setAnyOrAll(String anyOrAll) {
         this.anyOrAll = anyOrAll;
+    }
+
+    /**
+     * @return the fechaCreacion
+     */
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    /**
+     * @param fechaCreacion the fechaCreacion to set
+     */
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    /**
+     * @return the fechaModif
+     */
+    public Date getFechaModif() {
+        return fechaModif;
+    }
+
+    /**
+     * @param fechaModif the fechaModif to set
+     */
+    public void setFechaModif(Date fechaModif) {
+        this.fechaModif = fechaModif;
     }
 }

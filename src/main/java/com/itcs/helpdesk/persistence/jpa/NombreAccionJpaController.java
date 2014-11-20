@@ -10,7 +10,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.itcs.helpdesk.persistence.entities.Accion;
-import com.itcs.helpdesk.persistence.entities.NombreAccion;
+import com.itcs.helpdesk.persistence.entities.TipoAccion;
 import com.itcs.helpdesk.persistence.jpa.exceptions.IllegalOrphanException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
@@ -38,7 +38,7 @@ public class NombreAccionJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(NombreAccion nombreAccion) throws PreexistingEntityException, RollbackFailureException, Exception {
+    public void create(TipoAccion nombreAccion) throws PreexistingEntityException, RollbackFailureException, Exception {
         if (nombreAccion.getAccionList() == null) {
             nombreAccion.setAccionList(new ArrayList<Accion>());
         }
@@ -54,7 +54,7 @@ public class NombreAccionJpaController implements Serializable {
             nombreAccion.setAccionList(attachedAccionList);
             em.persist(nombreAccion);
             for (Accion accionListAccion : nombreAccion.getAccionList()) {
-                NombreAccion oldIdNombreAccionOfAccionListAccion = accionListAccion.getIdNombreAccion();
+                TipoAccion oldIdNombreAccionOfAccionListAccion = accionListAccion.getIdNombreAccion();
                 accionListAccion.setIdNombreAccion(nombreAccion);
                 accionListAccion = em.merge(accionListAccion);
                 if (oldIdNombreAccionOfAccionListAccion != null) {
@@ -80,12 +80,12 @@ public class NombreAccionJpaController implements Serializable {
         }
     }
 
-    public void edit(NombreAccion nombreAccion) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(TipoAccion nombreAccion) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            NombreAccion persistentNombreAccion = em.find(NombreAccion.class, nombreAccion.getIdNombreAccion());
+            TipoAccion persistentNombreAccion = em.find(TipoAccion.class, nombreAccion.getIdNombreAccion());
             List<Accion> accionListOld = persistentNombreAccion.getAccionList();
             List<Accion> accionListNew = nombreAccion.getAccionList();
             List<String> illegalOrphanMessages = null;
@@ -110,7 +110,7 @@ public class NombreAccionJpaController implements Serializable {
             nombreAccion = em.merge(nombreAccion);
             for (Accion accionListNewAccion : accionListNew) {
                 if (!accionListOld.contains(accionListNewAccion)) {
-                    NombreAccion oldIdNombreAccionOfAccionListNewAccion = accionListNewAccion.getIdNombreAccion();
+                    TipoAccion oldIdNombreAccionOfAccionListNewAccion = accionListNewAccion.getIdNombreAccion();
                     accionListNewAccion.setIdNombreAccion(nombreAccion);
                     accionListNewAccion = em.merge(accionListNewAccion);
                     if (oldIdNombreAccionOfAccionListNewAccion != null && !oldIdNombreAccionOfAccionListNewAccion.equals(nombreAccion)) {
@@ -146,9 +146,9 @@ public class NombreAccionJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            NombreAccion nombreAccion;
+            TipoAccion nombreAccion;
             try {
-                nombreAccion = em.getReference(NombreAccion.class, id);
+                nombreAccion = em.getReference(TipoAccion.class, id);
                 nombreAccion.getIdNombreAccion();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The nombreAccion with id " + id + " no longer exists.", enfe);
@@ -180,19 +180,19 @@ public class NombreAccionJpaController implements Serializable {
         }
     }
 
-    public List<NombreAccion> findNombreAccionEntities() {
+    public List<TipoAccion> findNombreAccionEntities() {
         return findNombreAccionEntities(true, -1, -1);
     }
 
-    public List<NombreAccion> findNombreAccionEntities(int maxResults, int firstResult) {
+    public List<TipoAccion> findNombreAccionEntities(int maxResults, int firstResult) {
         return findNombreAccionEntities(false, maxResults, firstResult);
     }
 
-    private List<NombreAccion> findNombreAccionEntities(boolean all, int maxResults, int firstResult) {
+    private List<TipoAccion> findNombreAccionEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(NombreAccion.class));
+            cq.select(cq.from(TipoAccion.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -204,10 +204,10 @@ public class NombreAccionJpaController implements Serializable {
         }
     }
 
-    public NombreAccion findNombreAccion(String id) {
+    public TipoAccion findNombreAccion(String id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(NombreAccion.class, id);
+            return em.find(TipoAccion.class, id);
         } finally {
             em.close();
         }
@@ -217,7 +217,7 @@ public class NombreAccionJpaController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<NombreAccion> rt = cq.from(NombreAccion.class);
+            Root<TipoAccion> rt = cq.from(TipoAccion.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

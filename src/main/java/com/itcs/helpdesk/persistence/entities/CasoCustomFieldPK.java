@@ -5,10 +5,10 @@
 package com.itcs.helpdesk.persistence.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  *
@@ -22,21 +22,15 @@ public class CasoCustomFieldPK implements Serializable {
     private Long idCaso;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 40)
-    @Column(name = "field_key")
-    private String fieldKey;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 40)
-    private String entity;
+    @Column(name = "id_custom_field")
+    private Long customField;
 
     public CasoCustomFieldPK() {
     }
 
-    public CasoCustomFieldPK(Long idCaso, String fieldKey, String entity) {
+    public CasoCustomFieldPK(Long idCaso, Long idCustomField) {
         this.idCaso = idCaso;
-        this.fieldKey = fieldKey;
-        this.entity = entity;
+        this.customField = idCustomField;
     }
 
     public Long getIdCaso() {
@@ -47,28 +41,19 @@ public class CasoCustomFieldPK implements Serializable {
         this.idCaso = idCaso;
     }
 
-    public String getFieldKey() {
-        return fieldKey;
+    public Long getCustomField() {
+        return customField;
     }
 
-    public void setFieldKey(String fieldKey) {
-        this.fieldKey = fieldKey;
-    }
-
-    public String getEntity() {
-        return entity;
-    }
-
-    public void setEntity(String entity) {
-        this.entity = entity;
+    public void setCustomField(Long idCustomField) {
+        this.customField = idCustomField;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 37 * hash + (this.idCaso != null ? this.idCaso.hashCode() : 0);
-        hash = 37 * hash + (this.fieldKey != null ? this.fieldKey.hashCode() : 0);
-        hash = 37 * hash + (this.entity != null ? this.entity.hashCode() : 0);
+        hash = 97 * hash + Objects.hashCode(this.idCaso);
+        hash = 97 * hash + Objects.hashCode(this.customField);
         return hash;
     }
 
@@ -81,13 +66,10 @@ public class CasoCustomFieldPK implements Serializable {
             return false;
         }
         final CasoCustomFieldPK other = (CasoCustomFieldPK) obj;
-        if (this.idCaso != other.idCaso && (this.idCaso == null || !this.idCaso.equals(other.idCaso))) {
+        if (!Objects.equals(this.idCaso, other.idCaso)) {
             return false;
         }
-        if ((this.fieldKey == null) ? (other.fieldKey != null) : !this.fieldKey.equals(other.fieldKey)) {
-            return false;
-        }
-        if ((this.entity == null) ? (other.entity != null) : !this.entity.equals(other.entity)) {
+        if (!Objects.equals(this.customField, other.customField)) {
             return false;
         }
         return true;
@@ -95,17 +77,12 @@ public class CasoCustomFieldPK implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("CasoCustomFieldPK [");
-        builder.append("entity=");
-        builder.append(entity);
-        builder.append(", fieldKey=");
-        builder.append(fieldKey);
-        builder.append(", idCaso=");
-        builder.append(idCaso);
-        builder.append("]");
-        return builder.toString();
+        return "CasoCustomFieldPK{" + "idCaso=" + idCaso + ", customField=" + customField + '}';
     }
+
+   
+
+    
 
    
     

@@ -11,7 +11,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.itcs.helpdesk.persistence.entities.ReglaTrigger;
-import com.itcs.helpdesk.persistence.entities.NombreAccion;
+import com.itcs.helpdesk.persistence.entities.TipoAccion;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
@@ -47,7 +47,7 @@ public class AccionJpaController implements Serializable {
                 idTrigger = em.getReference(idTrigger.getClass(), idTrigger.getIdTrigger());
                 accion.setIdTrigger(idTrigger);
             }
-            NombreAccion idNombreAccion = accion.getIdNombreAccion();
+            TipoAccion idNombreAccion = accion.getIdNombreAccion();
             if (idNombreAccion != null) {
                 idNombreAccion = em.getReference(idNombreAccion.getClass(), idNombreAccion.getIdNombreAccion());
                 accion.setIdNombreAccion(idNombreAccion);
@@ -87,8 +87,8 @@ public class AccionJpaController implements Serializable {
             Accion persistentAccion = em.find(Accion.class, accion.getIdAccion());
             ReglaTrigger idTriggerOld = persistentAccion.getIdTrigger();
             ReglaTrigger idTriggerNew = accion.getIdTrigger();
-            NombreAccion idNombreAccionOld = persistentAccion.getIdNombreAccion();
-            NombreAccion idNombreAccionNew = accion.getIdNombreAccion();
+            TipoAccion idNombreAccionOld = persistentAccion.getIdNombreAccion();
+            TipoAccion idNombreAccionNew = accion.getIdNombreAccion();
             if (idTriggerNew != null) {
                 idTriggerNew = em.getReference(idTriggerNew.getClass(), idTriggerNew.getIdTrigger());
                 accion.setIdTrigger(idTriggerNew);
@@ -153,7 +153,7 @@ public class AccionJpaController implements Serializable {
                 idTrigger.getAccionList().remove(accion);
                 idTrigger = em.merge(idTrigger);
             }
-            NombreAccion idNombreAccion = accion.getIdNombreAccion();
+            TipoAccion idNombreAccion = accion.getIdNombreAccion();
             if (idNombreAccion != null) {
                 idNombreAccion.getAccionList().remove(accion);
                 idNombreAccion = em.merge(idNombreAccion);

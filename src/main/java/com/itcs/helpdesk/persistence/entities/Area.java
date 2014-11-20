@@ -108,8 +108,8 @@ public class Area implements Serializable {
 //    private String mailInboundPassword;
 //    @Column(name = "mail_inbound_ssl_enabled")
 //    private Boolean mailInboundSslEnabled;
-    @Column(name = "email_enabled")
-    private boolean emailEnabled;
+//    @Column(name = "email_enabled")
+//    private boolean emailEnabled;
 //    @Column(name = "email_frecuencia")
 //    private Integer emailFrecuencia;
     @Column(name = "email_acusederecibo")
@@ -381,13 +381,13 @@ public class Area implements Serializable {
 //        this.mailInboundSslEnabled = mailInboundSslEnabled;
 //    }
 //
-    public boolean getEmailEnabled() {
-        return emailEnabled;
-    }
-
-    public void setEmailEnabled(boolean emailEnabled) {
-        this.emailEnabled = emailEnabled;
-    }
+//    public boolean getEmailEnabled() {
+//        return emailEnabled;
+//    }
+//
+//    public void setEmailEnabled(boolean emailEnabled) {
+//        this.emailEnabled = emailEnabled;
+//    }
 //
 //    public Integer getEmailFrecuencia() {
 //        return emailFrecuencia;

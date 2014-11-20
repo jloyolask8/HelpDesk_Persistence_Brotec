@@ -22,7 +22,7 @@ import com.itcs.helpdesk.persistence.entities.Funcion;
 import com.itcs.helpdesk.persistence.entities.Grupo;
 import com.itcs.helpdesk.persistence.entities.Item;
 import com.itcs.helpdesk.persistence.entities.Item_;
-import com.itcs.helpdesk.persistence.entities.NombreAccion;
+import com.itcs.helpdesk.persistence.entities.TipoAccion;
 import com.itcs.helpdesk.persistence.entities.Nota;
 import com.itcs.helpdesk.persistence.entities.Prioridad;
 import com.itcs.helpdesk.persistence.entities.Producto;
@@ -101,6 +101,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceProperty;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -142,7 +144,7 @@ public class JPAServiceFacade extends AbstractJPAController {
     private DocumentoJpaController documentoJpaController;
     private EstadoCasoJpaController estadoCasoJpaController;
     private FuncionJpaController funcionJpaController;
-    private NombreAccionJpaController nombreAccionJpaController;
+//    private NombreAccionJpaController nombreAccionJpaController;
     private ProductoJpaController productoJpaController;
     private ReglaTriggerJpaController reglaTriggerJpaController;
     private SubComponenteJpaController subComponenteJpaController;
@@ -187,7 +189,7 @@ public class JPAServiceFacade extends AbstractJPAController {
      */
     public <T extends Object> T find(Class<T> entityClass, Object primaryKey, boolean refresh) {
         if (refresh) {
-            Map<String, Object> properties = new HashMap<String, Object>();
+            Map<String, Object> properties = new HashMap<>();
             properties.put("javax.persistence.cache.storeMode", CacheStoreMode.REFRESH);
             properties.put(QueryHints.REFRESH, HintValues.TRUE);
             return getEntityManager().find(entityClass, primaryKey, properties);
@@ -226,17 +228,17 @@ public class JPAServiceFacade extends AbstractJPAController {
         }
     }
 
-    public void persistInTx(Object o) throws Exception {
-        EntityManager em = null;//
-        try {
-            em = getEntityManager();
-            em.persist(o);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
+//    public void persistInTx(Object o) throws Exception {
+//        EntityManager em = null;//
+//        try {
+//            em = getEntityManager();
+//            em.persist(o);
+//        } finally {
+//            if (em != null) {
+//                em.close();
+//            }
+//        }
+//    }
 
     public void remove(Class clazz, Object o) throws Exception {
         EntityManager em = null;
@@ -276,21 +278,21 @@ public class JPAServiceFacade extends AbstractJPAController {
 
     }
 
-    public void mergeInTx(Object o) throws Exception {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.merge(o);
-        } catch (Exception ex) {
-            ConstraintViolationExceptionHelper.handleError(ex);
-            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
+//    public void mergeInTx(Object o) throws Exception {
+//        EntityManager em = null;
+//        try {
+//            em = getEntityManager();
+//            em.merge(o);
+//        } catch (Exception ex) {
+//            ConstraintViolationExceptionHelper.handleError(ex);
+//            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);
+//            throw ex;
+//        } finally {
+//            if (em != null) {
+//                em.close();
+//            }
+//        }
+//    }
 
     public void merge(Object o) throws Exception {
         EntityManager em = null;
@@ -417,12 +419,12 @@ public class JPAServiceFacade extends AbstractJPAController {
         }
     }
 
-    public Long countCasosByCreatedBetween(Date from, Date to) {
-        EasyCriteriaQuery q = new EasyCriteriaQuery(emf, Caso.class);
-        q.addBetweenPredicate(Caso_.fechaCreacion, from, to);
-
-        return q.count();
-    }
+//    public Long countCasosByCreatedBetween(Date from, Date to) {
+//        EasyCriteriaQuery q = new EasyCriteriaQuery(emf, Caso.class);
+//        q.addBetweenPredicate(Caso_.fechaCreacion, from, to);
+//
+//        return q.count();
+//    }
 
     public Long countCasosByCreatedBetween(Date from, Date to, Usuario owner) {
         EasyCriteriaQuery q = new EasyCriteriaQuery(emf, Caso.class);
@@ -1082,35 +1084,35 @@ public class JPAServiceFacade extends AbstractJPAController {
         return getComponenteJpaController().findComponente(idComponente);
     }
 
-    public void persistNombreAccion(NombreAccion nombreAccion) throws PreexistingEntityException, RollbackFailureException, Exception {
-        getNombreAccionJpaController().create(nombreAccion);
-    }
-
-    public void mergeNombreAccion(NombreAccion nombreAccion) throws NonexistentEntityException, RollbackFailureException, Exception {
-        getNombreAccionJpaController().edit(nombreAccion);
-    }
-
-    public void removeNombreAccion(NombreAccion nombreAccion) throws NonexistentEntityException, RollbackFailureException, Exception {
-        getNombreAccionJpaController().destroy(nombreAccion.getIdNombreAccion());
-    }
-
-    /**
-     * <
-     * code>SELECT n FROM NombreAccion n</code>
-     */
-    public List<NombreAccion> getNombreAccionFindAll() {
-//        throw new UnsupportedOperationException("Not implemented... You shoud use a paginated or parcial query instead of quering all the tuples in a table.");
-        return getNombreAccionJpaController().findNombreAccionEntities();
-    }
-
-    /**
-     * <
-     * code>SELECT n FROM NombreAccion n WHERE n.idNombreAccion =
-     * :idNombreAccion</code>
-     */
-    public NombreAccion getNombreAccionFindByIdNombreAccion(String idNombreAccion) {
-        return getNombreAccionJpaController().findNombreAccion(idNombreAccion);
-    }
+//    public void persistNombreAccion(NombreAccion nombreAccion) throws PreexistingEntityException, RollbackFailureException, Exception {
+//        getNombreAccionJpaController().create(nombreAccion);
+//    }
+//
+//    public void mergeNombreAccion(NombreAccion nombreAccion) throws NonexistentEntityException, RollbackFailureException, Exception {
+//        getNombreAccionJpaController().edit(nombreAccion);
+//    }
+//
+//    public void removeNombreAccion(NombreAccion nombreAccion) throws NonexistentEntityException, RollbackFailureException, Exception {
+//        getNombreAccionJpaController().destroy(nombreAccion.getIdNombreAccion());
+//    }
+//
+//    /**
+//     * <
+//     * code>SELECT n FROM NombreAccion n</code>
+//     */
+//    public List<NombreAccion> getNombreAccionFindAll() {
+////        throw new UnsupportedOperationException("Not implemented... You shoud use a paginated or parcial query instead of quering all the tuples in a table.");
+//        return getNombreAccionJpaController().findNombreAccionEntities();
+//    }
+//
+//    /**
+//     * <
+//     * code>SELECT n FROM NombreAccion n WHERE n.idNombreAccion =
+//     * :idNombreAccion</code>
+//     */
+//    public NombreAccion getNombreAccionFindByIdNombreAccion(String idNombreAccion) {
+//        return getNombreAccionJpaController().findNombreAccion(idNombreAccion);
+//    }
 
     public void persistAttachment(Attachment attachment) throws PreexistingEntityException, RollbackFailureException, Exception {
         getAttachmentJpaController().create(attachment);
@@ -2171,15 +2173,15 @@ public class JPAServiceFacade extends AbstractJPAController {
         return funcionJpaController;
     }
 
-    /**
-     * @return the nombreAccionJpaController
-     */
-    public NombreAccionJpaController getNombreAccionJpaController() {
-        if (nombreAccionJpaController == null) {
-            nombreAccionJpaController = new NombreAccionJpaController(utx, emf);
-        }
-        return nombreAccionJpaController;
-    }
+//    /**
+//     * @return the nombreAccionJpaController
+//     */
+//    public NombreAccionJpaController getNombreAccionJpaController() {
+//        if (nombreAccionJpaController == null) {
+//            nombreAccionJpaController = new NombreAccionJpaController(utx, emf);
+//        }
+//        return nombreAccionJpaController;
+//    }
 
     /**
      * @return the productoJpaController

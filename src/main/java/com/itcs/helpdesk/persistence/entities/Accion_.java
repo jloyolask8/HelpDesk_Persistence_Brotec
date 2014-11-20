@@ -1,6 +1,6 @@
 package com.itcs.helpdesk.persistence.entities;
 
-import com.itcs.helpdesk.persistence.entities.NombreAccion;
+import com.itcs.helpdesk.persistence.entities.TipoAccion;
 import com.itcs.helpdesk.persistence.entities.ReglaTrigger;
 import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
@@ -12,7 +12,7 @@ public class Accion_ {
 
     public static volatile SingularAttribute<Accion, ReglaTrigger> idTrigger;
     public static volatile SingularAttribute<Accion, String> parametros;
-    public static volatile SingularAttribute<Accion, NombreAccion> idNombreAccion;
+    public static volatile SingularAttribute<Accion, TipoAccion> idNombreAccion;
     public static volatile SingularAttribute<Accion, Integer> idAccion;
 
 }

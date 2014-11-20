@@ -29,10 +29,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "NOMBRE_ACCION")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "NombreAccion.findAll", query = "SELECT n FROM NombreAccion n"),
-    @NamedQuery(name = "NombreAccion.findByIdNombreAccion", query = "SELECT n FROM NombreAccion n WHERE n.idNombreAccion = :idNombreAccion"),
-    @NamedQuery(name = "NombreAccion.findByNombre", query = "SELECT n FROM NombreAccion n WHERE n.nombre = :nombre")})
-public class NombreAccion implements Serializable {
+    @NamedQuery(name = "TipoAccion.findAll", query = "SELECT n FROM TipoAccion n"),
+    @NamedQuery(name = "TipoAccion.findByIdNombreAccion", query = "SELECT n FROM TipoAccion n WHERE n.idNombreAccion = :idNombreAccion"),
+    @NamedQuery(name = "TipoAccion.findByNombre", query = "SELECT n FROM TipoAccion n WHERE n.nombre = :nombre")})
+public class TipoAccion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -52,14 +52,14 @@ public class NombreAccion implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idNombreAccion")
     private List<Accion> accionList;
 
-    public NombreAccion() {
+    public TipoAccion() {
     }
 
-    public NombreAccion(String idNombreAccion) {
+    public TipoAccion(String idNombreAccion) {
         this.idNombreAccion = idNombreAccion;
     }
 
-    public NombreAccion(String idTipoAccion, String nombre, String descripcion, String implementationClassName) {
+    public TipoAccion(String idTipoAccion, String nombre, String descripcion, String implementationClassName) {
         this.idNombreAccion = idTipoAccion;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -109,10 +109,10 @@ public class NombreAccion implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof NombreAccion)) {
+        if (!(object instanceof TipoAccion)) {
             return false;
         }
-        NombreAccion other = (NombreAccion) object;
+        TipoAccion other = (TipoAccion) object;
         if ((this.idNombreAccion == null && other.idNombreAccion != null) || (this.idNombreAccion != null && !this.idNombreAccion.equals(other.idNombreAccion))) {
             return false;
         }

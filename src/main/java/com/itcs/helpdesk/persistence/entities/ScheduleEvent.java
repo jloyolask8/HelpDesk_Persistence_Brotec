@@ -104,7 +104,7 @@ public class ScheduleEvent implements Serializable, Comparable<ScheduleEvent> {
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Tipo Accion", fieldIdFull = "idTipoAccion.idTipoAccion", fieldTypeFull = String.class)
     @JoinColumn(name = "id_tipo_accion", referencedColumnName = "id_nombre_accion")
     @ManyToOne
-    private NombreAccion idTipoAccion;
+    private TipoAccion idTipoAccion;
 
     @Size(max = 2147483647)
     @Column(name = "parametros_accion")
@@ -348,11 +348,11 @@ public class ScheduleEvent implements Serializable, Comparable<ScheduleEvent> {
         this.idUsuario = idUsuario;
     }
 
-    public NombreAccion getIdTipoAccion() {
+    public TipoAccion getIdTipoAccion() {
         return idTipoAccion;
     }
 
-    public void setIdTipoAccion(NombreAccion idTipoAccion) {
+    public void setIdTipoAccion(TipoAccion idTipoAccion) {
         this.idTipoAccion = idTipoAccion;
     }
 

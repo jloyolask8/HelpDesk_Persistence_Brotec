@@ -7,6 +7,7 @@ package com.itcs.helpdesk.persistence.entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -32,45 +33,34 @@ import javax.validation.constraints.Size;
 public class CasoCustomField implements Serializable {
 
     private static final long serialVersionUID = 1L;
-//    @EmbeddedId
-//    protected CasoCustomFieldPK casoCustomFieldPK;
-    @Id
-    @Size(min = 1, max = 40)
-    @Column(name = "field_key")
-    private String fieldKey;
-    @Id
-    @Size(min = 1, max = 40)
-    private String entity;
+
     @Id
     @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")
     @ManyToOne(optional = false)
     private Caso idCaso;
+    @Id
+    @JoinColumn(name = "id_custom_field", referencedColumnName = "id_custom_field")
+    @ManyToOne(optional = false)
+    private CustomField customField;
+
     @Size(max = 2147483647)
     private String valor;
     @Size(max = 2147483647)
     private String valor2;
-    @JoinColumns({
-        @JoinColumn(name = "field_key", referencedColumnName = "field_key", insertable = false, updatable = false),
-        @JoinColumn(name = "entity", referencedColumnName = "entity", insertable = false, updatable = false)})
-    @ManyToOne(optional = false)
-    private CustomField customField;
 
     public CasoCustomField() {
     }
 
-    public CasoCustomField(String fieldKey, String entity, Caso caso) {
-        this.fieldKey = fieldKey;
-        this.entity = entity;
+    public CasoCustomField(CustomField customField, Caso caso) {
+        this.customField = customField;
         this.idCaso = caso;
         this.valor = "";
+        this.valor2 = "";
     }
-    
-    
 
 //    public CasoCustomField(CasoCustomFieldPK casoCustomFieldPK) {
 //        this.casoCustomFieldPK = casoCustomFieldPK;
 //    }
-
 //    public CasoCustomField(Long idCaso, String fieldKey, String entity) {
 //        this.casoCustomFieldPK = new CasoCustomFieldPK(idCaso, fieldKey, entity);
 //    }
@@ -79,7 +69,6 @@ public class CasoCustomField implements Serializable {
 //        this.casoCustomFieldPK = new CasoCustomFieldPK(idCaso.getIdCaso(), customFieldPK.getFieldKey(), customFieldPK.getEntity());
 //        this.caso = idCaso;
 //    }
-
 //    public CasoCustomFieldPK getCasoCustomFieldPK() {
 //        return casoCustomFieldPK;
 //    }
@@ -87,7 +76,6 @@ public class CasoCustomField implements Serializable {
 //    public void setCasoCustomFieldPK(CasoCustomFieldPK casoCustomFieldPK) {
 //        this.casoCustomFieldPK = casoCustomFieldPK;
 //    }
-
     public String getValor() {
         return valor;
     }
@@ -122,10 +110,9 @@ public class CasoCustomField implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 29 * hash + (this.fieldKey != null ? this.fieldKey.hashCode() : 0);
-        hash = 29 * hash + (this.entity != null ? this.entity.hashCode() : 0);
-        hash = 29 * hash + (this.idCaso != null ? this.idCaso.hashCode() : 0);
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.idCaso);
+        hash = 53 * hash + Objects.hashCode(this.customField);
         return hash;
     }
 
@@ -138,70 +125,27 @@ public class CasoCustomField implements Serializable {
             return false;
         }
         final CasoCustomField other = (CasoCustomField) obj;
-        if ((this.fieldKey == null) ? (other.fieldKey != null) : !this.fieldKey.equals(other.fieldKey)) {
+        if (!Objects.equals(this.idCaso, other.idCaso)) {
             return false;
         }
-        if ((this.entity == null) ? (other.entity != null) : !this.entity.equals(other.entity)) {
-            return false;
-        }
-        if (this.idCaso != other.idCaso && (this.idCaso == null || !this.idCaso.equals(other.idCaso))) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.customField, other.customField);
     }
-    
-    
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("CasoCustomField [");
-        builder.append("caso=");
-        builder.append(idCaso.getIdCaso());
-        builder.append(", entity=");
-        builder.append(entity);
-        builder.append(", fieldKey=");
-        builder.append(fieldKey);
-        builder.append("]");
-        return builder.toString();
+        return "CasoCustomField{" + "idCaso=" + idCaso + ", customField=" + customField + ", valor=" + valor + ", valor2=" + valor2 + '}';
     }
 
+   
 
+   
 
     /**
-     * @return the fieldKey
-     */
-    public String getFieldKey() {
-        return fieldKey;
-    }
-
-    /**
-     * @param fieldKey the fieldKey to set
-     */
-    public void setFieldKey(String fieldKey) {
-        this.fieldKey = fieldKey;
-    }
-
-    /**
-     * @return the entity
-     */
-    public String getEntity() {
-        return entity;
-    }
-
-    /**
-     * @param entity the entity to set
-     */
-    public void setEntity(String entity) {
-        this.entity = entity;
-    }
-    
-     /**
      * @return the valoresList
      */
     @Transient
     public List<String> getValoresList() {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         if (valor != null) {
             for (String value : valor.split(",", -1)) {
                 final String trimmedValue = value.trim();
