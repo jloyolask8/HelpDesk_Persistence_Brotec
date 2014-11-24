@@ -41,26 +41,25 @@ public class Canal implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @NotNull    
+    @NotNull
     @Column(name = "id_canal")
-    private String idCanal;   
+    private String idCanal;
     private String nombre;
     @Column(name = "enabled")
-    private Boolean enabled = Boolean.TRUE;    
+    private Boolean enabled = Boolean.TRUE;
     private String descripcion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "canal")
+    @OneToMany(orphanRemoval = true, cascade = {CascadeType.ALL}, mappedBy = "canal")
     @CascadeOnDelete
     private List<CanalSetting> canalSettingList;
     @JoinColumn(name = "id_tipo_canal", referencedColumnName = "id_tipo")
     @ManyToOne
     private TipoCanal idTipoCanal;
-    
+
     @Transient
     private Map<String, String> propertieSettings;
-    
+
 //    @OneToMany(mappedBy = "idCanal")
 //    private List<Caso> casoList;
-
     public Canal() {
     }
 
@@ -105,7 +104,7 @@ public class Canal implements Serializable {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    
+
     @XmlTransient
     public List<CanalSetting> getCanalSettingList() {
         return canalSettingList;
@@ -131,7 +130,6 @@ public class Canal implements Serializable {
 //    public void setCasoList(List<Caso> casoList) {
 //        this.casoList = casoList;
 //    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -170,25 +168,21 @@ public class Canal implements Serializable {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
-    
-    public String getSetting(String key)
-    {
+
+    public String getSetting(String key) {
         return getMapSetting().get(key);
     }
-    
-    public boolean containsKey(String key)
-    {
+
+    public boolean containsKey(String key) {
         return getMapSetting().containsKey(key);
     }
-    
-    public void reloadSettings(){
+
+    public void reloadSettings() {
         propertieSettings = null;
     }
-    
-    public Map<String, String> getMapSetting()
-    {
-        if(propertieSettings == null)
-        {
+
+    public Map<String, String> getMapSetting() {
+        if (propertieSettings == null) {
             propertieSettings = new HashMap<String, String>();
             for (CanalSetting canalSetting : getCanalSettingList()) {
                 propertieSettings.put(canalSetting.getCanalSettingPK().getCanalSettingKey(),
