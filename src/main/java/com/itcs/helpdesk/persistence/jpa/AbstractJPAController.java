@@ -141,23 +141,24 @@ public abstract class AbstractJPAController {
                     final ComparableField comparableField = annotatedFields.get(filtro.getIdCampo());
 
                     if (comparableField == null) {
-                        throw new IllegalStateException("Los valores de los filtros de la vista no cumplen con los requisitos minimos!. Debe especificar un campo comparable.");
-//                continue;
+//                        throw new IllegalStateException("Los valores de los filtros de la vista no cumplen con los requisitos minimos!. Debe especificar un campo comparable.");
+                        continue;
                     }
 
                     TipoComparacion operador = filtro.getIdComparador();
 
                     String valorAttributo = filtro.getValor();
 
-                    if (operador == null || valorAttributo == null || filtro == null) {
-                        throw new IllegalStateException("Los valores de los filtros de la vista no cumplen con los requisitos minimos.");
-//                continue;
+                    if (operador == null || valorAttributo == null) {
+//                        throw new IllegalStateException("Los valores de los filtros de la vista no cumplen con los requisitos minimos.");
+                        continue;
                     }
 
                     final FieldType fieldType = comparableField.getFieldTypeId();
 
                     if (fieldType == null) {
-                        throw new IllegalStateException("Los filtros de la vista no cumplen con los requisitos minimos!. Debe especificar un tipo de campo.");
+//                        throw new IllegalStateException("Los filtros de la vista no cumplen con los requisitos minimos!. Debe especificar un tipo de campo.");
+                        continue;
                     }
 
                     Predicate localPredicate = null;
@@ -183,14 +184,14 @@ public abstract class AbstractJPAController {
                         }
                     } else if (fieldType.equals(EnumFieldType.NUMBER.getFieldType())) {
 
-                         Expression<Long> expresion = root.get(filtro.getIdCampo());
-                         
+                        Expression<Long> expresion = root.get(filtro.getIdCampo());
+
                         if (operador.equals(EnumTipoComparacion.EQ.getTipoComparacion())) {
                             localPredicate = criteriaBuilder.equal(expresion, NumberUtils.createLong(valorAttributo.trim()));
                         } else if (operador.equals(EnumTipoComparacion.NE.getTipoComparacion())) {
                             localPredicate = criteriaBuilder.notEqual(expresion, NumberUtils.createLong(valorAttributo.trim()));
                         } else if (operador.equals(EnumTipoComparacion.LE.getTipoComparacion())) {
-                            localPredicate = criteriaBuilder.lessThanOrEqualTo(expresion, NumberUtils.createLong(valorAttributo.trim()) );
+                            localPredicate = criteriaBuilder.lessThanOrEqualTo(expresion, NumberUtils.createLong(valorAttributo.trim()));
                         } else if (operador.equals(EnumTipoComparacion.LT.getTipoComparacion())) {
                             localPredicate = criteriaBuilder.lessThan(expresion, NumberUtils.createLong(valorAttributo.trim()));
                         } else if (operador.equals(EnumTipoComparacion.GE.getTipoComparacion())) {

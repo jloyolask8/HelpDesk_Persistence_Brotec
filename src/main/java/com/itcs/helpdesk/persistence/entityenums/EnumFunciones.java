@@ -26,9 +26,9 @@ public enum EnumFunciones {
     EDITAR_AJUSTES(new Funcion(9, "EDITAR AJUSTES", "puede editar ajustes")),
     RESPONDER_CUALQUIER_CASO(new Funcion(10, "RESPONDER CUALQUIER CASO", "puede responder cualquier caso")),
     EDITAR_CUALQUIER_CASO(new Funcion(11, "EDITAR CUALQUIER CASO", "puede editar cualquier caso")),
-    ADMINISTRAR_ITEMS_PREENTREGA(new Funcion(12, "ADMINISTRAR ITEMS PREENTREGA", "Administrar items pre-entrega")),
-    CREAR_CASO_ENTREGA(new Funcion(13, "CREAR CASO ENTREGA", "Crear caso pre-entrega"));
-    
+    ADMINISTRAR_ITEMS_PREENTREGA(new Funcion(12, "ADMINISTRAR ITEMS PREENTREGA", "Administrar items pre-entrega"));
+//    CREAR_CASO_ENTREGA(new Funcion(13, "CREAR CASO ENTREGA", "Crear caso pre-entrega"));//TODO REMOVE CREAR_CASO_ENTREGA from functions
+
     private final Funcion funcion;
 
     EnumFunciones(Funcion funcion) {
@@ -40,10 +40,24 @@ public enum EnumFunciones {
     }
 
     public static List<Funcion> getAll() {
-        ArrayList<Funcion> funciones = new ArrayList<Funcion>(values().length);
+        ArrayList<Funcion> funciones = new ArrayList<>(values().length);
         for (EnumFunciones enumFuncion : values()) {
             funciones.add(enumFuncion.getFuncion());
         }
+        return funciones;
+    }
+
+    public static List<Funcion> getAgentDefaultFunctions() {
+        ArrayList<Funcion> funciones = new ArrayList<>(values().length);
+        funciones.add(AGREGAR_CASO.getFuncion());
+        funciones.add(EDITAR_CASO.getFuncion());
+        funciones.add(ELIMINAR_CASO.getFuncion());
+        funciones.add(FILTRO_OWNER.getFuncion());
+        funciones.add(FILTROS_INBOX.getFuncion());
+        funciones.add(ADMINISTRAR_VISTAS.getFuncion());
+        funciones.add(ASIGNAR_TRANSFERIR_CASO.getFuncion());
+//        funciones.add(CREAR_CASO_ENTREGA.getFuncion());//TODO REMOVE
+
         return funciones;
     }
 }
