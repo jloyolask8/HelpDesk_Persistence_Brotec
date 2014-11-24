@@ -22,6 +22,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 /**
  *
@@ -48,6 +49,7 @@ public class Canal implements Serializable {
     private Boolean enabled = Boolean.TRUE;    
     private String descripcion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "canal")
+    @CascadeOnDelete
     private List<CanalSetting> canalSettingList;
     @JoinColumn(name = "id_tipo_canal", referencedColumnName = "id_tipo")
     @ManyToOne
