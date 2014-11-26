@@ -152,6 +152,41 @@ public enum EnumSettingsBase {
             + "</div>", "app", "inputhtml", 24, 
             "Cuando un cliente se inscriba en un evento este mensaje de recepción será enviado.", true)),
     
+    NOTIFICATION_TAC_SUBJECT_TEXT(new AppSetting("NOTIFICATION_TAC_SUBJECT_TEXT", "Asunto Nofiticación de cambio de estado de alerta del caso", "El estado del caso ${TipoCaso} #${NumeroCaso} Ha cambiado a ${EstadoAlerta}", "app", "input", 25, "", true)),
+    NOTIFICATION_TAC_BODY_TEXT(new AppSetting("NOTIFICATION_TAC_BODY_TEXT", "Cuerpo mensaje Nofiticación de cambio de estado de alerta del caso",
+            "<div>\n"
+            + "<p>Estimad@ Agente <strong>${NombreAgente}</strong>,</p>\n"
+            + "\n"
+            + "<p>Le notificamos que el estado del caso ${TipoCaso} N&deg;#[${NumeroCaso}]: ${Asunto} Ha cambiado a ${EstadoAlerta}</p>\n"
+            + "\n"
+            + "<hr />\n"
+            + "<p><span style=\"color:rgb(68, 68, 68)\">${Descripcion}</span>&nbsp;</p>\n"
+            + "\n"
+            + "<hr />\n"
+            + "<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\"><small>Para una pronta atenci&oacute;n favor ingrese a nuestro portal de servicio al cliente <a href=\"\" target=\"_blank\">GoDesk</a>. O si lo desea puede responder a este correo directamente y esta respuesta sera enviada al cliente &nbsp;${NombreCliente} a su direcci&oacute;n ${EmailCliente}. Tambi&eacute;n est&aacute; permitido atachar documentos.</small><br />\n"
+            + "&nbsp;</div>\n"
+            + "\n"
+            + "<p>Atentamente,</p>\n"
+            + "\n"
+            + "<table border=\"0\" cellpadding=\"0\" cellspacing=\"10\">\n"
+            + "	<tbody>\n"
+            + "		<tr>\n"
+            + "			<td>logo</td>\n"
+            + "			<td>\n"
+            + "			<p>Su Equipo de Servicio al Cliente.</p>\n"
+            + "\n"
+            + "			<p><br />\n"
+            + "			<a href=\"\">www.godesk.cl</a></p>\n"
+            + "			</td>\n"
+            + "		</tr>\n"
+            + "	</tbody>\n"
+            + "</table>\n"
+            + "\n"
+            + "<hr />\n"
+            + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
+            + "</div>", "app", "inputhtml", 26, "", true)),
+    //--
+    
     
     DEBUG_ENABLED(new AppSetting("DEBUG_ENABLED", "AppDebug", "false", "admin", "booleanchoice", 50, "Habilitar esta opcion para realizar un diagnostico de la ejecucion del sistema (Herramienta de diagnostico de problemas para Soporte).", true)),
     COMPANY_LOGIN_BACKGROUND_URL(new AppSetting("COMPANY_LOGIN_BACKGROUND_URL", "Background Image (Login)", "", "app", "input", 5, "URL de una imagen de fondo a usar en la pagina de login.", false));

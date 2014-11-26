@@ -126,17 +126,24 @@ public class Usuario implements Serializable {
 
     //notifications
     @Column(name = "notify_when_ticket_assigned")
-    private Boolean notifyWhenTicketAssigned;
+    private boolean notifyWhenTicketAssigned;
     @Column(name = "notify_when_new_ticket_in_group")
-    private Boolean notifyWhenNewTicketInGroup;
+    private boolean notifyWhenNewTicketInGroup;
     @Column(name = "notify_when_ticket_alert")
-    private Boolean notifyWhenTicketAlert;
+    private boolean notifyWhenTicketAlert;
     @Column(name = "notify_when_ticket_is_updated")
-    private Boolean notifyWhenTicketIsUpdated;
+    private boolean notifyWhenTicketIsUpdated;
+    //---
     @Column(name = "email_notifications_enabled")
-    private Boolean emailNotificationsEnabled;
+    private boolean emailNotificationsEnabled;
     @Column(name = "desktop_notifications_enabled")
-    private Boolean desktopNotificationsEnabled;
+    private boolean desktopNotificationsEnabled;
+
+    @Column(name = "template_theme")
+    @Size(max = 64)
+    private String templateTheme;
+    @Column(name = "main_menu_changepos")
+    private boolean mainMenuChangePos;
 
     /**
      * ALTER TABLE usuario ADD COLUMN prefer_firma_enabled boolean; ALTER TABLE
@@ -144,7 +151,6 @@ public class Usuario implements Serializable {
      */
 //    @Column(name = "prefer_firma_enabled")
 //    private boolean firmaEnabled;
-
     @Column(name = "firma")
     @Size(max = 2147483647)
     private String firma;
@@ -155,9 +161,9 @@ public class Usuario implements Serializable {
 
     public Usuario() {
     }
-    
-    public void addUsuarioSessionLog(UsuarioSessionLog sessionLog){
-        if(usuarioSessionLogList == null){
+
+    public void addUsuarioSessionLog(UsuarioSessionLog sessionLog) {
+        if (usuarioSessionLogList == null) {
             usuarioSessionLogList = new LinkedList<>();
         }
         usuarioSessionLogList.add(sessionLog);
@@ -460,84 +466,84 @@ public class Usuario implements Serializable {
     /**
      * @return the notifyWhenTicketAssigned
      */
-    public Boolean getNotifyWhenTicketAssigned() {
+    public boolean getNotifyWhenTicketAssigned() {
         return notifyWhenTicketAssigned;
     }
 
     /**
      * @param notifyWhenTicketAssigned the notifyWhenTicketAssigned to set
      */
-    public void setNotifyWhenTicketAssigned(Boolean notifyWhenTicketAssigned) {
+    public void setNotifyWhenTicketAssigned(boolean notifyWhenTicketAssigned) {
         this.notifyWhenTicketAssigned = notifyWhenTicketAssigned;
     }
 
     /**
      * @return the notifyWhenNewTicketInGroup
      */
-    public Boolean getNotifyWhenNewTicketInGroup() {
+    public boolean getNotifyWhenNewTicketInGroup() {
         return notifyWhenNewTicketInGroup;
     }
 
     /**
      * @param notifyWhenNewTicketInGroup the notifyWhenNewTicketInGroup to set
      */
-    public void setNotifyWhenNewTicketInGroup(Boolean notifyWhenNewTicketInGroup) {
+    public void setNotifyWhenNewTicketInGroup(boolean notifyWhenNewTicketInGroup) {
         this.notifyWhenNewTicketInGroup = notifyWhenNewTicketInGroup;
     }
 
     /**
      * @return the notifyWhenTicketAlert
      */
-    public Boolean getNotifyWhenTicketAlert() {
+    public boolean getNotifyWhenTicketAlert() {
         return notifyWhenTicketAlert;
     }
 
     /**
      * @param notifyWhenTicketAlert the notifyWhenTicketAlert to set
      */
-    public void setNotifyWhenTicketAlert(Boolean notifyWhenTicketAlert) {
+    public void setNotifyWhenTicketAlert(boolean notifyWhenTicketAlert) {
         this.notifyWhenTicketAlert = notifyWhenTicketAlert;
     }
 
     /**
      * @return the notifyWhenTicketIsUpdated
      */
-    public Boolean getNotifyWhenTicketIsUpdated() {
+    public boolean getNotifyWhenTicketIsUpdated() {
         return notifyWhenTicketIsUpdated;
     }
 
     /**
      * @param notifyWhenTicketIsUpdated the notifyWhenTicketIsUpdated to set
      */
-    public void setNotifyWhenTicketIsUpdated(Boolean notifyWhenTicketIsUpdated) {
+    public void setNotifyWhenTicketIsUpdated(boolean notifyWhenTicketIsUpdated) {
         this.notifyWhenTicketIsUpdated = notifyWhenTicketIsUpdated;
     }
 
     /**
      * @return the emailNotificationsEnabled
      */
-    public Boolean getEmailNotificationsEnabled() {
+    public boolean getEmailNotificationsEnabled() {
         return emailNotificationsEnabled;
     }
 
     /**
      * @param emailNotificationsEnabled the emailNotificationsEnabled to set
      */
-    public void setEmailNotificationsEnabled(Boolean emailNotificationsEnabled) {
+    public void setEmailNotificationsEnabled(boolean emailNotificationsEnabled) {
         this.emailNotificationsEnabled = emailNotificationsEnabled;
     }
 
     /**
      * @return the desktopNotificationsEnabled
      */
-    public Boolean getDesktopNotificationsEnabled() {
+    public boolean getDesktopNotificationsEnabled() {
         return desktopNotificationsEnabled;
     }
 
     /**
      * @param desktopNotificationsEnabled the desktopNotificationsEnabled to set
      */
-    public void setDesktopNotificationsEnabled(Boolean desktopNotificationsEnabled) {
+    public void setDesktopNotificationsEnabled(boolean desktopNotificationsEnabled) {
         this.desktopNotificationsEnabled = desktopNotificationsEnabled;
     }
 
@@ -554,7 +560,6 @@ public class Usuario implements Serializable {
 //    public void setFirmaEnabled(boolean firmaEnabled) {
 //        this.firmaEnabled = firmaEnabled;
 //    }
-
     /**
      * @return the firma
      */
@@ -581,5 +586,33 @@ public class Usuario implements Serializable {
      */
     public void setUsuarioSessionLogList(List<UsuarioSessionLog> usuarioSessionLogList) {
         this.usuarioSessionLogList = usuarioSessionLogList;
+    }
+
+    /**
+     * @return the templateTheme
+     */
+    public String getTemplateTheme() {
+        return templateTheme;
+    }
+
+    /**
+     * @param templateTheme the templateTheme to set
+     */
+    public void setTemplateTheme(String templateTheme) {
+        this.templateTheme = templateTheme;
+    }
+
+    /**
+     * @return the mainMenuChangePos
+     */
+    public boolean isMainMenuChangePos() {
+        return mainMenuChangePos;
+    }
+
+    /**
+     * @param mainMenuChangePos the mainMenuChangePos to set
+     */
+    public void setMainMenuChangePos(boolean mainMenuChangePos) {
+        this.mainMenuChangePos = mainMenuChangePos;
     }
 }

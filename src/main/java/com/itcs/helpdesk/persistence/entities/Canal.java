@@ -48,16 +48,14 @@ public class Canal implements Serializable {
     @Column(name = "enabled")
     private Boolean enabled = Boolean.TRUE;
     private String descripcion;
-    @OneToMany(orphanRemoval = true, cascade = {CascadeType.ALL}, mappedBy = "canal")
     @CascadeOnDelete
+    @OneToMany(mappedBy = "canal", orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<CanalSetting> canalSettingList;
     @JoinColumn(name = "id_tipo_canal", referencedColumnName = "id_tipo")
     @ManyToOne
     private TipoCanal idTipoCanal;
-
     @Transient
     private Map<String, String> propertieSettings;
-
 //    @OneToMany(mappedBy = "idCanal")
 //    private List<Caso> casoList;
     public Canal() {
