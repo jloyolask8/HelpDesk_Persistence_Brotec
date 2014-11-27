@@ -22,6 +22,10 @@ public enum EnumSettingsBase {
     DEFAULT_THEME(new AppSetting("DEFAULT_THEME", "Tema por defecto", "itcs-theme", "app", "theme", 5, "", false)),
     PORTAL_WEB_URL_CASO(new AppSetting("PORTAL_WEB_URL_CASO", "Link al caso (clientes)", "http://", "app", "input", 6, "", true)),
     COMPANY_HELPDESK_SITE_URL(new AppSetting("COMPANY_HELPDESK_SITE_URL", "Url Sitio Web helpdesk", "http://", "app", "input", 7, "", true)),
+    
+    AREA_IS_REQUIRED(new AppSetting("AREA_IS_REQUIRED", "Es requerido que el caso este en un Área", "true", "app", "booleanchoice", 7, "Es mandatorio que el agente seleccione el area a la cual se asocia el caso.", true)),
+    
+    PRODUCT_IS_REQUIRED(new AppSetting("PRODUCT_IS_REQUIRED", "Es requerido Ingresar el producto", "true", "app", "booleanchoice", 8, "Es mandatorio que el agente ingrese el producto en los casos.", true)),
     PRODUCT_DESCRIPTION(new AppSetting("PRODUCT_DESCRIPTION", "Producto -> Nombre", "Producto", "app", "input", 8, "", true)),
     PRODUCT_COMP_DESCRIPTION(new AppSetting("PRODUCT_COMP_DESCRIPTION", "Producto -> Nombre Componente", "Componente", "app", "input", 9, "", true)),
     PRODUCT_SUBCOMP_DESCRIPTION(new AppSetting("PRODUCT_SUBCOMP_DESCRIPTION", "Producto -> Nombre Sub Componente", "Sub Componente", "app", "input", 10, "", true)),
