@@ -322,10 +322,14 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     public Long countEntities(Vista vista) throws ClassNotFoundException {
-        return countEntities(vista, null, null);
+        return countEntities(vista, false, null, null);
+    }
+    
+    public Long countEntities(Vista vista, Usuario who, String query) throws ClassNotFoundException {
+        return countEntities(vista, true, who, query);
     }
 
-    public Long countEntities(Vista vista, Usuario who, String query) throws ClassNotFoundException {
+    public Long countEntities(Vista vista, boolean useNonPersistentFilters, Usuario who, String query) throws ClassNotFoundException {
         EntityManager em = getEntityManager();
         em.setProperty("javax.persistence.cache.storeMode", javax.persistence.CacheRetrieveMode.USE);
 
@@ -340,7 +344,7 @@ public class JPAServiceFacade extends AbstractJPAController {
             CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(entityClass);
             Root root = criteriaQuery.from(entityClass);
 
-            Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, who, query);
+            Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, useNonPersistentFilters, who, query);
 
             if (predicate != null) {
                 criteriaQuery.select(criteriaBuilder.count(root)).where(predicate).distinct(true);
@@ -362,18 +366,22 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     public List<?> findAllEntities(Vista vista, OrderBy orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
-        return findEntities(vista, true, -1, -1, orderBy, null, who);
+        return findEntities(vista, true, true, -1, -1, orderBy, null, who);
     }
 
     public List<?> findEntities(Vista vista, int maxResults, int firstResult, OrderBy orderBy, Usuario who) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
-        return findEntities(vista, false, maxResults, firstResult, orderBy, null, who);
+        return findEntities(vista, true, false, maxResults, firstResult, orderBy, null, who);
     }
 
     public List<?> findEntities(Vista vista, int maxResults, int firstResult, OrderBy orderBy, Usuario who, String query) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
-        return findEntities(vista, false, maxResults, firstResult, orderBy, query, who);
+        return findEntities(vista, true, false, maxResults, firstResult, orderBy, query, who);
+    }
+    
+    public List<?> findEntities(Vista vista, boolean useNonPersistentFilters, int maxResults, int firstResult, OrderBy orderBy, Usuario who, String query) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
+        return findEntities(vista, useNonPersistentFilters, false, maxResults, firstResult, orderBy, query, who);
     }
 
-    private List<?> findEntities(Vista vista, boolean all, int maxResults, int firstResult, OrderBy orderBy, String query, Usuario who) throws IllegalStateException, ClassNotFoundException {
+    private List<?> findEntities(Vista vista, boolean useNonPersistentFilters, boolean all, int maxResults, int firstResult, OrderBy orderBy, String query, Usuario who) throws IllegalStateException, ClassNotFoundException {
         EntityManager em = getEntityManager();
 
         try {
@@ -385,7 +393,7 @@ public class JPAServiceFacade extends AbstractJPAController {
             CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(entityClass);
             Root root = criteriaQuery.from(entityClass);
 
-            Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, who, query);
+            Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, useNonPersistentFilters, who, query);
 
             if (predicate != null) {
                 criteriaQuery.where(predicate).distinct(true);

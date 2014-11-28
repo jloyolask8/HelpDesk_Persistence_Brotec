@@ -9,6 +9,7 @@ import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import javax.persistence.Basic;
@@ -81,8 +82,8 @@ public class Vista implements Serializable {
     @Size(max = 1000)
     @Column(name = "base_entity_type", nullable = false, length = 1000)
     private String baseEntityType;
-    
-     @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "fecha Creacion", fieldIdFull = "fechaCreacion", fieldTypeFull = Date.class)
+
+    @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "fecha Creacion", fieldIdFull = "fechaCreacion", fieldTypeFull = Date.class)
     @Column(name = "fecha_creacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
@@ -206,7 +207,7 @@ public class Vista implements Serializable {
         filtro.setIdVista(this);
     }
 
-    public void addNewFiltroVista() {
+    public void addNewFiltroVista(FiltroVista filtroActual) {
         FiltroVista filtro = new FiltroVista();
         Random randomGenerator = new Random();
         int n = randomGenerator.nextInt();
@@ -215,10 +216,30 @@ public class Vista implements Serializable {
         }
         filtro.setIdFiltro(n);//Ugly patch to solve identifier unknown when new items are added to the datatable.
         if (this.getFiltrosVistaList() == null || this.getFiltrosVistaList().isEmpty()) {
-            this.setFiltrosVistaList(new ArrayList<FiltroVista>());
+            this.setFiltrosVistaList(new LinkedList<FiltroVista>());
         }
-        this.getFiltrosVistaList().add(filtro);
+        if (filtroActual != null) {
+            int index = this.getFiltrosVistaList().indexOf(filtroActual);
+            if (index >= 0) {
+                this.getFiltrosVistaList().add(index + 1, filtro);
+            } else {
+                this.getFiltrosVistaList().add(filtro);
+            }
+        } else {
+            this.getFiltrosVistaList().add(filtro);
+        }
         filtro.setIdVista(this);
+    }
+
+    public void addNewFiltroVista() {
+        addNewFiltroVista(null);
+    }
+
+    public boolean canRemoveFiltroVista() {
+        if (this.getFiltrosVistaList() != null && !this.getFiltrosVistaList().isEmpty()) {
+            return this.getFiltrosVistaList().size() > 1;
+        }
+        return false;
     }
 
     public void removeFiltroFromVista(FiltroVista filtro) {

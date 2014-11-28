@@ -123,7 +123,7 @@ public abstract class AbstractJPAController {
      * @throws IllegalStateException
      * @throws ClassNotFoundException
      */
-    protected Predicate createPredicate(EntityManager em, CriteriaBuilder criteriaBuilder, Root<?> root, Vista vista, Usuario whoIsApplyingView, String query) throws IllegalStateException, ClassNotFoundException {
+    protected Predicate createPredicate(EntityManager em, CriteriaBuilder criteriaBuilder, Root<?> root, Vista vista, boolean useNonPersistentFilters, Usuario whoIsApplyingView, String query) throws IllegalStateException, ClassNotFoundException {
 
         Predicate predicate = null;
 
@@ -137,6 +137,10 @@ public abstract class AbstractJPAController {
 
             if (vista.getFiltrosVistaList() != null) {
                 for (FiltroVista filtro : vista.getFiltrosVistaList()) {
+                    
+                    if(!useNonPersistentFilters && filtro.getIdFiltro()<0){
+                        continue;
+                    }
 
                     final ComparableField comparableField = annotatedFields.get(filtro.getIdCampo());
 
