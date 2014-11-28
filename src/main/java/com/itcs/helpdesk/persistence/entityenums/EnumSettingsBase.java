@@ -190,6 +190,20 @@ public enum EnumSettingsBase {
             + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
             + "</div>", "app", "inputhtml", 26, "", true)),
     //--
+    NOTIFICATION_UPDATE_AGENT_SUBJECT_TEXT(new AppSetting("NOTIFICATION_UPDATE_AGENT_SUBJECT_TEXT", "Asunto Nofiticación de actualización del caso", "Su caso ha sido actualizado", "app", "input", 27, "", true)),
+    NOTIFICATION_UPDATE_AGENT_BODY_TEXT(new AppSetting("NOTIFICATION_UPDATE_AGENT_BODY_TEXT", "Cuerpo mensaje Nofiticación de actualización del caso",
+            "<div>\n"
+            + "<p>Estimad@ <strong>${NombreAgente}</strong>,</p>\n"
+            + "\n"
+            + "<p>Le notificamos que su caso ${TipoCaso} #[${NumeroCaso}]: ${Asunto} Ha sido actualizado.</p>\n"
+            + "\n"
+            + "<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\"><small>Para una pronta atenci&oacute;n favor ingrese a nuestro portal de servicio al cliente <a href=\"\" target=\"_blank\">GoDesk</a>. O si lo desea puede responder a este correo directamente y esta respuesta sera enviada al cliente &nbsp;${NombreCliente} a su direcci&oacute;n ${EmailCliente}. Tambi&eacute;n est&aacute; permitido atachar documentos.</small><br />\n"
+            + "&nbsp;</div>\n"
+            + "\n"
+            + "<hr />\n"
+            + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
+            + "</div>", "app", "inputhtml", 28, "", true)),
+    //--
     
     
     DEBUG_ENABLED(new AppSetting("DEBUG_ENABLED", "AppDebug", "false", "admin", "booleanchoice", 50, "Habilitar esta opcion para realizar un diagnostico de la ejecucion del sistema (Herramienta de diagnostico de problemas para Soporte).", true)),

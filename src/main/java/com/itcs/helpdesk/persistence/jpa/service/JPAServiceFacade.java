@@ -440,6 +440,15 @@ public class JPAServiceFacade extends AbstractJPAController {
     public Caso findCasoByIdEmailCliente(String email, Long idCaso) {
         return getCasoJpa().findCasoByIdEmailCliente(email, idCaso);
     }
+    
+    public Cliente findClienteByEmail(String email) {
+        final EmailCliente find = find(EmailCliente.class, email);
+        if(find != null){
+            return find.getCliente();
+        }else{
+            return null;
+        }
+    }
 
 //    public Long countByCreatedBetween(Class entityClass, Date from, Date to, Area idArea, Grupo idGrupo, Usuario owner) {
 //        EasyCriteriaQuery q = new EasyCriteriaQuery(emf, entityClass);
