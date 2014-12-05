@@ -11,6 +11,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 public class Caso_ {
 
     public static final String ESTADO_FIELD_NAME = "idEstado";
+    public static final String SUBESTADO_FIELD_NAME = "idSubEstado";
     public static final String OWNER_FIELD_NAME = "owner";
     public static final String REVISAR_ACTUALIZACION_FIELD_NAME = "revisarActualizacion";
     public static final String ESTADO_ALERTA_FIELD_NAME = "estadoAlerta";

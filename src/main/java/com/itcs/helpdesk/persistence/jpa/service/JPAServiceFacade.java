@@ -776,6 +776,8 @@ public class JPAServiceFacade extends AbstractJPAController {
     public Caso mergeCasoWithoutNotify(Caso caso, List<AuditLog> changeList) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         return mergeCaso(caso, changeList, false);
     }
+    
+  
 
     public void removeCaso(Caso caso) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         getCasoJpa().destroy(caso.getIdCaso());

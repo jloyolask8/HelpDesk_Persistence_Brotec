@@ -129,6 +129,12 @@ public class Caso implements Serializable {
     @JoinColumn(name = "owner", referencedColumnName = "id_usuario")
     @ManyToOne
     private Usuario owner;
+    
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Grupo", fieldIdFull = "idGrupo.idGrupo", fieldTypeFull = String.class)
+    @JoinColumn(name = "id_grupo", referencedColumnName = "id_grupo")
+    @ManyToOne
+    private Grupo idGrupo;
+    
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Estado de Alerta", fieldIdFull = "estadoAlerta.idalerta", fieldTypeFull = Integer.class)
     @JoinColumn(name = "estado_alerta", referencedColumnName = "idalerta")
     @ManyToOne
@@ -187,6 +193,7 @@ public class Caso implements Serializable {
     @JoinColumn(name = "id_canal", referencedColumnName = "id_canal")
     @ManyToOne
     private Canal idCanal;
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_PLACE_HOLDER, label = "Lista de Actividades", fieldIdFull = "notaList", fieldTypeFull = List.class)
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "idCaso")
     @CascadeOnDelete
     @OrderBy("fechaCreacion DESC")
@@ -952,5 +959,19 @@ public class Caso implements Serializable {
      */
     public void setCasoCustomFieldList(List<CasoCustomField> casoCustomFieldList) {
         this.casoCustomFieldList = casoCustomFieldList;
+    }
+
+    /**
+     * @return the idGrupo
+     */
+    public Grupo getIdGrupo() {
+        return idGrupo;
+    }
+
+    /**
+     * @param idGrupo the idGrupo to set
+     */
+    public void setIdGrupo(Grupo idGrupo) {
+        this.idGrupo = idGrupo;
     }
 }
