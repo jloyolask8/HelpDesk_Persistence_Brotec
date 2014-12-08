@@ -71,7 +71,6 @@ import com.itcs.helpdesk.persistence.jpa.SubEstadoCasoJpaController;
 import com.itcs.helpdesk.persistence.jpa.TipoAlertaJpaController;
 import com.itcs.helpdesk.persistence.jpa.TipoComparacionJpaController;
 import com.itcs.helpdesk.persistence.jpa.TipoNotaJpaController;
-import com.itcs.helpdesk.persistence.jpa.UsuarioJpaController;
 import com.itcs.helpdesk.persistence.jpa.VistaJpaController;
 import com.itcs.helpdesk.persistence.jpa.custom.AuditLogJpaCustomController;
 import com.itcs.helpdesk.persistence.jpa.custom.CasoJPACustomController;
@@ -125,7 +124,7 @@ public class JPAServiceFacade extends AbstractJPAController {
     //--------------specific controllers wrapped by this service------------------------
     private CasoJPACustomController casoJpa;
     private AuditLogJpaCustomController auditLogJpa;
-    private UsuarioJpaController usuarioJpaController;
+//    private UsuarioJpaController usuarioJpaController;
     private UsuarioJpaCustomController usuarioJpaCustomController;
     private RolJpaController rolJpaController;
     private NotaJpaController notaJpaController;
@@ -861,100 +860,104 @@ public class JPAServiceFacade extends AbstractJPAController {
 //    public List<CampoCompCaso> getCampoCompCasoFindByNombreColValor(String nombreColValor) {
 //        return getEntityManager().createNamedQuery("CampoCompCaso.findByNombreColValor").setParameter("nombreColValor", nombreColValor).getResultList();
 //    }
-    public void persistUsuario(Usuario usuario) throws PreexistingEntityException, RollbackFailureException, Exception {
-        getUsuarioJpaController().create(usuario);
-    }
+//    public void persistUsuario(Usuario usuario) throws PreexistingEntityException, RollbackFailureException, Exception {
+//        getUsuarioJpaController().create(usuario);
+//    }
 
-    public void mergeUsuarioFull(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
-        getUsuarioJpaController().edit(usuario);
-    }
+//    public void mergeUsuarioFull(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
+//        getUsuarioJpaController().edit(usuario);
+//    }
 
-    public void mergeUsuarioLight(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
-        EntityManager em = null;
-        try {
-            utx.begin();
-            em = getEntityManager();
+//    public void mergeUsuarioLight(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
+//        EntityManager em = null;
+//        try {
+//            utx.begin();
+//            em = getEntityManager();
+//
+//            usuario = em.merge(usuario);
+//
+//            utx.commit();
+//        } catch (Exception ex) {
+//            try {
+//                utx.rollback();
+//            } catch (Exception re) {
+//                throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
+//            }
+//            String msg = ex.getLocalizedMessage();
+//            if (msg == null || msg.length() == 0) {
+//                String id = usuario.getIdUsuario();
+//
+//                if (em.find(Usuario.class, id) == null) {
+//                    throw new NonexistentEntityException(
+//                            "The usuario with id " + id + " no longer exists.");
+//                }
+//            }
+//            throw ex;
+//        } finally {
+//            if (em != null) {
+//                em.close();
+//            }
+//        }
+//    }
 
-            usuario = em.merge(usuario);
+//    public void removeUsuario(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
+//        getUsuarioJpaController().destroy(usuario.getIdUsuario());
+//    }
 
-            utx.commit();
-        } catch (Exception ex) {
-            try {
-                utx.rollback();
-            } catch (Exception re) {
-                throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
-            }
-            String msg = ex.getLocalizedMessage();
-            if (msg == null || msg.length() == 0) {
-                String id = usuario.getIdUsuario();
+//    /**
+//     * <
+//     * code>SELECT u FROM Usuario u</code>
+//     */
+//    public List<Usuario> getUsuarioFindAll() {
+//        return getUsuarioJpaController().findUsuarioEntities();
+//
+//    }
+//
+//    /**
+//     * <
+//     * code>SELECT u FROM Usuario u WHERE u.idUsuario = :idUsuario</code>
+//     */
+//    public Usuario getUsuarioFindByIdUsuario(String idUsuario) {
+//        return getUsuarioJpaController().findUsuario(idUsuario);
+//    }
 
-                if (em.find(Usuario.class, id) == null) {
-                    throw new NonexistentEntityException(
-                            "The usuario with id " + id + " no longer exists.");
-                }
-            }
-            throw ex;
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
-
-    public void removeUsuario(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
-        getUsuarioJpaController().destroy(usuario.getIdUsuario());
-    }
-
-    /**
-     * <
-     * code>SELECT u FROM Usuario u</code>
-     */
-    public List<Usuario> getUsuarioFindAll() {
-        return getUsuarioJpaController().findUsuarioEntities();
-
-    }
-
-    /**
-     * <
-     * code>SELECT u FROM Usuario u WHERE u.idUsuario = :idUsuario</code>
-     */
-    public Usuario getUsuarioFindByIdUsuario(String idUsuario) {
-        return getUsuarioJpaController().findUsuario(idUsuario);
-    }
-
-    /**
-     * <
-     * code>SELECT u FROM Usuario u WHERE u.nombres = :nombres</code>
-     */
-    public List<Usuario> getUsuarioFindByNombres(String nombres) {
-        return getUsuarioJpaController().getEntityManager().createNamedQuery("Usuario.findByNombres").setParameter("nombres", nombres).getResultList();
-    }
-
-    /**
-     * <
-     * code>SELECT u FROM Usuario u WHERE u.apellidos = :apellidos</code>
-     */
-    public List<Usuario> getUsuarioFindByApellidos(String apellidos) {
-        return getUsuarioJpaController().getEntityManager().createNamedQuery("Usuario.findByApellidos").setParameter("apellidos", apellidos).getResultList();
-    }
-
+//    /**
+//     * <
+//     * code>SELECT u FROM Usuario u WHERE u.nombres = :nombres</code>
+//     */
+//    public List<Usuario> getUsuarioFindByNombres(String nombres) {
+//        return getUsuarioJpaController().getEntityManager().createNamedQuery("Usuario.findByNombres").setParameter("nombres", nombres).getResultList();
+//    }
+//
+//    /**
+//     * <
+//     * code>SELECT u FROM Usuario u WHERE u.apellidos = :apellidos</code>
+//     */
+//    public List<Usuario> getUsuarioFindByApellidos(String apellidos) {
+//        return getUsuarioJpaController().getEntityManager().createNamedQuery("Usuario.findByApellidos").setParameter("apellidos", apellidos).getResultList();
+//    }
+//
     /**
      * <
      * code>SELECT u FROM Usuario u WHERE u.email = :email</code>
+     * @param email
+     * @return List<Usuario> 
      */
     public List<Usuario> getUsuarioFindByEmail(String email) {
         if (email == null) {
             return null;
         }
-        return getUsuarioJpaController().getEntityManager().createNamedQuery("Usuario.findByEmail").setParameter("email", email).getResultList();
+        return getEntityManager().createNamedQuery("Usuario.findByEmail").setParameter("email", email).getResultList();
     }
 
     /**
      * <
      * code>SELECT u FROM Usuario u WHERE u.rut = :rut</code>
+     * @param rut
+     * @return 
      */
     public List<Usuario> getUsuarioFindByRut(String rut) {
-        return (List<Usuario>) getUsuarioJpaController().getEntityManager().createNamedQuery("Usuario.findByRut").setParameter("rut", rut).getResultList();
+        return (List<Usuario>) getEntityManager().createNamedQuery("Usuario.findByRut").setParameter("rut", rut).getResultList();
     }
 
     public void persistGrupo(Grupo grupo) throws PreexistingEntityException, RollbackFailureException, Exception {
@@ -1949,7 +1952,7 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     public List<FieldType> getCustomFieldTypes() {
-        return getUsuarioJpaController().getEntityManager().createNamedQuery("FieldType.findByIsCustomField").setParameter("isCustomField", Boolean.TRUE).getResultList();
+        return getEntityManager().createNamedQuery("FieldType.findByIsCustomField").setParameter("isCustomField", Boolean.TRUE).getResultList();
     }
 
 //    public List<CustomField> getCustomFieldsForCaso() {
@@ -1971,12 +1974,12 @@ public class JPAServiceFacade extends AbstractJPAController {
     /**
      * @return the usuarioJpaController
      */
-    public UsuarioJpaController getUsuarioJpaController() {
-        if (usuarioJpaController == null) {
-            usuarioJpaController = new UsuarioJpaController(utx, emf);
-        }
-        return usuarioJpaController;
-    }
+//    public UsuarioJpaController getUsuarioJpaController() {
+//        if (usuarioJpaController == null) {
+//            usuarioJpaController = new UsuarioJpaController(utx, emf);
+//        }
+//        return usuarioJpaController;
+//    }
 
     /**
      * @return the rolJpaController
