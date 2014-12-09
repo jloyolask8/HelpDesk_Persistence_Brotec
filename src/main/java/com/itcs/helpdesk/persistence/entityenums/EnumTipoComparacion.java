@@ -12,7 +12,7 @@ public enum EnumTipoComparacion
      * EQUALS
      */
      
-    EQ(new TipoComparacion("Es", "EQ", "=", "Igual: Verdadero, si el contenido del operando1 es igual al contenido del operando2.")),
+    EQ(new TipoComparacion("Es exactamente", "EQ", "=", "Igual: Verdadero, si el contenido del operando1 es igual al contenido del operando2.")),
     /**
      * NOT EQUALS "Es Distinto", "NE", "<>", "No Igual: Verdadero, si el contenido del operando1 no es igual al contenido del operando2."
      */
@@ -41,7 +41,7 @@ public enum EnumTipoComparacion
     /**
      * "Sub Conjunto", "SC", "SC", "Verdadero si el valor del campo esta dentro del subconjunto pasado como parametro."
      */
-    SC(new TipoComparacion("Es SubConjunto de", "SC", "SC", "Verdadero si el valor del campo esta dentro del subconjunto pasado como parametro.")),
+    SC(new TipoComparacion("Es Cualquiera de", "SC", "SC", "Verdadero si el universo contiene la lista subconjunto pasado como parametro.")),
     /**
      * "Cambie A", "CT", "Change To", "Verdadero si el valor del campo cambio, y cambio al valor especificado."
      */

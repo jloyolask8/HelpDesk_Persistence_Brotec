@@ -68,6 +68,9 @@ public class Grupo implements Serializable {
     @ManyToMany
     private List<Producto> productoList;
 
+    @OneToMany(mappedBy = "idGrupo")
+    private List<Caso> casoList;
+
     public Grupo() {
     }
 
@@ -116,7 +119,6 @@ public class Grupo implements Serializable {
 //    public void setCategoriaList(List<Categoria> categoriaList) {
 //        this.categoriaList = categoriaList;
 //    }
-
     public Area getIdArea() {
         return idArea;
     }
@@ -203,5 +205,19 @@ public class Grupo implements Serializable {
      */
     public void setProductoList(List<Producto> productoList) {
         this.productoList = productoList;
+    }
+
+    /**
+     * @return the casoList
+     */
+    public List<Caso> getCasoList() {
+        return casoList;
+    }
+
+    /**
+     * @param casoList the casoList to set
+     */
+    public void setCasoList(List<Caso> casoList) {
+        this.casoList = casoList;
     }
 }
