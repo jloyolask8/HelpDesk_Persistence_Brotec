@@ -129,12 +129,12 @@ public class Caso implements Serializable {
     @JoinColumn(name = "owner", referencedColumnName = "id_usuario")
     @ManyToOne
     private Usuario owner;
-    
+
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Grupo", fieldIdFull = "idGrupo.idGrupo", fieldTypeFull = String.class)
     @JoinColumn(name = "id_grupo", referencedColumnName = "id_grupo")
     @ManyToOne
     private Grupo idGrupo;
-    
+
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Estado de Alerta", fieldIdFull = "estadoAlerta.idalerta", fieldTypeFull = Integer.class)
     @JoinColumn(name = "estado_alerta", referencedColumnName = "idalerta")
     @ManyToOne
@@ -189,6 +189,10 @@ public class Caso implements Serializable {
     @JoinColumn(name = "id_caso_padre", referencedColumnName = "id_caso")
     @ManyToOne
     private Caso idCasoPadre;
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_PLACE_HOLDER, label = "Caso combinado", fieldIdFull = "idCasoCombinado.idCaso", fieldTypeFull = Long.class)
+    @JoinColumn(name = "id_caso_combinado", referencedColumnName = "id_caso")
+    @ManyToOne
+    private Caso idCasoCombinado;
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Canal", fieldIdFull = "idCanal.idCanal", fieldTypeFull = String.class)
     @JoinColumn(name = "id_canal", referencedColumnName = "id_canal")
     @ManyToOne
@@ -959,6 +963,20 @@ public class Caso implements Serializable {
      */
     public void setCasoCustomFieldList(List<CasoCustomField> casoCustomFieldList) {
         this.casoCustomFieldList = casoCustomFieldList;
+    }
+
+    /**
+     * @return the idCasoCombinado
+     */
+    public Caso getIdCasoCombinado() {
+        return idCasoCombinado;
+    }
+
+    /**
+     * @param idCasoCombinado the idCasoCombinado to set
+     */
+    public void setIdCasoCombinado(Caso idCasoCombinado) {
+        this.idCasoCombinado = idCasoCombinado;
     }
 
     /**
