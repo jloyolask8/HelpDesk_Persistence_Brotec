@@ -16,7 +16,9 @@ public class Caso_ {
     public static final String REVISAR_ACTUALIZACION_FIELD_NAME = "revisarActualizacion";
     public static final String ESTADO_ALERTA_FIELD_NAME = "estadoAlerta";
     public static final String CATEGORIA_FIELD_NAME = "idCategoria";
+    public static final String PRODUCTO_FIELD_NAME = "idProducto";
     public static final String AREA_FIELD_NAME = "idArea";
+    public static final String GRUPO_FIELD_NAME = "idGrupo";
     public static final String FECHA_CREACION_FIELD_NAME = "fechaCreacion";
     public static final String ES_PRIORITARIO_FIELD_NAME = "esPrioritario";
     public static volatile SingularAttribute<Caso, Date> fechaModif;
