@@ -21,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 /**
  *
@@ -43,7 +44,7 @@ public class Item implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_item")
     private Integer idItem;
-    @Size(max = 40)
+    @Size(max = 200)
     private String nombre;
     @Transient
     private String nombreFullPath;
@@ -53,6 +54,7 @@ public class Item implements Serializable {
     private Integer orden;
 
     @OneToMany(mappedBy = "idItemPadre")
+    @CascadeOnDelete
     private List<Item> itemList;
 
     @JoinColumn(name = "id_item_padre", referencedColumnName = "id_item")
