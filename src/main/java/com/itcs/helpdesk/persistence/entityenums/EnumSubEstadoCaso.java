@@ -23,6 +23,7 @@ public enum EnumSubEstadoCaso {
     CONTACTO_SOLUCIONADO(new SubEstadoCaso(EnumTipoCaso.CONTACTO.getTipoCaso(), "solucionado", "Solucionado", EnumEstadoCaso.CERRADO.getEstado(), "Caso solucionado. Respuesta enviada al cliente y cerrado.", false, "FFFFFF", "563D7C", false)),
     CONTACTO_INVALIDO(new SubEstadoCaso(EnumTipoCaso.CONTACTO.getTipoCaso(), "invalido", "Caso no valido", EnumEstadoCaso.CERRADO.getEstado(), "Caso no es un caso valido.", false, "FFFFFF", "B94A48", false)),
     CONTACTO_ABANDONADO(new SubEstadoCaso(EnumTipoCaso.CONTACTO.getTipoCaso(), "Abandonado", "Abandonado", EnumEstadoCaso.CERRADO.getEstado(), "Cliente crea un caso pero nunca mas responde preguntas o comentarios del agente.", false, "FFFFFF", "444444", false)),
+    CONTACTO_DUPLICADO(new SubEstadoCaso(EnumTipoCaso.CONTACTO.getTipoCaso(), "Duplicado", "Duplicado", EnumEstadoCaso.CERRADO.getEstado(), "Cliente crea un caso nuevo con respecto a un caso que ya está en proceso.", false, "0d0d0d", "fff700", false)),
     //
     POSTVENTA_NUEVO(new SubEstadoCaso(EnumTipoCaso.POSTVENTA.getTipoCaso(), "POSTVENTA_NUEVO", "Nuevo", EnumEstadoCaso.ABIERTO.getEstado(), "Estado inicial de un caso cuando ha sido creado.", false, "FFFFFF", "00aeed", true)),
     POSTVENTA_EN_PROCESO(new SubEstadoCaso(EnumTipoCaso.POSTVENTA.getTipoCaso(), "POSTVENTA_EN_PROCESO", "En Proceso", EnumEstadoCaso.ABIERTO.getEstado(), "El Agente esta trabajando en el caso. Ej: investigando o buscando una solución al caso.", false, "FFFFFF", "EB6420", false)),
@@ -31,6 +32,7 @@ public enum EnumSubEstadoCaso {
     POSTVENTA_SOLUCIONADO(new SubEstadoCaso(EnumTipoCaso.POSTVENTA.getTipoCaso(), "POSTVENTA_SOLUCIONADO", "Solucionado", EnumEstadoCaso.CERRADO.getEstado(), "Caso solucionado. Respuesta enviada al cliente y cerrado.", false, "FFFFFF", "563D7C", false)),
     POSTVENTA_INVALIDO(new SubEstadoCaso(EnumTipoCaso.POSTVENTA.getTipoCaso(), "POSTVENTA_INVALIDO", "Caso no valido", EnumEstadoCaso.CERRADO.getEstado(), "Caso no es un caso valido.", false, "FFFFFF", "B94A48", false)),
     POSTVENTA_ABANDONADO(new SubEstadoCaso(EnumTipoCaso.POSTVENTA.getTipoCaso(), "POSTVENTA_ABANDONADO", "Abandonado", EnumEstadoCaso.CERRADO.getEstado(), "Cliente crea un caso pero nunca mas responde preguntas o comentarios del agente.", false, "FFFFFF", "444444", false)),
+    POSTVENTA_DUPLICADO(new SubEstadoCaso(EnumTipoCaso.POSTVENTA.getTipoCaso(), "Duplicado", "Duplicado", EnumEstadoCaso.CERRADO.getEstado(), "Cliente crea un caso nuevo con respecto a un caso que ya está en proceso.", false, "0d0d0d", "fff700", false)),
     //
     COTIZACION_NUEVO(new SubEstadoCaso(EnumTipoCaso.COTIZACION.getTipoCaso(), "COTIZACION_NUEVO", "Nuevo", EnumEstadoCaso.ABIERTO.getEstado(), "Estado inicial de un caso cuando ha sido creado.", false, "FFFFFF", "00aeed", true)),
     COTIZACION_EN_PROCESO(new SubEstadoCaso(EnumTipoCaso.COTIZACION.getTipoCaso(), "COTIZACION_EN_PROCESO", "En Proceso", EnumEstadoCaso.ABIERTO.getEstado(), "El Agente esta trabajando en el caso. Ej: investigando o buscando una solución al caso.", false, "FFFFFF", "EB6420", false)),
@@ -39,6 +41,7 @@ public enum EnumSubEstadoCaso {
     COTIZACION_SOLUCIONADO(new SubEstadoCaso(EnumTipoCaso.COTIZACION.getTipoCaso(), "COTIZACION_SOLUCIONADO", "Solucionado", EnumEstadoCaso.CERRADO.getEstado(), "Caso solucionado. Respuesta enviada al cliente y cerrado.", false, "FFFFFF", "563D7C", false)),
     COTIZACION_INVALIDO(new SubEstadoCaso(EnumTipoCaso.COTIZACION.getTipoCaso(), "COTIZACION_INVALIDO", "Caso no valido", EnumEstadoCaso.CERRADO.getEstado(), "Caso no es un caso valido.", false, "FFFFFF", "B94A48", false)),
     COTIZACION_ABANDONADO(new SubEstadoCaso(EnumTipoCaso.COTIZACION.getTipoCaso(), "COTIZACION_ABANDONADO", "Abandonado", EnumEstadoCaso.CERRADO.getEstado(), "Cliente crea un caso pero nunca mas responde preguntas o comentarios del agente.", false, "FFFFFF", "444444", false)),
+    COTIZACION_DUPLICADO(new SubEstadoCaso(EnumTipoCaso.COTIZACION.getTipoCaso(), "Duplicado", "Duplicado", EnumEstadoCaso.CERRADO.getEstado(), "Cliente crea un caso nuevo con respecto a un caso que ya está en proceso.", false, "0d0d0d", "fff700", false)),
     //
     PREVENTA_PENDIENTE(new SubEstadoCaso(EnumTipoCaso.PREVENTA.getTipoCaso(), "PREVENTA_PENDIENTE", "Pendiente de Contacto", EnumEstadoCaso.ABIERTO.getEstado(), "Estado inicial de la preventa, agente debe ponerse en contacto dentro de los plazos del SLA.", false, "FFFFFF", "00aeed", true)),
     PREVENTA_EVALUACION(new SubEstadoCaso(EnumTipoCaso.PREVENTA.getTipoCaso(), "PREVENTA_EVALUACION", "Evaluación", EnumEstadoCaso.ABIERTO.getEstado(), "El Agente esta trabajando en el caso. Ej: investigando o buscando una solución al caso.", false, "FFFFFF", "EB6420", false)),
