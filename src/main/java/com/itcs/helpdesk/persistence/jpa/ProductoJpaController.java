@@ -51,7 +51,7 @@ public class ProductoJpaController implements Serializable {
             utx.begin();
             em = getEntityManager();
 
-            List<Componente> attachedComponenteList = new ArrayList<Componente>();
+            List<Componente> attachedComponenteList = new ArrayList<>();
             System.out.println("producto.getComponenteList():"+producto.getComponenteList());
             for (Componente componente : producto.getComponenteList()) {
                 Componente persistentComponent = em.find(componente.getClass(), componente.getIdComponente());
@@ -59,7 +59,7 @@ public class ProductoJpaController implements Serializable {
                     //component do not exist!
                     System.out.println("(Persist) component do not exist in local DB: " + componente);
                     em.persist(componente);
-                    List<SubComponente> subComponentList = new ArrayList<SubComponente>();
+                    List<SubComponente> subComponentList = new ArrayList<>();
                     System.out.println("componente.getSubComponenteList():"+componente.getSubComponenteList());
                     for (SubComponente subComponent : componente.getSubComponenteList()) {
                         SubComponente persistentSubComponent = em.find(SubComponente.class, subComponent.getIdSubComponente());

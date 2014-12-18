@@ -224,6 +224,8 @@ public class SubComponenteJpaController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             return em.find(SubComponente.class, id);
+        } catch (EntityNotFoundException e) {
+            return null;
         } finally {
             em.close();
         }
@@ -241,5 +243,5 @@ public class SubComponenteJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }
