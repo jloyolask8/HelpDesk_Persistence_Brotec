@@ -260,6 +260,14 @@ public class Caso implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCaso")
     private List<CasoCustomField> casoCustomFieldList;
 
+    @Column(name = "customer_satisfied")
+    private Boolean customerSatisfied;
+
+    @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "fecha Evaluación (Survey)", fieldIdFull = "fechaCustomerEvaluation", fieldTypeFull = Date.class)
+    @Column(name = "fecha_customer_evaluation")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaCustomerEvaluation;
+
     @Transient
     public boolean hasNotas() {
         return (notaList != null && !notaList.isEmpty());
@@ -991,5 +999,33 @@ public class Caso implements Serializable {
      */
     public void setIdGrupo(Grupo idGrupo) {
         this.idGrupo = idGrupo;
+    }
+
+    /**
+     * @return the customerSatisfied
+     */
+    public Boolean getCustomerSatisfied() {
+        return customerSatisfied;
+    }
+
+    /**
+     * @param customerSatisfied the customerSatisfied to set
+     */
+    public void setCustomerSatisfied(Boolean customerSatisfied) {
+        this.customerSatisfied = customerSatisfied;
+    }
+
+    /**
+     * @return the fechaCustomerEvaluation
+     */
+    public Date getFechaCustomerEvaluation() {
+        return fechaCustomerEvaluation;
+    }
+
+    /**
+     * @param fechaCustomerEvaluation the fechaCustomerEvaluation to set
+     */
+    public void setFechaCustomerEvaluation(Date fechaCustomerEvaluation) {
+        this.fechaCustomerEvaluation = fechaCustomerEvaluation;
     }
 }

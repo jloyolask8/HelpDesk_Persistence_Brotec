@@ -22,9 +22,7 @@ public enum EnumSettingsBase {
     DEFAULT_THEME(new AppSetting("DEFAULT_THEME", "Tema por defecto", "itcs-theme", "app", "theme", 5, "", false)),
     PORTAL_WEB_URL_CASO(new AppSetting("PORTAL_WEB_URL_CASO", "Link al caso (clientes)", "http://", "app", "input", 6, "", true)),
     COMPANY_HELPDESK_SITE_URL(new AppSetting("COMPANY_HELPDESK_SITE_URL", "Url Sitio Web helpdesk", "http://", "app", "input", 7, "", true)),
-    
     AREA_IS_REQUIRED(new AppSetting("AREA_IS_REQUIRED", "Es requerido que el caso este en un Área", "true", "app", "booleanchoice", 7, "Es mandatorio que el agente seleccione el area a la cual se asocia el caso.", true)),
-    
     PRODUCT_IS_REQUIRED(new AppSetting("PRODUCT_IS_REQUIRED", "Es requerido Ingresar el producto", "true", "app", "booleanchoice", 8, "Es mandatorio que el agente ingrese el producto en los casos.", true)),
     PRODUCT_DESCRIPTION(new AppSetting("PRODUCT_DESCRIPTION", "Producto -> Nombre", "Producto", "app", "input", 8, "", true)),
     PRODUCT_COMP_DESCRIPTION(new AppSetting("PRODUCT_COMP_DESCRIPTION", "Producto -> Nombre Componente", "Componente", "app", "input", 9, "", true)),
@@ -50,20 +48,6 @@ public enum EnumSettingsBase {
             + "\n"
             + "<p>Atentamente,</p>\n"
             + "\n"
-            + "<table border=\"0\" cellpadding=\"0\" cellspacing=\"10\">\n"
-            + "	<tbody>\n"
-            + "		<tr>\n"
-            + "			<td>logo</td>\n"
-            + "			<td>\n"
-            + "			<p>Su Equipo de Servicio al Cliente.</p>\n"
-            + "\n"
-            + "			<p><br />\n"
-            + "			<a href=\"\">www.suempresa.cl</a></p>\n"
-            + "			</td>\n"
-            + "		</tr>\n"
-            + "	</tbody>\n"
-            + "</table>\n"
-            + "\n"
             + "<hr />\n"
             + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
             + "</div>", "app", "inputhtml", 16, "", true)),
@@ -81,23 +65,9 @@ public enum EnumSettingsBase {
             + "&nbsp;\n"
             + "<p>Atentamente,</p>\n"
             + "\n"
-            + "<table border=\"0\" cellpadding=\"0\" cellspacing=\"10\">\n"
-            + "	<tbody>\n"
-            + "		<tr>\n"
-            + "			<td>logo</td>\n"
-            + "			<td>\n"
-            + "			<p>Equipo de Servicio al Cliente.</p>\n"
-            + "\n"
-            + "			<p><Empresa><br/>\n"
-            + "			<a href=\"\">www.suempresa.cl</a></p>\n"
-            + "			</td>\n"
-            + "		</tr>\n"
-            + "	</tbody>\n"
-            + "</table>\n"
-            + "\n"
             + "<hr />\n"
             + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
-            + "</div>", "app", "inputhtml", 19, 
+            + "</div>", "app", "inputhtml", 19,
             "Cuando un nuevo caso llegue este mensaje de recepción será enviado. Nota: Los departamentos o areas podrían tener su propio texto, se prioriza el texto del Area que corresponda.", true)),
     NOTIFICATION_UPDATE_CLIENT_SUBJECT_TEXT(new AppSetting("NOTIFICATION_UPDATE_CLIENT_SUBJECT_TEXT", "Asunto Nofiticación de actualización de caso, al Cliente", "su caso ha sido actualizado.", "app", "input", 20, "", true)),
     NOTIFICATION_UPDATE_CLIENT_BODY_TEXT(new AppSetting("NOTIFICATION_UPDATE_CLIENT_BODY_TEXT", "Cuerpo mensaje Nofiticación de actualización de caso, al Cliente",
@@ -110,24 +80,9 @@ public enum EnumSettingsBase {
             + "&nbsp;\n"
             + "<p>Atentamente,</p>\n"
             + "\n"
-            + "<table border=\"0\" cellpadding=\"0\" cellspacing=\"10\">\n"
-            + "	<tbody>\n"
-            + "		<tr>\n"
-            + "			<td>logo</td>\n"
-            + "			<td>\n"
-            + "			<p>Equipo de Servicio al Cliente.</p>\n"
-            + "\n"
-            + "			<p><Empresa><br/>\n"
-            + "			<a href=\"\">www.suempresa.cl</a></p>\n"
-            + "			</td>\n"
-            + "		</tr>\n"
-            + "	</tbody>\n"
-            + "</table>\n"
-            + "\n"
             + "<hr />\n"
             + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
             + "</div>", "app", "inputhtml", 21, "", true)),
-    
     SEND_NOTIFICATION_TOCLIENT_ON_SUBSCRIBED_TO_EVENT(new AppSetting("SEND_NOTIFICATION_TOCLIENT_ON_SUBSCRIBED_TO_EVENT", "Notificar acuse de recibo cuando un cliente se inscriba a un evento", "true", "app", "booleanchoice", 22, "", true)),
     NOTIF_SUBSCRIBED_EVENT_CLIENT_SUBJECT(new AppSetting("NOTIF_SUBSCRIBED_EVENT_CLIENT_SUBJECT", "Asunto Nofiticación al cliente (Inscripción Evento)", "${TipoCaso}:${Asunto}", "app", "input", 23, "", true)),
     NOTIFICATION_SUBSCRIBED_TO_EVENT_CLIENT_BODY_TEXT(new AppSetting("NOTIFICATION_SUBSCRIBED_TO_EVENT_CLIENT_BODY_TEXT", "Cuerpo mensaje Nofiticación Cliente (Inscripción Evento)",
@@ -137,25 +92,10 @@ public enum EnumSettingsBase {
             + "<p>su #{TipoCaso} se realizó con éxito. Nuestros ejecutivos lo contactarán para coordinar su asistencia a la actividad.</p>\n"
             + "<p>Atentamente,</p>\n"
             + "\n"
-            + "<table border=\"0\" cellpadding=\"0\" cellspacing=\"10\">\n"
-            + "	<tbody>\n"
-            + "		<tr>\n"
-            + "			<td>logo</td>\n"
-            + "			<td>\n"
-            + "			<p>Equipo de Servicio al Cliente.</p>\n"
-            + "\n"
-            + "			<p><Empresa><br/>\n"
-            + "			<a href=\"\">www.suempresa.cl</a></p>\n"
-            + "			</td>\n"
-            + "		</tr>\n"
-            + "	</tbody>\n"
-            + "</table>\n"
-            + "\n"
-            + "<hr />\n"
+            + "<hr/>\n"
             + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
-            + "</div>", "app", "inputhtml", 24, 
+            + "</div>", "app", "inputhtml", 24,
             "Cuando un cliente se inscriba en un evento este mensaje de recepción será enviado.", true)),
-    
     NOTIFICATION_TAC_SUBJECT_TEXT(new AppSetting("NOTIFICATION_TAC_SUBJECT_TEXT", "Asunto Nofiticación de cambio de estado de alerta del caso", "El estado del caso ${TipoCaso} #${NumeroCaso} Ha cambiado a ${EstadoAlerta}", "app", "input", 25, "", true)),
     NOTIFICATION_TAC_BODY_TEXT(new AppSetting("NOTIFICATION_TAC_BODY_TEXT", "Cuerpo mensaje Nofiticación de cambio de estado de alerta del caso",
             "<div>\n"
@@ -171,20 +111,6 @@ public enum EnumSettingsBase {
             + "&nbsp;</div>\n"
             + "\n"
             + "<p>Atentamente,</p>\n"
-            + "\n"
-            + "<table border=\"0\" cellpadding=\"0\" cellspacing=\"10\">\n"
-            + "	<tbody>\n"
-            + "		<tr>\n"
-            + "			<td>logo</td>\n"
-            + "			<td>\n"
-            + "			<p>Su Equipo de Servicio al Cliente.</p>\n"
-            + "\n"
-            + "			<p><br />\n"
-            + "			<a href=\"\">www.godesk.cl</a></p>\n"
-            + "			</td>\n"
-            + "		</tr>\n"
-            + "	</tbody>\n"
-            + "</table>\n"
             + "\n"
             + "<hr />\n"
             + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
@@ -204,9 +130,31 @@ public enum EnumSettingsBase {
             + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
             + "</div>", "app", "inputhtml", 28, "", true)),
     //--
-    
-    
+     SURVEY_ENABLED(new AppSetting("SURVEY_ENABLED", "Survey de satisfacción del cliente", "true", "app",
+            "booleanchoice", 29, "Enviar survey de satisacción del cliente al cerrar el caso.", true)),
+
+    CUSTOMER_SURVEY_SUBJECT_TEXT(new AppSetting("CUSTOMER_SURVEY_SUBJECT_TEXT", "Asunto Survey, al Cliente",
+            "¿Cómo calificaría el servicio que recibió?", "app", "input", 30, "", true)),
+    CUSTOMER_SURVEY_BODY_TEXT(new AppSetting("CUSTOMER_SURVEY_BODY_TEXT", "Cuerpo mensaje Survey",
+            "<div>\n"
+            + "<p>${SaludoCliente} ${NombreCliente},</p>\n"
+            + "\n"
+            + "<p>Gracias por contactárnos. Nos encantaría saber de su experiencia de soporte. Por favor tome un momento para responder una encuesta rápida (1-pregunta 1-click).</p>\n"
+            + "&nbsp;\n"
+            + "<p><strong>¿Cómo calificaría el servicio que recibió?</strong></p>\n"
+            + "<p>Bueno, Estoy satisfecho</p>\n"
+            + "<p>Malo, No Estoy satisfecho</p>\n"
+            + "<p>He aquí un recordatorio de lo que trataba su caso:</p>\n"
+            + "<p>${Descripcion}</p>\n"
+            + "<p>Atentamente,</p>\n"
+            + "\n"
+            + "<hr />\n"
+            + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
+            + "</div>", "app", "inputhtml", 31, "", true)),
     DEBUG_ENABLED(new AppSetting("DEBUG_ENABLED", "AppDebug", "false", "admin", "booleanchoice", 50, "Habilitar esta opcion para realizar un diagnostico de la ejecucion del sistema (Herramienta de diagnostico de problemas para Soporte).", true)),
+    DIAGNOSTIC_SCRIPT(new AppSetting("DIAGNOSTIC_SCRIPT", "Script de diagnostico", "", "app", "inputtextarea",
+            60, "Ejemplo: new relic script for browser diagnostics & monitoring", true)),
+   
     COMPANY_LOGIN_BACKGROUND_URL(new AppSetting("COMPANY_LOGIN_BACKGROUND_URL", "Background Image (Login)", "", "app", "input", 5, "URL de una imagen de fondo a usar en la pagina de login.", false));
 //    SEND_GROUP_NOTIFICATION_ON_NEW_CASE(new AppSetting("SEND_GROUP_NOTIFICATION_ON_NEW_CASE", "Notificar a el/los Grupo(s)", "true", "app", "booleanchoice", 22, "Notificar a el/los Grupo(s) encargado(s) del producto cuando llegue un nuevo caso", true));
     private AppSetting appSetting;
