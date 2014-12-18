@@ -86,6 +86,7 @@ import com.itcs.helpdesk.persistence.utils.ConstraintViolationExceptionHelper;
 import com.itcs.helpdesk.persistence.utils.OrderBy;
 import com.itcs.helpdesk.persistence.utils.vo.AuditLogVO;
 import com.itcs.jpautils.EasyCriteriaQuery;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -867,6 +868,210 @@ public class JPAServiceFacade extends AbstractJPAController {
 //    public void mergeUsuarioFull(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
 //        getUsuarioJpaController().edit(usuario);
 //    }
+    
+     public void mergeUsuarioFull(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
+//        getUsuarioJpaController().edit(usuario);
+
+        EntityManager em = null;
+        try {
+            utx.begin();
+            em = getEntityManager();
+            Usuario persistentUsuario = em.find(Usuario.class, usuario.getIdUsuario());
+            Usuario supervisorOld = persistentUsuario.getSupervisor();
+            Usuario supervisorNew = usuario.getSupervisor();
+            List<Grupo> grupoListOld = persistentUsuario.getGrupoList();
+            List<Grupo> grupoListNew = usuario.getGrupoList();
+            List<Rol> rolListOld = persistentUsuario.getRolList();
+            List<Rol> rolListNew = usuario.getRolList();
+            List<Caso> casoListOld = persistentUsuario.getCasoList();
+            List<Caso> casoListNew = usuario.getCasoList();
+            List<Documento> documentoListOld = persistentUsuario.getDocumentoList();
+            List<Documento> documentoListNew = usuario.getDocumentoList();
+            List<Usuario> usuarioListOld = persistentUsuario.getUsuarioList();
+            List<Usuario> usuarioListNew = usuario.getUsuarioList();
+            List<Nota> notaListOld = persistentUsuario.getNotaList();
+            List<Nota> notaListNew = usuario.getNotaList();
+            List<String> illegalOrphanMessages = null;
+            for (Documento documentoListOldDocumento : documentoListOld) {
+                if (!documentoListNew.contains(documentoListOldDocumento)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Documento " + documentoListOldDocumento + " since its createdBy field is not nullable.");
+                }
+            }
+            for (Nota notaListOldNota : notaListOld) {
+                if (!notaListNew.contains(notaListOldNota)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Nota " + notaListOldNota + " since its creadaPor field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            if (supervisorNew != null) {
+                supervisorNew = em.getReference(supervisorNew.getClass(), supervisorNew.getIdUsuario());
+                usuario.setSupervisor(supervisorNew);
+            }
+
+            List<Grupo> attachedGrupoListNew = new ArrayList<Grupo>();
+            for (Grupo grupoListNewGrupoToAttach : grupoListNew) {
+                grupoListNewGrupoToAttach = em.getReference(grupoListNewGrupoToAttach.getClass(), grupoListNewGrupoToAttach.getIdGrupo());
+                attachedGrupoListNew.add(grupoListNewGrupoToAttach);
+            }
+            grupoListNew = attachedGrupoListNew;
+            usuario.setGrupoList(grupoListNew);
+
+            List<Rol> attachedRolListNew = new ArrayList<Rol>();
+            for (Rol rolListNewRolToAttach : rolListNew) {
+                rolListNewRolToAttach = em.getReference(rolListNewRolToAttach.getClass(), rolListNewRolToAttach.getIdRol());
+                attachedRolListNew.add(rolListNewRolToAttach);
+            }
+            rolListNew = attachedRolListNew;
+            usuario.setRolList(rolListNew);
+            List<Caso> attachedCasoListNew = new ArrayList<Caso>();
+            for (Caso casoListNewCasoToAttach : casoListNew) {
+                casoListNewCasoToAttach = em.getReference(casoListNewCasoToAttach.getClass(), casoListNewCasoToAttach.getIdCaso());
+                attachedCasoListNew.add(casoListNewCasoToAttach);
+            }
+            casoListNew = attachedCasoListNew;
+            usuario.setCasoList(casoListNew);
+            List<Documento> attachedDocumentoListNew = new ArrayList<Documento>();
+            for (Documento documentoListNewDocumentoToAttach : documentoListNew) {
+                documentoListNewDocumentoToAttach = em.getReference(documentoListNewDocumentoToAttach.getClass(), documentoListNewDocumentoToAttach.getIdDocumento());
+                attachedDocumentoListNew.add(documentoListNewDocumentoToAttach);
+            }
+            documentoListNew = attachedDocumentoListNew;
+            usuario.setDocumentoList(documentoListNew);
+
+            List<Usuario> attachedUsuarioListNew = new ArrayList<Usuario>();
+            for (Usuario usuarioListNewUsuarioToAttach : usuarioListNew) {
+                usuarioListNewUsuarioToAttach = em.getReference(usuarioListNewUsuarioToAttach.getClass(), usuarioListNewUsuarioToAttach.getIdUsuario());
+                attachedUsuarioListNew.add(usuarioListNewUsuarioToAttach);
+            }
+            usuarioListNew = attachedUsuarioListNew;
+            usuario.setUsuarioList(usuarioListNew);
+            List<Nota> attachedNotaListNew = new ArrayList<Nota>();
+            for (Nota notaListNewNotaToAttach : notaListNew) {
+                notaListNewNotaToAttach = em.getReference(notaListNewNotaToAttach.getClass(), notaListNewNotaToAttach.getIdNota());
+                attachedNotaListNew.add(notaListNewNotaToAttach);
+            }
+            notaListNew = attachedNotaListNew;
+            usuario.setNotaList(notaListNew);
+            usuario = em.merge(usuario);
+            if (supervisorOld != null && !supervisorOld.equals(supervisorNew)) {
+                supervisorOld.getUsuarioList().remove(usuario);
+                supervisorOld = em.merge(supervisorOld);
+            }
+            if (supervisorNew != null && !supervisorNew.equals(supervisorOld)) {
+                supervisorNew.getUsuarioList().add(usuario);
+                supervisorNew = em.merge(supervisorNew);
+            }
+            for (Grupo grupoListOldGrupo : grupoListOld) {
+                if (!grupoListNew.contains(grupoListOldGrupo)) {
+                    grupoListOldGrupo.getUsuarioList().remove(usuario);
+                    grupoListOldGrupo = em.merge(grupoListOldGrupo);
+                }
+            }
+            for (Grupo grupoListNewGrupo : grupoListNew) {
+                if (!grupoListOld.contains(grupoListNewGrupo)) {
+                    grupoListNewGrupo.getUsuarioList().add(usuario);
+                    grupoListNewGrupo = em.merge(grupoListNewGrupo);
+                }
+            }
+            for (Rol rolListOldRol : rolListOld) {
+                if (!rolListNew.contains(rolListOldRol)) {
+                    rolListOldRol.getUsuarioList().remove(usuario);
+                    rolListOldRol = em.merge(rolListOldRol);
+                }
+            }
+            for (Rol rolListNewRol : rolListNew) {
+                if (!rolListOld.contains(rolListNewRol)) {
+                    rolListNewRol.getUsuarioList().add(usuario);
+                    rolListNewRol = em.merge(rolListNewRol);
+                }
+            }
+            for (Caso casoListOldCaso : casoListOld) {
+                if (!casoListNew.contains(casoListOldCaso)) {
+                    casoListOldCaso.setOwner(null);
+                    casoListOldCaso = em.merge(casoListOldCaso);
+                }
+            }
+            for (Caso casoListNewCaso : casoListNew) {
+                if (!casoListOld.contains(casoListNewCaso)) {
+                    Usuario oldOwnerOfCasoListNewCaso = casoListNewCaso.getOwner();
+                    casoListNewCaso.setOwner(usuario);
+                    casoListNewCaso = em.merge(casoListNewCaso);
+                    if (oldOwnerOfCasoListNewCaso != null && !oldOwnerOfCasoListNewCaso.equals(usuario)) {
+                        oldOwnerOfCasoListNewCaso.getCasoList().remove(casoListNewCaso);
+                        oldOwnerOfCasoListNewCaso = em.merge(oldOwnerOfCasoListNewCaso);
+                    }
+                }
+            }
+            for (Documento documentoListNewDocumento : documentoListNew) {
+                if (!documentoListOld.contains(documentoListNewDocumento)) {
+                    Usuario oldCreatedByOfDocumentoListNewDocumento = documentoListNewDocumento.getCreatedBy();
+                    documentoListNewDocumento.setCreatedBy(usuario);
+                    documentoListNewDocumento = em.merge(documentoListNewDocumento);
+                    if (oldCreatedByOfDocumentoListNewDocumento != null && !oldCreatedByOfDocumentoListNewDocumento.equals(usuario)) {
+                        oldCreatedByOfDocumentoListNewDocumento.getDocumentoList().remove(documentoListNewDocumento);
+                        oldCreatedByOfDocumentoListNewDocumento = em.merge(oldCreatedByOfDocumentoListNewDocumento);
+                    }
+                }
+            }
+
+            for (Usuario usuarioListOldUsuario : usuarioListOld) {
+                if (!usuarioListNew.contains(usuarioListOldUsuario)) {
+                    usuarioListOldUsuario.setSupervisor(null);
+                    usuarioListOldUsuario = em.merge(usuarioListOldUsuario);
+                }
+            }
+            for (Usuario usuarioListNewUsuario : usuarioListNew) {
+                if (!usuarioListOld.contains(usuarioListNewUsuario)) {
+                    Usuario oldSupervisorOfUsuarioListNewUsuario = usuarioListNewUsuario.getSupervisor();
+                    usuarioListNewUsuario.setSupervisor(usuario);
+                    usuarioListNewUsuario = em.merge(usuarioListNewUsuario);
+                    if (oldSupervisorOfUsuarioListNewUsuario != null && !oldSupervisorOfUsuarioListNewUsuario.equals(usuario)) {
+                        oldSupervisorOfUsuarioListNewUsuario.getUsuarioList().remove(usuarioListNewUsuario);
+                        oldSupervisorOfUsuarioListNewUsuario = em.merge(oldSupervisorOfUsuarioListNewUsuario);
+                    }
+                }
+            }
+            for (Nota notaListNewNota : notaListNew) {
+                if (!notaListOld.contains(notaListNewNota)) {
+                    Usuario oldCreadaPorOfNotaListNewNota = notaListNewNota.getCreadaPor();
+                    notaListNewNota.setCreadaPor(usuario);
+                    notaListNewNota = em.merge(notaListNewNota);
+                    if (oldCreadaPorOfNotaListNewNota != null && !oldCreadaPorOfNotaListNewNota.equals(usuario)) {
+                        oldCreadaPorOfNotaListNewNota.getNotaList().remove(notaListNewNota);
+                        oldCreadaPorOfNotaListNewNota = em.merge(oldCreadaPorOfNotaListNewNota);
+                    }
+                }
+            }
+            utx.commit();
+        } catch (Exception ex) {
+            try {
+                utx.rollback();
+            } catch (Exception re) {
+                throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
+            }
+            String msg = ex.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                String id = usuario.getIdUsuario();
+                if (find(Usuario.class, id) == null) {
+                    throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.");
+                }
+            }
+            throw ex;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+
+    }
 
 //    public void mergeUsuarioLight(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
 //        EntityManager em = null;
