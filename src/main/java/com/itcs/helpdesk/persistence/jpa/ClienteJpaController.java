@@ -11,6 +11,7 @@ import com.itcs.helpdesk.persistence.entities.ProductoContratado;
 import com.itcs.helpdesk.persistence.jpa.exceptions.NonexistentEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
+import com.itcs.helpdesk.persistence.utils.ConstraintViolationExceptionHelper;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -185,7 +186,8 @@ public class ClienteJpaController implements Serializable {
                         }
                         em.flush();
                     } catch (Exception e) {
-                        System.out.println("ERORR en cliente " + cliente );
+                        ConstraintViolationExceptionHelper.handleError(e);
+                        System.out.println("ERORR en " + cliente + " -- " + cliente.getEmailClienteList());
                         e.printStackTrace();
                         errorClients++;
 //                        break;
