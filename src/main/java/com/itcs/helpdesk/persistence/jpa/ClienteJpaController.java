@@ -71,9 +71,9 @@ public class ClienteJpaController implements Serializable {
         Expression<String> expresionEmail = root.joinList(Cliente_.emailClienteList.getName(), JoinType.LEFT).get("emailCliente");//root.get(Cliente_.emailClienteList).(EmailCliente_.emailCliente);
         Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT).join("subComponente", JoinType.LEFT).get("direccionMunicipal"); //.get("subComponente").get("direccionMunicipal");
         Predicate predicate = criteriaBuilder.or(
-                criteriaBuilder.like(criteriaBuilder.upper(criteriaBuilder.concat(criteriaBuilder.concat(expresionNombre," "),expresionApellido)), "%" + searchPattern.toUpperCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.upper(criteriaBuilder.concat(criteriaBuilder.concat(expresionApellido," "),expresionNombre)), "%" + searchPattern.toUpperCase() + "%"),
-//                criteriaBuilder.like(criteriaBuilder.upper(), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(criteriaBuilder.concat(criteriaBuilder.concat(expresionNombre, " "), expresionApellido)), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(criteriaBuilder.concat(criteriaBuilder.concat(expresionApellido, " "), expresionNombre)), "%" + searchPattern.toUpperCase() + "%"),
+                //                criteriaBuilder.like(criteriaBuilder.upper(), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionRut), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionEmail), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionM), "%" + searchPattern.toUpperCase() + "%"));
@@ -159,23 +159,23 @@ public class ClienteJpaController implements Serializable {
                             if (cliente.getIdCliente() != null) {
                                 cliente = em.getReference(cliente.getClass(), cliente.getIdCliente());
                             } else {
-                                List<Cliente> clientesRut = em.createNamedQuery("Cliente.findByRut").setParameter("rut", cliente.getRut()).getResultList();
-                                if (clientesRut != null && !clientesRut.isEmpty()) {
-                                    cliente = clientesRut.get(0);
+                                List<Cliente> clienteByRut = em.createNamedQuery("Cliente.findByRut").setParameter("rut", cliente.getRut()).getResultList();
+                                if (clienteByRut != null && !clienteByRut.isEmpty()) {
+                                    cliente = clienteByRut.get(0);
                                     existingClients++;
                                 } else {
-                                    List<EmailCliente> attachedEmailClienteList = new ArrayList<EmailCliente>();
-                                    for (EmailCliente emailClienteListEmailClienteToAttach : cliente.getEmailClienteList()) {
-                                        if (em.find(EmailCliente.class, emailClienteListEmailClienteToAttach.getEmailCliente()) == null) {
-                                            em.persist(emailClienteListEmailClienteToAttach);
-                                            //emailClienteListEmailClienteToAttach = em.getReference(emailClienteListEmailClienteToAttach.getClass(), emailClienteListEmailClienteToAttach.getEmailCliente());
-                                        } else {
-                                            System.out.println(emailClienteListEmailClienteToAttach.getEmailCliente() + " existe");
-                                        }
-
-                                        attachedEmailClienteList.add(emailClienteListEmailClienteToAttach);
-                                    }
-                                    cliente.setEmailClienteList(attachedEmailClienteList);
+//                                    List<EmailCliente> attachedEmailClienteList = new ArrayList<>();
+//                                    for (EmailCliente emailClienteListEmailClienteToAttach : cliente.getEmailClienteList()) {
+//                                        if (em.find(EmailCliente.class, emailClienteListEmailClienteToAttach.getEmailCliente()) == null) {
+//                                            em.persist(emailClienteListEmailClienteToAttach);
+//                                            //emailClienteListEmailClienteToAttach = em.getReference(emailClienteListEmailClienteToAttach.getClass(), emailClienteListEmailClienteToAttach.getEmailCliente());
+//                                        } else {
+//                                            System.out.println(emailClienteListEmailClienteToAttach.getEmailCliente() + " existe");
+//                                        }
+//
+//                                        attachedEmailClienteList.add(emailClienteListEmailClienteToAttach);
+//                                    }
+//                                    cliente.setEmailClienteList(attachedEmailClienteList);
                                     em.persist(cliente);
                                     persistedClients++;
                                 }
@@ -185,7 +185,7 @@ public class ClienteJpaController implements Serializable {
                         }
                         em.flush();
                     } catch (Exception e) {
-                        System.out.println("ERORR en " + cliente + " -- " + cliente.getEmailClienteList());
+                        System.out.println("ERORR en cliente " + cliente );
                         e.printStackTrace();
                         errorClients++;
 //                        break;
@@ -315,7 +315,7 @@ public class ClienteJpaController implements Serializable {
                     }
                 }
             }
-            
+
             for (ProductoContratado oldPc : productoContratadoListOld) {
                 if (!productoContratadoListNew.contains(oldPc)) {
 //                    oldPc.setCliente(null);
