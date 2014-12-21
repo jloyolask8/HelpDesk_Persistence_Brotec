@@ -49,18 +49,13 @@ public class Cliente implements Serializable {
     @Size(max = 40)
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "rut", fieldIdFull = "rut", fieldTypeFull = String.class)
     private String rut;
-    @Size(max = 80)
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "nombres", fieldIdFull = "nombres", fieldTypeFull = String.class)
     private String nombres;
-    @Size(max = 80)
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "apellidos", fieldIdFull = "apellidos", fieldTypeFull = String.class)
     private String apellidos;
-    @Size(max = 40)
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Sexo (Hombre/Mujer)", fieldIdFull = "sexo", fieldTypeFull = String.class)
     private String sexo;
-    @Size(max = 40)
     private String fono1;
-    @Size(max = 40)
     private String fono2;
     @Size(max = 400)
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Dirección Particular", fieldIdFull = "dirParticular", fieldTypeFull = String.class)
@@ -71,7 +66,7 @@ public class Cliente implements Serializable {
     @Column(name = "DIR_COMERCIAL")
     private String dirComercial;
     //emails
-    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<EmailCliente> emailClienteList;
     //casos
     @OneToMany(mappedBy = "idCliente", fetch = FetchType.EAGER)

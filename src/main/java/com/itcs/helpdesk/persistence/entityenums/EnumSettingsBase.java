@@ -130,22 +130,28 @@ public enum EnumSettingsBase {
             + "<p><small>Powered by <strong>GoDesk</strong>, <a href=\"http://www.godesk.cl\" target=\"_blank\">www.godesk.cl</a></small></p>\n"
             + "</div>", "app", "inputhtml", 28, "", true)),
     //--
-     SURVEY_ENABLED(new AppSetting("SURVEY_ENABLED", "Survey de satisfacción del cliente", "true", "app",
+    SURVEY_ENABLED(new AppSetting("SURVEY_ENABLED", "Survey de satisfacción del cliente", "true", "app",
             "booleanchoice", 29, "Enviar survey de satisacción del cliente al cerrar el caso.", true)),
-
     CUSTOMER_SURVEY_SUBJECT_TEXT(new AppSetting("CUSTOMER_SURVEY_SUBJECT_TEXT", "Asunto Survey, al Cliente",
             "¿Cómo calificaría el servicio que recibió?", "app", "input", 30, "", true)),
     CUSTOMER_SURVEY_BODY_TEXT(new AppSetting("CUSTOMER_SURVEY_BODY_TEXT", "Cuerpo mensaje Survey",
             "<div>\n"
             + "<p>${SaludoCliente} ${NombreCliente},</p>\n"
             + "\n"
-            + "<p>Gracias por contactárnos. Nos encantaría saber de su experiencia de soporte. Por favor tome un momento para responder una encuesta rápida (1-pregunta 1-click).</p>\n"
-            + "&nbsp;\n"
-            + "<p><strong>¿Cómo calificaría el servicio que recibió?</strong></p>\n"
-            + "<p>Bueno, Estoy satisfecho</p>\n"
-            + "<p>Malo, No Estoy satisfecho</p>\n"
-            + "<p>He aquí un recordatorio de lo que trataba su caso:</p>\n"
+            + "<p>Nos encantar&iacute;a saber de su experiencia de servicio.</p>\n"
+            + "\n"
+            + "<p>Por favor tome un momento para responder una encuesta r&aacute;pida (1-pregunta 1-click).</p>\n"
+            + "\n"
+            + "<p><strong>&iquest;C&oacute;mo calificar&iacute;a el servicio que recibi&oacute;?</strong></p>\n"
+            + "\n"
+            + "<p><strong><a href=\"${ContextUrl}/faces/customer/satisfaction.xhtml?emailCliente=${EmailCliente}&amp;idCaso=${NumeroCaso}&amp;sat=true\"><span style=\"background-color:#F0FFF0\">Bueno, Estoy satisfecho</span></a></strong></p>\n"
+            + "\n"
+            + "<p><a href=\"${ContextUrl}/faces/customer/satisfaction.xhtml?emailCliente=${EmailCliente}&amp;idCaso=${NumeroCaso}&amp;sat=false\"><strong><span style=\"background-color:#FFF0F5\">Malo, No Estoy satisfecho</span></strong></a></p>\n"
+            + "\n"
+            + "<p>He aqu&iacute; un recordatorio de lo que trataba su caso: ${Asunto}</p>\n"
+            + "\n"
             + "<p>${Descripcion}</p>\n"
+            + "\n"
             + "<p>Atentamente,</p>\n"
             + "\n"
             + "<hr />\n"
@@ -154,7 +160,6 @@ public enum EnumSettingsBase {
     DEBUG_ENABLED(new AppSetting("DEBUG_ENABLED", "AppDebug", "false", "admin", "booleanchoice", 50, "Habilitar esta opcion para realizar un diagnostico de la ejecucion del sistema (Herramienta de diagnostico de problemas para Soporte).", true)),
     DIAGNOSTIC_SCRIPT(new AppSetting("DIAGNOSTIC_SCRIPT", "Script de diagnostico", "", "app", "inputtextarea",
             60, "Ejemplo: new relic script for browser diagnostics & monitoring", true)),
-   
     COMPANY_LOGIN_BACKGROUND_URL(new AppSetting("COMPANY_LOGIN_BACKGROUND_URL", "Background Image (Login)", "", "app", "input", 5, "URL de una imagen de fondo a usar en la pagina de login.", false));
 //    SEND_GROUP_NOTIFICATION_ON_NEW_CASE(new AppSetting("SEND_GROUP_NOTIFICATION_ON_NEW_CASE", "Notificar a el/los Grupo(s)", "true", "app", "booleanchoice", 22, "Notificar a el/los Grupo(s) encargado(s) del producto cuando llegue un nuevo caso", true));
     private AppSetting appSetting;
