@@ -12,7 +12,7 @@ public enum EnumTipoComparacion
      * EQUALS
      */
      
-    EQ(new TipoComparacion("Es exactamente", "EQ", "=", "Igual: Verdadero, si el contenido del operando1 es igual al contenido del operando2.")),
+    EQ(new TipoComparacion("Es", "EQ", "=", "Igual: Verdadero, si el contenido del operando1 es igual al contenido del operando2.")),
     /**
      * NOT EQUALS "Es Distinto", "NE", "<>", "No Igual: Verdadero, si el contenido del operando1 no es igual al contenido del operando2."
      */
