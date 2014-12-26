@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Clipping.findAll", query = "SELECT c FROM Clipping c"),
+    @NamedQuery(name = "Clipping.findAllByQuery", query = "SELECT c FROM Clipping c WHERE (LOWER(c.nombre) LIKE CONCAT('%', LOWER(:q), '%')) or (LOWER(c.idClipping) LIKE CONCAT('%', LOWER(:q), '%'))"),
     @NamedQuery(name = "Clipping.findByIdClipping", query = "SELECT c FROM Clipping c WHERE c.idClipping = :idClipping"),
     @NamedQuery(name = "Clipping.findByNombre", query = "SELECT c FROM Clipping c WHERE c.nombre = :nombre"),
     @NamedQuery(name = "Clipping.findByVisibleToAll", query = "SELECT c FROM Clipping c WHERE c.visibleToAll = :visibleToAll")})

@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r"),
+    @NamedQuery(name = "Rol.findAllByQuery", query = "SELECT r FROM Rol r WHERE (LOWER(r.nombre) LIKE CONCAT('%', LOWER(:q), '%')) or (LOWER(r.descripcion) LIKE CONCAT('%', LOWER(:q), '%')) or (LOWER(r.idRol) LIKE CONCAT('%', LOWER(:q), '%'))"),
     @NamedQuery(name = "Rol.findByIdRol", query = "SELECT r FROM Rol r WHERE r.idRol = :idRol"),
     @NamedQuery(name = "Rol.findByNombre", query = "SELECT r FROM Rol r WHERE r.nombre = :nombre"),
     @NamedQuery(name = "Rol.findByDescripcion", query = "SELECT r FROM Rol r WHERE r.descripcion = :descripcion")})

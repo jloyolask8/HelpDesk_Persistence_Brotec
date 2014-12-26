@@ -66,9 +66,11 @@ public class Cliente implements Serializable {
     @Column(name = "DIR_COMERCIAL")
     private String dirComercial;
     //emails
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_PLACE_HOLDER, label = "Emails", fieldIdFull = "emailClienteList", fieldTypeFull = List.class)
     @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<EmailCliente> emailClienteList;
     //casos
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_PLACE_HOLDER, label = "Lista de Casos", fieldIdFull = "casoList", fieldTypeFull = List.class)
     @OneToMany(mappedBy = "idCliente", fetch = FetchType.EAGER)
     private List<Caso> casoList;
     //productos Contratados
@@ -217,7 +219,6 @@ public class Cliente implements Serializable {
         this.sexo = sexo;
     }
 
-    @XmlTransient
     public List<ProductoContratado> getProductoContratadoList() {
         return productoContratadoList;
     }

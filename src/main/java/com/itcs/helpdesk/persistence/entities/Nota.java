@@ -4,8 +4,6 @@
  */
 package com.itcs.helpdesk.persistence.entities;
 
-import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
-import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
@@ -52,6 +50,12 @@ public class Nota implements Serializable, Comparable<Nota> {
     @Lob
     @Size(max = 2147483647)
     private String texto;
+    
+    @Lob
+    @Size(max = 2147483647)
+    @Column(name = "texto_original")
+    private String textoOriginal;
+    
     @Column(name = "fecha_creacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
@@ -324,5 +328,19 @@ public class Nota implements Serializable, Comparable<Nota> {
      */
     public void setEnviadoPorQuartzJobId(String enviadoPorQuartzJobId) {
         this.enviadoPorQuartzJobId = enviadoPorQuartzJobId;
+    }
+
+    /**
+     * @return the textoOriginal
+     */
+    public String getTextoOriginal() {
+        return textoOriginal;
+    }
+
+    /**
+     * @param textoOriginal the textoOriginal to set
+     */
+    public void setTextoOriginal(String textoOriginal) {
+        this.textoOriginal = textoOriginal;
     }
 }

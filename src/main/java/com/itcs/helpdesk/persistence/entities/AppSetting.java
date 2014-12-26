@@ -4,6 +4,8 @@
  */
 package com.itcs.helpdesk.persistence.entities;
 
+import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
+import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -35,6 +37,7 @@ public class AppSetting implements Serializable {
     @NotNull
     @Size(min = 1, max = 128)
     @Column(name = "setting_key", nullable = false, length = 64)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Setting key", fieldIdFull = "settingKey", fieldTypeFull = String.class)
     private String settingKey;
     @Size(max = 2147483647)
     @Column(name = "setting_value", length = 2147483647)
@@ -42,20 +45,24 @@ public class AppSetting implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 40)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Setting group", fieldIdFull = "grupo", fieldTypeFull = String.class)
     @Column(name = "grupo", nullable = false, length = 40)
     private String grupo;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 128)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Setting label", fieldIdFull = "label", fieldTypeFull = String.class)
     @Column(name = "label", nullable = false, length = 64)
     private String label;
     @Size(max = 2147483647)
     @Column(name = "descripcion", length = 2147483647)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Setting description", fieldIdFull = "descripcion", fieldTypeFull = String.class)
     private String descripcion;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "type", nullable = false, length = 64)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Setting type", fieldIdFull = "type", fieldTypeFull = String.class)
     private String type;
     @Basic(optional = false)
     @NotNull
@@ -64,6 +71,7 @@ public class AppSetting implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "required", nullable = false)
+    @FilterField(fieldTypeId = EnumFieldType.CHECKBOX, label = "is required", fieldIdFull = "required", fieldTypeFull = Boolean.class)
     private boolean required;
 
     public AppSetting() {
@@ -163,8 +171,6 @@ public class AppSetting implements Serializable {
         builder.append("]");
         return builder.toString();
     }
-
-  
 
     /**
      * @return the required
