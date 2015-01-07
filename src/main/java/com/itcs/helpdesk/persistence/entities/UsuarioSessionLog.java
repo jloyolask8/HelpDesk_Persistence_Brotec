@@ -25,6 +25,10 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.TenantTableDiscriminator;
+import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 
 /**
  *
@@ -32,6 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "usuario_session_log")
+/*@Multitenant(MultitenantType.TABLE_PER_TENANT)
+@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")*/
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "UsuarioSessionLog.findAll", query = "SELECT u FROM UsuarioSessionLog u"),

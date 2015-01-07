@@ -19,6 +19,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.TenantTableDiscriminator;
+import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 
 /**
  *
@@ -26,6 +30,8 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "report_chart_serie")
+/*@Multitenant(MultitenantType.TABLE_PER_TENANT)
+@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")*/
 @NamedQueries({   
     @NamedQuery(name = "ReportChartSerie.findByIdChartSerie", query = "SELECT r FROM ReportChartSerie r WHERE r.idChartSerie = :idChartSerie"),   
     @NamedQuery(name = "ReportChartSerie.findByVisible", query = "SELECT r FROM ReportChartSerie r WHERE r.visible = :visible")})

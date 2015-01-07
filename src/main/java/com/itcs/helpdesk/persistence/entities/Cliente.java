@@ -19,16 +19,23 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.TenantTableDiscriminator;
+import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 
 /**
  *
  * @author jonathan
  */
 @Entity
+@Table(name = "cliente")
+/*@Multitenant(MultitenantType.TABLE_PER_TENANT)
+@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")*/
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Cliente.findAll", query = "SELECT c FROM Cliente c"),

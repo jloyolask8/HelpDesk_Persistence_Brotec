@@ -30,6 +30,10 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.TenantTableDiscriminator;
+import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 
 /**
  *
@@ -37,6 +41,10 @@ import org.eclipse.persistence.annotations.CascadeOnDelete;
  */
 @Entity
 @Table(name = "vista")
+
+/*@Multitenant(MultitenantType.TABLE_PER_TENANT)
+@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, 
+contextProperty="eclipselink.tenant-id")*/
 @NamedQueries({
     @NamedQuery(name = "Vista.findAll", query = "SELECT v FROM Vista v"),
     @NamedQuery(name = "Vista.findByIdVista", query = "SELECT v FROM Vista v WHERE v.idVista = :idVista"),

@@ -22,16 +22,24 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.TenantTableDiscriminator;
+import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 
 /**
  *
  * @author jonathan
  */
 @Entity
+@Table(name = "nota")
+/*@Multitenant(MultitenantType.TABLE_PER_TENANT)
+@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")*/
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Nota.findAll", query = "SELECT n FROM Nota n"),

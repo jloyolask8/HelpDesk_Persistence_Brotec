@@ -5,7 +5,6 @@
 package com.itcs.helpdesk.persistence.entities;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -18,15 +17,23 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.TenantTableDiscriminator;
+import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 
 /**
  *
  * @author jonathan
  */
 @Entity
+@Table(name = "attachment")
+/*@Multitenant(MultitenantType.TABLE_PER_TENANT)
+@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")*/
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Attachment.findAll", query = "SELECT a FROM Attachment a"),

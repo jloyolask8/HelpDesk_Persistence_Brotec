@@ -15,7 +15,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -26,6 +28,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.TenantTableDiscriminator;
+import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 
 /**
  *
@@ -33,6 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "REGLA_TRIGGER")
+/*@Multitenant(MultitenantType.TABLE_PER_TENANT)
+@TenantTableDiscriminator(type = TenantTableDiscriminatorType.SCHEMA, contextProperty = "eclipselink.tenant-id")*/
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ReglaTrigger.findAll", query = "SELECT r FROM ReglaTrigger r ORDER BY r.orden ASC"),
@@ -46,9 +54,11 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
     @NotNull
     @Size(min = 1, max = 40)
     @Column(name = "id_trigger")
+    @FilterField(fieldTypeId = EnumFieldType.TEXTAREA, label = "Id", fieldIdFull = "idTrigger", fieldTypeFull = String.class)
     private String idTrigger;
     @Lob
     @Size(max = 2147483647)
+    @FilterField(fieldTypeId = EnumFieldType.TEXTAREA, label = "Descripcion", fieldIdFull = "desccripcion", fieldTypeFull = String.class)
     private String desccripcion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTrigger")
     private List<Condicion> condicionList;
@@ -58,6 +68,7 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
 //    @ManyToOne(optional = false)
 //    private Area idArea;
     @Column(name = "regla_activa")
+    @FilterField(fieldTypeId = EnumFieldType.CHECKBOX, label = "Regla Activa", fieldIdFull = "reglaActiva", fieldTypeFull = Boolean.class)
     private Boolean reglaActiva = true;
     @Basic(optional = false)
     @NotNull
@@ -81,8 +92,13 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModif;
 
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Creada por", fieldIdFull = "idUsuarioCreadaPor.capitalName", fieldTypeFull = String.class)
+    @JoinColumn(name = "id_usuario_creada_por", referencedColumnName = "id_usuario", nullable = false)
+    @ManyToOne(optional = false)
+    private Usuario idUsuarioCreadaPor;
+
     public ReglaTrigger() {
-        condicionList = new ArrayList<Condicion>();
+        condicionList = new ArrayList<>();
     }
 
     public ReglaTrigger(String idTrigger) {
@@ -257,5 +273,19 @@ public class ReglaTrigger implements Serializable, Comparable<ReglaTrigger> {
      */
     public void setFechaModif(Date fechaModif) {
         this.fechaModif = fechaModif;
+    }
+
+    /**
+     * @return the idUsuarioCreadaPor
+     */
+    public Usuario getIdUsuarioCreadaPor() {
+        return idUsuarioCreadaPor;
+    }
+
+    /**
+     * @param idUsuarioCreadaPor the idUsuarioCreadaPor to set
+     */
+    public void setIdUsuarioCreadaPor(Usuario idUsuarioCreadaPor) {
+        this.idUsuarioCreadaPor = idUsuarioCreadaPor;
     }
 }

@@ -24,6 +24,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.TenantTableDiscriminator;
+import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 
 /**
  *
@@ -31,6 +35,8 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "report_chart")
+/*@Multitenant(MultitenantType.TABLE_PER_TENANT)
+@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")*/
 @NamedQueries({
     @NamedQuery(name = "ReportChart.findAll", query = "SELECT r FROM ReportChart r"),
     @NamedQuery(name = "ReportChart.findByIdChartReport", query = "SELECT r FROM ReportChart r WHERE r.idChartReport = :idChartReport"),

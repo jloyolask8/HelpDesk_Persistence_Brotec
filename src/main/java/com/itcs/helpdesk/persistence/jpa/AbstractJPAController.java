@@ -5,11 +5,12 @@
 package com.itcs.helpdesk.persistence.jpa;
 
 import com.itcs.helpdesk.persistence.entities.Caso;
-import com.itcs.helpdesk.persistence.entities.Caso_;
+import com.itcs.helpdesk.persistence.entities.metadata.Caso_;
 import com.itcs.helpdesk.persistence.entities.Cliente;
+import com.itcs.helpdesk.persistence.entities.metadata.Cliente_;
 import com.itcs.helpdesk.persistence.entities.FieldType;
 import com.itcs.helpdesk.persistence.entities.FiltroVista;
-import com.itcs.helpdesk.persistence.entities.Nota_;
+import com.itcs.helpdesk.persistence.entities.ReglaTrigger;
 import com.itcs.helpdesk.persistence.entities.TipoComparacion;
 import com.itcs.helpdesk.persistence.entities.Usuario;
 import com.itcs.helpdesk.persistence.entities.Vista;
@@ -32,6 +33,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -41,8 +43,10 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.transaction.UserTransaction;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.eclipse.persistence.config.EntityManagerProperties;
 
 /**
  *
@@ -50,11 +54,52 @@ import org.apache.commons.lang3.math.NumberUtils;
  */
 public abstract class AbstractJPAController {
 
+    protected UserTransaction utx = null;
+    protected EntityManagerFactory emf = null;
+//    protected EntityManagerFactory nonSharedEmf = null;
+    private final String schema;//default is public in case not passed from the user session.
+
     public static final String PLACE_HOLDER_CURRENT_USER = "{CURRENT_USER}";
     public static final String PLACE_HOLDER_NULL = "{NULL}";
     public static final String PLACE_HOLDER_ANY = "{ANY_BUT_NULL}";
 
-    protected abstract EntityManager getEntityManager();
+    public AbstractJPAController(UserTransaction utx, EntityManagerFactory emf, String schema) {
+        this.utx = utx;
+        this.emf = emf;
+        this.schema = schema;
+    }
+
+//    protected abstract EntityManager getEntityManager();
+    protected EntityManager getEntityManager() {
+
+//        if (nonSharedEmf == null) {
+//            // Non shared EMF
+//            Map pu = emf.getProperties();
+//
+//            HashMap properties = new HashMap();
+//            for (Object key : pu.keySet()) {
+//                System.out.println("key:" + key + ",value:" + pu.get(key));
+//                properties.put(key, pu.get(key));
+//            }
+//            properties.put(PersistenceUnitProperties.MULTITENANT_SHARED_EMF, "false");
+//            properties.put(PersistenceUnitProperties.SESSION_NAME, "non-shared-emf-for-" + schema);
+//            properties.put(PersistenceUnitProperties.MULTITENANT_PROPERTY_DEFAULT, schema);
+//            nonSharedEmf = Persistence.createEntityManagerFactory("helpdeskPU", properties);
+//        }
+//        EntityManager em = nonSharedEmf.createEntityManager();
+        EntityManager em = emf.createEntityManager();
+        if (!StringUtils.isEmpty(this.schema)) {
+            em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, this.schema);
+        }
+        return em;
+    }
+
+    /**
+     * @return the schema
+     */
+    public String getSchema() {
+        return schema;
+    }
 
     public List<?> findAll(Class entityClass) {
         return findEntities(entityClass, true, 0, 0);
@@ -137,8 +182,8 @@ public abstract class AbstractJPAController {
 
             if (vista.getFiltrosVistaList() != null) {
                 for (FiltroVista filtro : vista.getFiltrosVistaList()) {
-                    
-                    if(!useNonPersistentFilters && filtro.getIdFiltro()<0){
+
+                    if (!useNonPersistentFilters && filtro.getIdFiltro() < 0) {
                         continue;
                     }
 
@@ -479,6 +524,89 @@ public abstract class AbstractJPAController {
     }
 
     /**
+     * @deprecated @param root
+     * @param criteriaBuilder
+     * @param searchPattern
+     * @return
+     */
+    private Predicate createReglaTriggerSearchExpression(Root<ReglaTrigger> root, CriteriaBuilder criteriaBuilder, String searchPattern) {
+        Expression<String> expresionNombre = root.get("idTrigger");
+        Expression<String> expresionDescripcion = root.get("desccripcion");
+        Expression<String> expresionCampo = root.joinList("condicionList", JoinType.LEFT).get("idCampo");
+        Expression<String> expresionCondicionValor = root.joinList("condicionList", JoinType.LEFT).get("valor");
+        Expression<String> expresionAccionParams = root.joinList("accionList", JoinType.LEFT).get("parametros");
+        Expression<String> expresionAccionNombre = root.joinList("accionList", JoinType.LEFT).get("idNombreAccion").get("idNombreAccion");
+
+        Predicate predicate = criteriaBuilder.or(
+                criteriaBuilder.like(criteriaBuilder.upper(expresionNombre), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionDescripcion), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionCampo), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionCondicionValor), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionAccionParams), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionAccionNombre), "%" + searchPattern.toUpperCase() + "%"));
+        return predicate;
+    }
+
+    /**
+     * @deprecated @param root
+     * @param criteriaBuilder
+     * @param searchPattern
+     * @return
+     */
+    //TODO remove direccion municipal field from sub componente, use id as product code and nombre as product label or direccion
+    public static Predicate createClientesSearchExpression(Root<Cliente> root, CriteriaBuilder criteriaBuilder, String searchPattern) {
+        Expression<String> expresionNombre = root.get(Cliente_.nombres);
+        Expression<String> expresionApellido = root.get(Cliente_.apellidos);
+        Expression<String> expresionRut = root.get(Cliente_.rut);
+        Expression<String> expresionEmail = root.joinList(Cliente_.emailClienteList.getName(), JoinType.LEFT).get("emailCliente");//root.get(Cliente_.emailClienteList).(EmailCliente_.emailCliente);
+        Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT).join("subComponente", JoinType.LEFT).get("direccionMunicipal"); //.get("subComponente").get("direccionMunicipal");
+        Predicate predicate = criteriaBuilder.or(
+                criteriaBuilder.like(criteriaBuilder.upper(criteriaBuilder.concat(criteriaBuilder.concat(expresionNombre, " "), expresionApellido)), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(criteriaBuilder.concat(criteriaBuilder.concat(expresionApellido, " "), expresionNombre)), "%" + searchPattern.toUpperCase() + "%"),
+                //                criteriaBuilder.like(criteriaBuilder.upper(), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionRut), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionEmail), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionM), "%" + searchPattern.toUpperCase() + "%"));
+        return predicate;
+    }
+
+    /**
+     * @deprecated @param root
+     * @param criteriaBuilder
+     * @param query
+     * @return
+     */
+    public static Predicate createCasoSearchExpression(Root<Caso> root, CriteriaBuilder criteriaBuilder, String query) {
+//        Expression<Long> expresion1 = root.get(Caso_.idCaso);
+        Expression<String> expresion2 = root.get(Caso_.tema);
+        Expression<String> expresion3 = root.get(Caso_.descripcion);
+        Expression<String> expresionNombre = root.get("idCliente").get("nombres");
+        Expression<String> expresionApellido = root.get("idCliente").get("apellidos");
+//        Expression<String> expresionEmail = root.joinList("idCliente.emailClienteList", JoinType.LEFT).get("emailCliente");
+
+        Expression<String> expresionNotaList = root.joinList(Caso_.notaList.getName(), JoinType.LEFT).get("texto");
+//        Expression<Long> expresionNotaIDCaso = root.joinList(Caso_.notaList.getName(), JoinType.LEFT).get("idCaso").get("idCaso");
+//        Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT)
+//                .join("subComponente", JoinType.LEFT).get("direccionMunicipal"); 
+        //.get("subComponente").get("direccionMunicipal");
+//        Predicate predicate = criteriaBuilder.equal(expresionNotaIDCaso, expresion1);
+
+        Predicate predicate = criteriaBuilder.or(
+                criteriaBuilder.like(criteriaBuilder.lower(expresion2), "%" + query.toLowerCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.lower(expresion3), "%" + query.toLowerCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.lower(expresionNotaList), "%" + query.toLowerCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.lower(criteriaBuilder.concat(criteriaBuilder.concat(expresionNombre, " "), expresionApellido)), "%" + query.toLowerCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.lower(criteriaBuilder.concat(criteriaBuilder.concat(expresionApellido, " "), expresionNombre)), "%" + query.toLowerCase() + "%"));
+
+//        if (NumberUtils.isNumber(query.trim())) {
+//            Predicate localPredicate = criteriaBuilder.equal(expresion1, query);
+//            criteriaBuilder.and(predicate, localPredicate);
+////            predicate = CriteriaQueryHelper.addOrPredicate(predicate, localPredicate, criteriaBuilder);
+//        }
+        return predicate;
+    }
+
+    /**
      * Default implementation for searching by query, it creates one criteria
      * for each Text field, as a "field LIKE %query%" operation.
      *
@@ -498,7 +626,10 @@ public abstract class AbstractJPAController {
 
         //TODO cuero del pene de una pulga. temporal para el problema de buscar clientes
         if (root.getJavaType().getName().equals(Cliente.class.getName()) && !StringUtils.isEmpty(query)) {
-            Predicate predicateCliente = ClienteJpaController.createSearchExpression((Root<Cliente>) root, criteriaBuilder, query);
+            Predicate predicateCliente = createClientesSearchExpression((Root<Cliente>) root, criteriaBuilder, query);
+            predicate = CriteriaQueryHelper.addOrPredicate(predicate, predicateCliente, criteriaBuilder);
+        } else if (root.getJavaType().getName().equals(ReglaTrigger.class.getName()) && !StringUtils.isEmpty(query)) {
+            Predicate predicateCliente = createReglaTriggerSearchExpression((Root<ReglaTrigger>) root, criteriaBuilder, query);
             predicate = CriteriaQueryHelper.addOrPredicate(predicate, predicateCliente, criteriaBuilder);
         } else //fin cpdp
         //TODO cuero del pene de una pulga. temporal para el problema de buscar en los casos
@@ -546,37 +677,6 @@ public abstract class AbstractJPAController {
 
         }
 
-        return predicate;
-    }
-
-    public static Predicate createCasoSearchExpression(Root<Caso> root, CriteriaBuilder criteriaBuilder, String query) {
-//        Expression<Long> expresion1 = root.get(Caso_.idCaso);
-        Expression<String> expresion2 = root.get(Caso_.tema);
-        Expression<String> expresion3 = root.get(Caso_.descripcion);
-        Expression<String> expresionNombre = root.get("idCliente").get("nombres");
-        Expression<String> expresionApellido = root.get("idCliente").get("apellidos");
-//        Expression<String> expresionEmail = root.joinList("idCliente.emailClienteList", JoinType.LEFT).get("emailCliente");
-               
-
-        Expression<String> expresionNotaList = root.joinList(Caso_.notaList.getName(), JoinType.LEFT).get("texto");
-//        Expression<Long> expresionNotaIDCaso = root.joinList(Caso_.notaList.getName(), JoinType.LEFT).get("idCaso").get("idCaso");
-//        Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT)
-//                .join("subComponente", JoinType.LEFT).get("direccionMunicipal"); 
-        //.get("subComponente").get("direccionMunicipal");
-//        Predicate predicate = criteriaBuilder.equal(expresionNotaIDCaso, expresion1);
-
-        Predicate predicate = criteriaBuilder.or(
-                criteriaBuilder.like(criteriaBuilder.lower(expresion2), "%" + query.toLowerCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.lower(expresion3), "%" + query.toLowerCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.lower(expresionNotaList), "%" + query.toLowerCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.lower(criteriaBuilder.concat(criteriaBuilder.concat(expresionNombre," "),expresionApellido)), "%" + query.toLowerCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.lower(criteriaBuilder.concat(criteriaBuilder.concat(expresionApellido," "),expresionNombre)), "%" + query.toLowerCase() + "%"));
-
-//        if (NumberUtils.isNumber(query.trim())) {
-//            Predicate localPredicate = criteriaBuilder.equal(expresion1, query);
-//            criteriaBuilder.and(predicate, localPredicate);
-////            predicate = CriteriaQueryHelper.addOrPredicate(predicate, localPredicate, criteriaBuilder);
-//        }
         return predicate;
     }
 
