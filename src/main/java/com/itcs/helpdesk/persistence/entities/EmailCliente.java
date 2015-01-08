@@ -35,8 +35,8 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
  */
 @Entity
 @Table(name = "EMAIL_CLIENTE")
-/*@Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")*/
+@Multitenant(MultitenantType.TABLE_PER_TENANT)
+@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "EmailCliente.findAll", query = "SELECT e FROM EmailCliente e"),

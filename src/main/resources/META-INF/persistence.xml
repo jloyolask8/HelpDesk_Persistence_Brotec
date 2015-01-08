@@ -54,7 +54,7 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <shared-cache-mode>${shared-cache-mode}</shared-cache-mode>
         <properties>
-            <!--property name="eclipselink.session-event-listener" value="com.itcs.helpdesk.persistence.utils.SessionEventListener"/-->
+            <property name="eclipselink.session-event-listener" value="com.itcs.helpdesk.persistence.utils.SessionEventListener"/>
             <property name="eclipselink.logging.logger" value="JavaLogger"/>
             <property name="eclipselink.logging.level.sql" value="${eclipselink.logging.level.sql}"/>
             <property name="eclipselink.logging.parameters" value="true"/>

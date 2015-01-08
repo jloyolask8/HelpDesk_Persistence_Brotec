@@ -40,8 +40,8 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
  */
 @Entity
 @Table(name = "custom_field")
-/*@Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")*/
+@Multitenant(MultitenantType.TABLE_PER_TENANT)
+@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")
 @NamedQueries({
     @NamedQuery(name = "CustomField.findAll", query = "SELECT c FROM CustomField c"),
     @NamedQuery(name = "CustomField.findByEntity", query = "SELECT c FROM CustomField c WHERE c.entity = :entity"),

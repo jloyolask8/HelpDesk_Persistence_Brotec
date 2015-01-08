@@ -42,9 +42,9 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 @Entity
 @Table(name = "vista")
 
-/*@Multitenant(MultitenantType.TABLE_PER_TENANT)
+@Multitenant(MultitenantType.TABLE_PER_TENANT)
 @TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, 
-contextProperty="eclipselink.tenant-id")*/
+contextProperty="eclipselink.tenant-id")
 @NamedQueries({
     @NamedQuery(name = "Vista.findAll", query = "SELECT v FROM Vista v"),
     @NamedQuery(name = "Vista.findByIdVista", query = "SELECT v FROM Vista v WHERE v.idVista = :idVista"),

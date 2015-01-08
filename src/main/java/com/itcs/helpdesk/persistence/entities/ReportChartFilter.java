@@ -29,8 +29,8 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
  */
 @Entity
 @Table(name = "report_chart_filter")
-/*@Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")*/
+@Multitenant(MultitenantType.TABLE_PER_TENANT)
+@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")
 @NamedQueries({
     @NamedQuery(name = "ReportChartFilter.findAll", query = "SELECT r FROM ReportChartFilter r"),
     @NamedQuery(name = "ReportChartFilter.findByIdReportChartFilter", query = "SELECT r FROM ReportChartFilter r WHERE r.idReportChartFilter = :idReportChartFilter"),})
