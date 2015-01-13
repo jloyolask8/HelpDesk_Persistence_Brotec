@@ -16,7 +16,6 @@ import com.itcs.helpdesk.persistence.entities.Usuario;
 import com.itcs.helpdesk.persistence.entities.Vista;
 import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
 import com.itcs.helpdesk.persistence.entityenums.EnumTipoComparacion;
-import com.itcs.helpdesk.persistence.entityenums.EnumUsuariosBase;
 import com.itcs.helpdesk.persistence.jpa.custom.CriteriaQueryHelper;
 import com.itcs.helpdesk.persistence.utils.ComparableField;
 import com.itcs.helpdesk.persistence.utils.FilterField;
@@ -58,6 +57,8 @@ public abstract class AbstractJPAController {
     protected EntityManagerFactory emf = null;
 //    protected EntityManagerFactory nonSharedEmf = null;
     private final String schema;//default is public in case not passed from the user session.
+     public static final String PUBLIC_SCHEMA_NAME = "public";
+     public static final String TENANT_PROP_NAME = "tenant";
 
     public static final String PLACE_HOLDER_CURRENT_USER = "{CURRENT_USER}";
     public static final String PLACE_HOLDER_NULL = "{NULL}";
@@ -90,9 +91,23 @@ public abstract class AbstractJPAController {
         EntityManager em = emf.createEntityManager();
         if (!StringUtils.isEmpty(this.schema)) {
             em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, this.schema);
+        }else{
+            em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, PUBLIC_SCHEMA_NAME);
         }
         return em;
     }
+    
+    protected EntityManager getEntityManager(String schemax) throws IllegalStateException{
+
+        EntityManager em = emf.createEntityManager();
+        if (!StringUtils.isEmpty(schemax)) {
+            em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, schemax);
+        }else{
+            throw new IllegalStateException("Error accessing the schema " + schemax);
+        }
+        return em;
+    }
+
 
     /**
      * @return the schema
@@ -747,7 +762,7 @@ public abstract class AbstractJPAController {
         if (comparableField.getTipo().equals(List.class)) {
             entities = findAll(comparableField.getListGenericType());
             if (comparableField.getListGenericType().equals(Usuario.class)) {
-                entities.remove(EnumUsuariosBase.SISTEMA.getUsuario());
+//                entities.remove(EnumUsuariosBase.SISTEMA.getUsuario());
             }
         } else {
             //Que tipo de Entity? -> comparableField.tipo
@@ -756,7 +771,7 @@ public abstract class AbstractJPAController {
 
             //Usuario entity has a special place holder that others entities do not have
             if (comparableField.getTipo().equals(Usuario.class)) {
-                entities.remove(EnumUsuariosBase.SISTEMA.getUsuario());
+//                entities.remove(EnumUsuariosBase.SISTEMA.getUsuario());
             }
         }
         return entities;
@@ -796,14 +811,14 @@ public abstract class AbstractJPAController {
         if (comparableField.getTipo().equals(List.class)) {
             entities = findEntitiesByQuery(comparableField.getListGenericType(), false, 10, query);
             if (comparableField.getListGenericType().equals(Usuario.class)) {
-                entities.remove(EnumUsuariosBase.SISTEMA.getUsuario());
+//                entities.remove(EnumUsuariosBase.SISTEMA.getUsuario());
             }
         } else {
 
             entities = findEntitiesByQuery(comparableField.getTipo(), false, 10, query);
             //Usuario entity has a special place holder that others entities do not have
             if (comparableField.getTipo().equals(Usuario.class)) {
-                entities.remove(EnumUsuariosBase.SISTEMA.getUsuario());
+//                entities.remove(EnumUsuariosBase.SISTEMA.getUsuario());
             }
         }
         return entities;

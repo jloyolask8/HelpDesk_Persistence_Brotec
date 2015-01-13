@@ -7,6 +7,7 @@ package com.itcs.helpdesk.persistence.entities;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -32,7 +33,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 @Entity
 @Table(name = "funcion")
 @Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")
+@TenantTableDiscriminator(type = TenantTableDiscriminatorType.SCHEMA, contextProperty = "eclipselink.tenant-id")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Funcion.findAll", query = "SELECT f FROM Funcion f"),
@@ -41,6 +42,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
     @NamedQuery(name = "Funcion.findByDescripcion", query = "SELECT f FROM Funcion f WHERE f.descripcion = :descripcion"),
     @NamedQuery(name = "Funcion.findByOutcome", query = "SELECT f FROM Funcion f WHERE f.outcome = :outcome")})
 public class Funcion implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -48,14 +50,12 @@ public class Funcion implements Serializable {
     @Column(name = "id_funcion")
     private Integer idFuncion;
     @Size(max = 40)
-    private String nombre;    
+    private String nombre;
     private String descripcion;
     @Size(max = 40)
     private String outcome;
-    @JoinTable(name = "ROL_FUNCION", joinColumns = {
-        @JoinColumn(name = "id_funcion", referencedColumnName = "id_funcion")}, inverseJoinColumns = {
-        @JoinColumn(name = "id_rol", referencedColumnName = "id_rol")})
-    @ManyToMany
+
+    @ManyToMany(mappedBy = "funcionList")
     private List<Rol> rolList;
 
     public Funcion() {
@@ -64,8 +64,8 @@ public class Funcion implements Serializable {
     public Funcion(Integer idFuncion) {
         this.idFuncion = idFuncion;
     }
-    
-     public Funcion(Integer idFuncion, String nombre, String descripcion) {
+
+    public Funcion(Integer idFuncion, String nombre, String descripcion) {
         this.idFuncion = idFuncion;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -136,5 +136,5 @@ public class Funcion implements Serializable {
     public String toString() {
         return nombre;
     }
-    
+
 }

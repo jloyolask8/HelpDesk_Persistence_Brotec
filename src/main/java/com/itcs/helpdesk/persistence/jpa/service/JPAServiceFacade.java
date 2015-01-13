@@ -1,6 +1,6 @@
 package com.itcs.helpdesk.persistence.jpa.service;
 
-import com.itcs.helpdesk.persistence.entities.Area;
+import com.itcs.helpdesk.persistence.jpa.EasyCriteriaQuery;
 import com.itcs.helpdesk.persistence.entities.Attachment;
 import com.itcs.helpdesk.persistence.entities.metadata.Attachment_;
 import com.itcs.helpdesk.persistence.entities.AuditLog;
@@ -10,7 +10,6 @@ import com.itcs.helpdesk.persistence.entities.Caso;
 import com.itcs.helpdesk.persistence.entities.metadata.Caso_;
 import com.itcs.helpdesk.persistence.entities.Cliente;
 import com.itcs.helpdesk.persistence.entities.Componente;
-import com.itcs.helpdesk.persistence.entities.Condicion;
 import com.itcs.helpdesk.persistence.entities.Documento;
 import com.itcs.helpdesk.persistence.entities.EmailCliente;
 import com.itcs.helpdesk.persistence.entities.metadata.EmailCliente_;
@@ -22,19 +21,16 @@ import com.itcs.helpdesk.persistence.entities.Grupo;
 import com.itcs.helpdesk.persistence.entities.Item;
 import com.itcs.helpdesk.persistence.entities.metadata.Item_;
 import com.itcs.helpdesk.persistence.entities.Nota;
-import com.itcs.helpdesk.persistence.entities.Prioridad;
 import com.itcs.helpdesk.persistence.entities.Producto;
 import com.itcs.helpdesk.persistence.entities.ReglaTrigger;
 import com.itcs.helpdesk.persistence.entities.Resource;
 import com.itcs.helpdesk.persistence.entities.Rol;
-import com.itcs.helpdesk.persistence.entities.Sesiones;
 import com.itcs.helpdesk.persistence.entities.SubComponente;
 import com.itcs.helpdesk.persistence.entities.SubEstadoCaso;
 import com.itcs.helpdesk.persistence.entities.TipoAlerta;
 import com.itcs.helpdesk.persistence.entities.TipoCaso;
 import com.itcs.helpdesk.persistence.entities.Usuario;
 import com.itcs.helpdesk.persistence.entities.Vista;
-import com.itcs.helpdesk.persistence.entityenums.EnumEstadoCaso;
 import com.itcs.helpdesk.persistence.entityenums.EnumTipoCanal;
 import com.itcs.helpdesk.persistence.entityenums.EnumTipoCaso;
 import com.itcs.helpdesk.persistence.jpa.AbstractJPAController;
@@ -47,7 +43,8 @@ import com.itcs.helpdesk.persistence.utils.CasoChangeListener;
 import com.itcs.helpdesk.persistence.utils.ConstraintViolationExceptionHelper;
 import com.itcs.helpdesk.persistence.utils.OrderBy;
 import com.itcs.helpdesk.persistence.utils.vo.AuditLogVO;
-import com.itcs.jpautils.EasyCriteriaQuery;
+import com.itcs.helpdesk.persistence.utils.vo.RegistrationVO;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -74,6 +71,7 @@ import javax.persistence.criteria.Root;
 import javax.resource.NotSupportedException;
 import javax.transaction.UserTransaction;
 import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
 import org.eclipse.persistence.descriptors.ClassDescriptor;
@@ -93,19 +91,89 @@ public class JPAServiceFacade extends AbstractJPAController {
 //        this.utx = utx;
 //        this.emf = emf;
 //    }
-//    public JPAServiceFacade(UserTransaction utx, EntityManagerFactory emf, String schema) {
-//        super(utx, emf, schema);
-//    }
-
     /**
-     * defaults to public schema. non-multitenant usage.
+     * Multitenant jpa service
+     *
      * @param utx
      * @param emf
+     * @param schema
      */
-    public JPAServiceFacade(UserTransaction utx, EntityManagerFactory emf) {
-        super(utx, emf, null/*"public"*/);//THIS WILL CREATE A JPA INSTANCE POINTING TO THE PUBLIC SCHEMA.
+    public JPAServiceFacade(UserTransaction utx, EntityManagerFactory emf, String schema) {
+        super(utx, emf, schema);
     }
 
+//    /**
+//     * defaults to public schema in multitenant usage.
+//     *
+//     * @param utx
+//     * @param emf
+//     */
+//    public JPAServiceFacade(UserTransaction utx, EntityManagerFactory emf) {
+//        super(utx, emf, PUBLIC_SCHEMA_NAME);//THIS WILL CREATE A JPA INSTANCE POINTING TO THE PUBLIC SCHEMA.
+//    }
+    public String findSchemaByName(String schema) {
+        if (!StringUtils.isEmpty(schema)) {
+            EntityManager em = null;
+            try {
+                em = getEntityManager();
+                Query query = em.createNativeQuery("select schema_name \n"
+                        + "from information_schema.schemata WHERE schema_name = ?");
+
+                Object o = query.setParameter(1, schema).getSingleResult();
+                System.out.println("*********** " + o);
+                return (String) o;
+            } catch (NoResultException no) {
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                em.close();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Register a new tenant. We assume data has been validated at this point
+     *
+     * @param registrationVO
+     * @return
+     */
+    public String createTheSchema(RegistrationVO registrationVO) {
+        if (!StringUtils.isEmpty(registrationVO.getCompanyName())) {
+            EntityManager em = null;
+//            EntityManager emNew = null;
+            try {
+                utx.begin();
+                em = getEntityManager();
+                final String schemaName = registrationVO.getCompanyName().trim().toLowerCase().replace("\u0020", "_");
+                registrationVO.setCompanyName(schemaName);
+                //1. Create the new schema
+                Query query = em.createNativeQuery("SELECT create_new_schema('base_schema', ?)");
+                Object o = query.setParameter(1, schemaName).getSingleResult();
+
+                System.out.println("*** Schema created: " + schemaName);
+
+                utx.commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                em.close();
+            }
+        }
+
+        return null;
+    }
+
+//    /**
+//     * NON-Multitenant usage.
+//     * @param utx
+//     * @param emf
+//     */
+//    public JPAServiceFacade(UserTransaction utx, EntityManagerFactory emf) {
+//        super(utx, emf, null/*"public"*/);//THIS WILL CREATE A JPA INSTANCE POINTING TO THE PUBLIC SCHEMA.
+//    }
     public <T extends Object> T find(Class<T> entityClass, Object id) {
         return find(entityClass, id, false);
     }
@@ -243,11 +311,13 @@ public class JPAServiceFacade extends AbstractJPAController {
             }
         }
     }
-    
+
     /**
      * Returns the id of the entity. A generated id is not guaranteed to be
      * available until after the database insert has occurred. Returns null if
      * the entity does not yet have an id
+     *
+     * This method changed to be used as multitenant
      *
      * @param entity
      * @return id of the entity
@@ -282,6 +352,13 @@ public class JPAServiceFacade extends AbstractJPAController {
         return null;
     }
 
+    /**
+     * multitenant version of get entity Identifier
+     *
+     * @param em
+     * @param entity
+     * @return
+     */
     public Object getIdentifier(EntityManager em, Object entity) {
         try {
             AbstractSession session = (AbstractSession) em.unwrap(Session.class);
@@ -320,7 +397,7 @@ public class JPAServiceFacade extends AbstractJPAController {
      * code>SELECT count(*) from o</code>
      */
     public Long count(Class entityClass) {
-        EasyCriteriaQuery q = new EasyCriteriaQuery(emf, entityClass);
+        EasyCriteriaQuery q = new EasyCriteriaQuery(this, entityClass);
         return q.count();
     }
 
@@ -431,7 +508,7 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     public Attachment findAttachmentByContentId(String contentId, Caso caso) {
-        EasyCriteriaQuery<Attachment> easyCriteriaQuery = new EasyCriteriaQuery<>(emf, Attachment.class);
+        EasyCriteriaQuery<Attachment> easyCriteriaQuery = new EasyCriteriaQuery<>(this, Attachment.class);
         easyCriteriaQuery.addEqualPredicate(Attachment_.contentId.getName(), contentId);
         easyCriteriaQuery.addEqualPredicate(Attachment_.idCaso.getName(), caso);
         System.out.println("buscando contentId: " + contentId);
@@ -440,17 +517,6 @@ public class JPAServiceFacade extends AbstractJPAController {
             return res.get(0);
         }
         return null;
-    }
-
-    public Long countCasosByCreatedBetween(Date from, Date to, Usuario owner) {
-        EasyCriteriaQuery q = new EasyCriteriaQuery(emf, Caso.class);
-        q.addBetweenPredicate(Caso_.fechaCreacion, from, to);
-        if (owner
-                != null) {
-            q.addEqualPredicate("owner", owner);
-        }
-
-        return q.count();
     }
 
     public Caso findCasoByIdEmailCliente(String email, Long idCaso) {
@@ -503,7 +569,7 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     public List<Caso> findDuplicatedCasosPreventaByClient(Cliente cliente) {
-        EasyCriteriaQuery<Caso> easyCriteriaQuery = new EasyCriteriaQuery<Caso>(emf, Caso.class);
+        EasyCriteriaQuery<Caso> easyCriteriaQuery = new EasyCriteriaQuery<Caso>(this, Caso.class);
         easyCriteriaQuery.addEqualPredicate("emailCliente.cliente", cliente);
         easyCriteriaQuery.addEqualPredicate("tipoCaso", EnumTipoCaso.PREVENTA.getTipoCaso());
         if (easyCriteriaQuery.count() > 1) {
@@ -519,7 +585,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //        q.addEqualPredicate("idEstado", EnumEstadoCaso.CERRADO.getEstado());
 //        return q.count();
 //    }
-
     public Long countCasosByEtiqueta(Etiqueta etiqueta) {
         EntityManager em = getEntityManager();
         try {
@@ -577,29 +642,6 @@ public class JPAServiceFacade extends AbstractJPAController {
         }
     }
 
-//    public List<Etiqueta> findEtiquetasLike(String etiquetaPattern) {
-//        EntityManager em = getEntityManager();
-//        try {
-//
-//            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-//            CriteriaQuery<Etiqueta> criteriaQuery = criteriaBuilder.createQuery(Etiqueta.class);
-//            Root<Etiqueta> root = criteriaQuery.from(Etiqueta.class);
-//            Expression<String> exp = root.get("tagId");
-//
-//            criteriaQuery = criteriaQuery.orderBy(criteriaBuilder.desc(root.get("tagId")));
-//            Predicate predicate = criteriaBuilder.like(criteriaBuilder.lower(exp), etiquetaPattern.toLowerCase() + "%");
-//            criteriaQuery.where(predicate);
-//            Query q = em.createQuery(criteriaQuery);
-//            return q.getResultList();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return Collections.EMPTY_LIST;
-//
-//        } finally {
-//            em.close();
-//        }
-//    }
     public List<Etiqueta> findEtiquetasLike(String etiquetaPattern, String idUsuario) {
 
         EntityManager em = getEntityManager();
@@ -615,21 +657,6 @@ public class JPAServiceFacade extends AbstractJPAController {
         } finally {
             em.close();
         }
-    }
-
-    public Long countCasosByClosedBetween(Date from, Date to/*, Area idArea, ,Grupo idGrupo*/, Usuario owner) {
-        EasyCriteriaQuery q = new EasyCriteriaQuery(emf, Caso.class);
-        q.addBetweenPredicate(Caso_.fechaCierre, from, to);
-
-        q.addEqualPredicate(
-                "idEstado", EnumEstadoCaso.CERRADO.getEstado());
-
-        if (owner
-                != null) {
-            q.addEqualPredicate("owner", owner);
-        }
-
-        return q.count();
     }
 
 //
@@ -652,42 +679,30 @@ public class JPAServiceFacade extends AbstractJPAController {
 //    public boolean isTransactionDirty() {
 //        return isTransactionDirty();
 //    }
-//    public Object queryByRange(String jpqlStmt, int firstResult, int maxResults) {
-//        Query query = getEntityManager().createQuery(jpqlStmt);
-//        if (firstResult > 0) {
-//            query = query.setFirstResult(firstResult);
+//    /**
+//     * @deprecated @param entityClazz
+//     * @param maxResults
+//     * @param firstResult
+//     * @return
+//     */
+//    public List queryByRange(Class entityClazz, int maxResults, int firstResult) {
+//        EntityManager em = getEntityManager();
+//        try {
+//            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+//            cq.select(cq.from(entityClazz));
+////            Root root = cq.from(entityClazz);
+//            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+//            CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(entityClazz);
+//            Query q = em.createQuery(criteriaQuery);
+//
+//            q.setMaxResults(maxResults);
+//            q.setFirstResult(firstResult);
+//
+//            return q.getResultList();
+//        } finally {
+//            em.close();
 //        }
-//        if (maxResults > 0) {
-//            query = query.setMaxResults(maxResults);
-//        }
-//        return query.getResultList();
 //    }
-    /**
-     * @deprecated @param entityClazz
-     * @param maxResults
-     * @param firstResult
-     * @return
-     */
-    public List queryByRange(Class entityClazz, int maxResults, int firstResult) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(entityClazz));
-//            Root root = cq.from(entityClazz);
-            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-            CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(entityClazz);
-            Query q = em.createQuery(criteriaQuery);
-
-            q.setMaxResults(maxResults);
-            q.setFirstResult(firstResult);
-
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-
     public void persistCaso(Caso caso, List<AuditLog> changeList) throws PreexistingEntityException, RollbackFailureException, Exception {
         if (caso.getAttachmentList() != null && !caso.getAttachmentList().isEmpty()) {
             caso.setHasAttachments(true);
@@ -780,7 +795,7 @@ public class JPAServiceFacade extends AbstractJPAController {
      */
     public int getAuditLogCount(AuditLogVO filter, boolean log) {
         filter.setAlertLevel(!log);
-        EasyCriteriaQuery<AuditLog> criteriaQueryCasos = new EasyCriteriaQuery<>(emf, AuditLog.class);
+        EasyCriteriaQuery<AuditLog> criteriaQueryCasos = new EasyCriteriaQuery<>(this, AuditLog.class);
         createAuditLogCountPredicate(filter, criteriaQueryCasos);
         return criteriaQueryCasos.count().intValue();
 
@@ -816,7 +831,7 @@ public class JPAServiceFacade extends AbstractJPAController {
 
     private List<AuditLog> findAuditLogEntities(boolean all, int maxResults, int firstResult, AuditLogVO filter, boolean log) {
 
-        EasyCriteriaQuery<AuditLog> criteriaQueryCasos = new EasyCriteriaQuery<AuditLog>(emf, AuditLog.class);
+        EasyCriteriaQuery<AuditLog> criteriaQueryCasos = new EasyCriteriaQuery<>(this, AuditLog.class);
         filter.setAlertLevel(!log);
         createAuditLogCountPredicate(filter, criteriaQueryCasos);
         criteriaQueryCasos.orderBy(AuditLog_.fecha.getName(), false);
@@ -860,17 +875,54 @@ public class JPAServiceFacade extends AbstractJPAController {
                 utx.begin();
                 em = getEntityManager();
                 int count = 0;
-                for (Cliente cliente : list) {
+                for (Cliente clienteVo : list) {
                     try {
-                        if (cliente != null) {
-                            if (cliente.getIdCliente() != null) {
-                                cliente = em.getReference(cliente.getClass(), cliente.getIdCliente());
+                        if (clienteVo != null) {
+                            if (clienteVo.getIdCliente() != null) {
+                                clienteVo = em.find(clienteVo.getClass(), clienteVo.getIdCliente());
+                                existingClients++;
                             } else {
-                                List<Cliente> clienteByRut = em.createNamedQuery("Cliente.findByRut").setParameter("rut", cliente.getRut()).getResultList();
+                                //buscarlo por el rut
+                                List<Cliente> clienteByRut = em.createNamedQuery("Cliente.findByRut").setParameter("rut", clienteVo.getRut()).getResultList();
                                 if (clienteByRut != null && !clienteByRut.isEmpty()) {
-                                    cliente = clienteByRut.get(0);
+                                    Cliente cliente = clienteByRut.get(0);
+                                    cliente.setNombres(clienteVo.getNombres());
+                                    cliente.setApellidos(clienteVo.getApellidos());
+                                    cliente.setDirParticular(clienteVo.getDirParticular());
+                                    cliente.setDirComercial(clienteVo.getDirComercial());
+                                    cliente.setFono1(clienteVo.getFono1());
+                                    cliente.setFono2(clienteVo.getFono2());
+                                    cliente.setSexo(clienteVo.getSexo());
+
+                                    em.merge(cliente);
+
                                     existingClients++;
                                 } else {
+                                    boolean exists = false;
+                                    //not found by rut
+                                    //Buscar por el email.
+                                    for (EmailCliente emailCliente : clienteVo.getEmailClienteList()) {
+                                        EmailCliente email = em.find(EmailCliente.class, emailCliente.getEmailCliente());
+                                        if (email != null) {
+                                            if (email.getCliente() != null) {
+                                                Cliente cliente = email.getCliente();
+                                                cliente.setRut(clienteVo.getRut());
+                                                cliente.setNombres(clienteVo.getNombres());
+                                                cliente.setApellidos(clienteVo.getApellidos());
+                                                cliente.setDirParticular(clienteVo.getDirParticular());
+                                                cliente.setDirComercial(clienteVo.getDirComercial());
+                                                cliente.setFono1(clienteVo.getFono1());
+                                                cliente.setFono2(clienteVo.getFono2());
+                                                cliente.setSexo(clienteVo.getSexo());
+
+                                                em.merge(cliente);
+                                                existingClients++;
+                                                exists = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+
 //                                    List<EmailCliente> attachedEmailClienteList = new ArrayList<>();
 //                                    for (EmailCliente emailClienteListEmailClienteToAttach : cliente.getEmailClienteList()) {
 //                                        if (em.find(EmailCliente.class, emailClienteListEmailClienteToAttach.getEmailCliente()) == null) {
@@ -883,8 +935,11 @@ public class JPAServiceFacade extends AbstractJPAController {
 //                                        attachedEmailClienteList.add(emailClienteListEmailClienteToAttach);
 //                                    }
 //                                    cliente.setEmailClienteList(attachedEmailClienteList);
-                                    em.persist(cliente);
-                                    persistedClients++;
+                                    if (!exists) {
+                                        em.persist(clienteVo);
+                                        persistedClients++;
+                                    }
+
                                 }
                             }
                         } else {
@@ -893,7 +948,7 @@ public class JPAServiceFacade extends AbstractJPAController {
                         em.flush();
                     } catch (Exception e) {
                         ConstraintViolationExceptionHelper.handleError(e);
-                        System.out.println("ERORR en " + cliente + " -- " + cliente.getEmailClienteList());
+                        System.out.println("ERORR en " + clienteVo + " -- " + clienteVo.getEmailClienteList());
                         e.printStackTrace();
                         errorClients++;
 //                        break;
@@ -929,7 +984,7 @@ public class JPAServiceFacade extends AbstractJPAController {
 //            query.setParameter("tipoCaso", tipoCaso.getIdTipoCaso());
             //query.setParameter("idProducto", idProducto);
 
-            EasyCriteriaQuery<Caso> ecq = new EasyCriteriaQuery<>(emf, Caso.class);
+            EasyCriteriaQuery<Caso> ecq = new EasyCriteriaQuery<>(this, Caso.class);
             ecq.addEqualPredicate(Caso_.idEstado.getName(), idEstado);
             ecq.addEqualPredicate("emailCliente", emailCliente);
             ecq.addEqualPredicate("tipoCaso", tipoCaso);
@@ -951,21 +1006,6 @@ public class JPAServiceFacade extends AbstractJPAController {
             em.close();
         }
     }
-
-//    /**
-//     * <
-//     * code>SELECT c FROM CampoCompCaso c WHERE c.nombreColValor =
-//     * :nombreColValor</code>
-//     */
-//    public List<CampoCompCaso> getCampoCompCasoFindByNombreColValor(String nombreColValor) {
-//        return getEntityManager().createNamedQuery("CampoCompCaso.findByNombreColValor").setParameter("nombreColValor", nombreColValor).getResultList();
-//    }
-//    public void persistUsuario(Usuario usuario) throws PreexistingEntityException, RollbackFailureException, Exception {
-//        getUsuarioJpaController().create(usuario);
-//    }
-//    public void mergeUsuarioFull(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
-//        getUsuarioJpaController().edit(usuario);
-//    }
 
     public void mergeUsuarioFull(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
 //        getUsuarioJpaController().edit(usuario);
@@ -1202,7 +1242,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //            }
 //        }
 //    }
-    
     /**
      * <
      * code>SELECT u FROM Usuario u WHERE u.email = :email</code>
@@ -1230,14 +1269,14 @@ public class JPAServiceFacade extends AbstractJPAController {
 
     public Long countAttachmentWOContentId(Caso caso) {
 //        return getAttachmentJpaController().countAttachmentsWOContentId(caso);
-        EasyCriteriaQuery<Attachment> easyCriteriaQuery = new EasyCriteriaQuery<>(emf, Attachment.class);
+        EasyCriteriaQuery<Attachment> easyCriteriaQuery = new EasyCriteriaQuery<>(this, Attachment.class);
         easyCriteriaQuery.addEqualPredicate(Attachment_.contentId.getName(), (Attachment) null);
         easyCriteriaQuery.addEqualPredicate(Attachment_.idCaso.getName(), caso);
         return easyCriteriaQuery.count();
     }
 
     public Long nextVal(String seq) throws PreexistingEntityException, RollbackFailureException, Exception {
-        return (Long) getEntityManager().createNativeQuery("select nextval('" + seq + "')").getSingleResult();
+        return (Long) getEntityManager().createNativeQuery("select nextval(?)").setParameter(1, seq).getSingleResult();
     }
 
     /**
@@ -1257,166 +1296,33 @@ public class JPAServiceFacade extends AbstractJPAController {
      * code>SELECT p FROM Producto p WHERE p.nombre = :nombre</code>
      */
     public Producto getProductoFindByNombre(String nombre) {
-        EasyCriteriaQuery<Producto> ecq = new EasyCriteriaQuery<Producto>(emf, Producto.class);
+        EasyCriteriaQuery<Producto> ecq = new EasyCriteriaQuery<Producto>(this, Producto.class);
         ecq.addLikePredicate("nombre", nombre);
         return ecq.getSingleResult();
         //return (Producto) getEntityManager().createNamedQuery("Producto.findByNombre").setParameter("nombre", nombre).getSingleResult();
     }
 
-//    /**
-//     * <
-//     * code>SELECT a FROM AuditLog a WHERE a.tabla = :tabla</code>
-//     */
-//    public List<AuditLog> getAuditLogFindByTabla(String tabla) {
-//        return getEntityManager().createNamedQuery("AuditLog.findByTabla").setParameter("tabla", tabla).getResultList();
-//    }
-
-//    /**
-//     * <
-//     * code>SELECT a FROM AuditLog a WHERE a.campo = :campo</code>
-//     */
-//    public List<AuditLog> getAuditLogFindByCampo(String campo) {
-//        return getEntityManager().createNamedQuery("AuditLog.findByCampo").setParameter("campo", campo).getResultList();
-//    }
-//
-//    /**
-//     * <
-//     * code>SELECT p FROM Prioridad p</code>
-//     */
-//    public List<Prioridad> getPrioridadFindAll() {
-//        return getEntityManager().createNamedQuery("Prioridad.findAll").getResultList();
-//    }
-
-//    /**
-//     * <
-//     * code>SELECT p FROM Prioridad p WHERE p.idPrioridad = :idPrioridad</code>
-//     */
-//    public Prioridad getPrioridadFindByIdPrioridad(String idPrioridad) {
-//        return getPrioridadJpaController().findPrioridad(idPrioridad);
-//    }
-//    /**
-//     * <
-//     * code>SELECT p FROM Prioridad p WHERE p.nombre = :nombre</code>
-//     */
-//    public List<Prioridad> getPrioridadFindByNombre(String nombre) {
-//        return getEntityManager().createNamedQuery("Prioridad.findByNombre").setParameter("nombre", nombre).getResultList();
-//    }
-
-//    public void persistCondicion(Condicion condicion) throws PreexistingEntityException, RollbackFailureException, Exception {
-//        getCondicionJpaController().create(condicion);
-//    }
-//
-//    public void mergeCondicion(Condicion condicion) throws NonexistentEntityException, RollbackFailureException, Exception {
-//        getCondicionJpaController().edit(condicion);
-//    }
-//
-//    public void removeCondicion(Condicion condicion) throws NonexistentEntityException, RollbackFailureException, Exception {
-//        getCondicionJpaController().destroy(condicion.getIdCondicion());
-//    }
-//    /**
-//     * <
-//     * code>SELECT c FROM Condicion c</code>
-//     */
-//    public List<Condicion> getCondicionFindAll() {
-//        return getEntityManager().createNamedQuery("Condicion.findAll").getResultList();
-//    }
-//
-//    /**
-//     * <
-//     * code>SELECT c FROM Condicion c WHERE c.idCondicion = :idCondicion</code>
-//     */
-//    public List<Condicion> getCondicionFindByIdCondicion(Integer idCondicion) {
-//        return getEntityManager().createNamedQuery("Condicion.findByIdCondicion").setParameter("idCondicion", idCondicion).getResultList();
-//    }
-
-//    public void persistReglaTrigger(ReglaTrigger reglaTrigger) throws PreexistingEntityException, RollbackFailureException, Exception {
-//        getReglaTriggerJpaController().create(reglaTrigger);
-//    }
-//
-//    public void mergeReglaTrigger(ReglaTrigger reglaTrigger) throws NonexistentEntityException, RollbackFailureException, Exception {
-//        getReglaTriggerJpaController().edit(reglaTrigger);
-//    }
-//
-//    public void removeReglaTrigger(ReglaTrigger reglaTrigger) throws NonexistentEntityException, RollbackFailureException, Exception {
-//        getReglaTriggerJpaController().destroy(reglaTrigger.getIdTrigger());
-//    }
-//    /**
-//     * <
-//     * code>SELECT r FROM ReglaTrigger r</code>
-//     */
-//    public List<ReglaTrigger> getReglaTriggerFindAll() {
-//        return getEntityManager().createNamedQuery("ReglaTrigger.findAll").getResultList();
-//    }
-//
-//    /**
-//     * <
-//     * code>SELECT r FROM ReglaTrigger r WHERE r.idTrigger = :idTrigger</code>
-//     */
-//    public ReglaTrigger getReglaTriggerFindByIdTrigger(String idTrigger) {
-//        return (ReglaTrigger) getEntityManager().createNamedQuery("ReglaTrigger.findByIdTrigger").setParameter("idTrigger", idTrigger).getSingleResult();
-//    }
-
     public List<ReglaTrigger> getReglaTriggerFindByEvento(String event) {
         return getEntityManager().createNamedQuery("ReglaTrigger.findByEvento").setParameter("evento", event).getResultList();
     }
 
-
-//    /**
-//     * <
-//     * code>SELECT s FROM Sesiones s</code>
-//     */
-//    public List<Sesiones> getSesionesFindAll() {
-//        return getEntityManager().createNamedQuery("Sesiones.findAll").getResultList();
-//    }
-
-//    /**
-//     * <
-//     * code>SELECT s FROM Sesiones s WHERE s.idSesion = :idSesion</code>
-//     */
-//    public Sesiones getSesionesFindByIdSesion(Long idSesion) {
-//        return getSesionesJpaController().findSesiones(idSesion);
-//    }
-//    /**
-//     * <
-//     * code>SELECT s FROM Sesiones s WHERE s.rutUsuario = :rutUsuario</code>
-//     */
-//    public List<Sesiones> getSesionesFindByRutUsuario(String rutUsuario) {
-//        return getEntityManager().createNamedQuery("Sesiones.findByRutUsuario").setParameter("rutUsuario", rutUsuario).getResultList();
-//    }
-//
-//    /**
-//     * <
-//     * code>SELECT s FROM Sesiones s WHERE s.fechaIngreso = :fechaIngreso</code>
-//     */
-//    public List<Sesiones> getSesionesFindByFechaIngreso(Date fechaIngreso) {
-//        return getEntityManager().createNamedQuery("Sesiones.findByFechaIngreso").setParameter("fechaIngreso", fechaIngreso).getResultList();
-//    }
-
-//    /**
-//     * <
-//     * code>SELECT a FROM Area a WHERE a.nombre = :nombre</code>
-//     */
-//    public List<Area> getAreaFindByNombre(String nombre) {
-//        return getEntityManager().createNamedQuery("Area.findByNombre").setParameter("nombre", nombre).getResultList();
-//    }
-
     public List<Caso> getCasoFindByEstadoAndAlerta(EstadoCaso estado, TipoAlerta tipoAlerta) {
 //        return getCasoJpa().getCasoFindByEstadoAndAlerta(estado, tipoAlerta);
-        EasyCriteriaQuery<Caso> easyquery = new EasyCriteriaQuery<>(emf, Caso.class);
+        EasyCriteriaQuery<Caso> easyquery = new EasyCriteriaQuery<>(this, Caso.class);
         easyquery.addEqualPredicate(Caso_.idEstado.getName(), estado);
         easyquery.addEqualPredicate(Caso_.estadoAlerta.getName(), tipoAlerta);
         return easyquery.getAllResultList();
     }
 
     public List<Item> getItemFindByNombreLike(String nombre) {
-        EasyCriteriaQuery<Item> ecq = new EasyCriteriaQuery<>(emf, Item.class);
+        EasyCriteriaQuery<Item> ecq = new EasyCriteriaQuery<>(this, Item.class);
         ecq.addLikePredicate(Item_.nombre.getName(), '%' + nombre + '%');
         return ecq.getAllResultList();
 //        return getEntityManager().createNamedQuery("Item.findByNombreLike").setParameter("nombre", "%" + nombre + "%").getResultList();
     }
 
     public Caso getCasoFindByEmailCreationTimeAndType(String email, Date creationTime, TipoCaso tipoCaso) {
-        EasyCriteriaQuery<Caso> ecq = new EasyCriteriaQuery<>(emf, Caso.class);
+        EasyCriteriaQuery<Caso> ecq = new EasyCriteriaQuery<>(this, Caso.class);
         ecq.addLikePredicate("emailCliente.emailCliente", email);
         ecq.addEqualPredicate(Caso_.fechaCreacion.getName(), creationTime);
         ecq.addDistinctPredicate("tipoCaso", tipoCaso);
@@ -1762,7 +1668,7 @@ public class JPAServiceFacade extends AbstractJPAController {
     }
 
     public List<Canal> findCanalTipoEmail() {
-        EasyCriteriaQuery<Canal> ecq = new EasyCriteriaQuery<>(emf, Canal.class);
+        EasyCriteriaQuery<Canal> ecq = new EasyCriteriaQuery<>(this, Canal.class);
         ecq.addEqualPredicate("idTipoCanal", EnumTipoCanal.EMAIL.getTipoCanal());
         return ecq.getAllResultList();
     }

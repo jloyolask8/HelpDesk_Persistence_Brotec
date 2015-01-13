@@ -32,7 +32,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 @Entity
 @Table(name = "rol")
 @Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")
+@TenantTableDiscriminator(type = TenantTableDiscriminatorType.SCHEMA, contextProperty = "eclipselink.tenant-id")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r"),
@@ -54,12 +54,14 @@ public class Rol implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "descripcion", length = 2147483647)
     private String descripcion;
-    @ManyToMany(mappedBy = "rolList")
-    private List<Funcion> funcionList;
-    @JoinTable(name = "USER_ROL", joinColumns = {
+//    @ManyToMany(mappedBy = "rolList")
+    @JoinTable(name = "ROL_FUNCION", joinColumns = {
         @JoinColumn(name = "id_rol", referencedColumnName = "id_rol")}, inverseJoinColumns = {
-        @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")})
+        @JoinColumn(name = "id_funcion", referencedColumnName = "id_funcion")})
     @ManyToMany
+    private List<Funcion> funcionList;
+        
+    @ManyToMany(mappedBy = "rolList")
     private List<Usuario> usuarioList;
     @NotNull
     private Boolean editable;

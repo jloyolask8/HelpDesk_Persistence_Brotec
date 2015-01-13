@@ -41,7 +41,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 @Entity
 @Table(name = "usuario")
 @Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")
+@TenantTableDiscriminator(type = TenantTableDiscriminatorType.SCHEMA, contextProperty = "eclipselink.tenant-id")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u"),
@@ -93,7 +93,11 @@ public class Usuario implements Serializable {
     @Size(min = 0, max = 14)
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Rut", fieldIdFull = "rut", fieldTypeFull = String.class)
     private String rut;
-    @ManyToMany(mappedBy = "usuarioList")
+//    @ManyToMany(mappedBy = "usuarioList")
+    @ManyToMany
+    @JoinTable(name = "USER_ROL", joinColumns = {
+        @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")}, inverseJoinColumns = {
+        @JoinColumn(name = "id_rol", referencedColumnName = "id_rol")})
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Rol(es)", fieldIdFull = "rolList", fieldTypeFull = List.class, listGenericTypeFieldId = "idRol")
     private List<Rol> rolList;
     @OneToMany(mappedBy = "owner")
@@ -112,10 +116,11 @@ public class Usuario implements Serializable {
 //    private Grupo idGrupo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "creadaPor")
     private List<Nota> notaList;
-    @JoinTable(name = "USUARIO_GRUPO", joinColumns = {
-        @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")}, inverseJoinColumns = {
-        @JoinColumn(name = "id_grupo", referencedColumnName = "id_grupo")})
-    @ManyToMany
+    @ManyToMany(mappedBy = "usuarioList", cascade = CascadeType.ALL)
+//    @JoinTable(name = "USUARIO_GRUPO", joinColumns = {
+//        @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")}, inverseJoinColumns = {
+//        @JoinColumn(name = "id_grupo", referencedColumnName = "id_grupo")})
+//    @ManyToMany
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Grupo(s)", fieldIdFull = "grupoList", fieldTypeFull = List.class, listGenericTypeFieldId = "idGrupo")
     private List<Grupo> grupoList;
     @Column(name = "theme")
@@ -152,6 +157,9 @@ public class Usuario implements Serializable {
     private String templateTheme;
     @Column(name = "main_menu_changepos")
     private boolean mainMenuChangePos;
+
+    @Column(name = "tenant_id")
+    private String tenantId;
 
     /**
      * ALTER TABLE usuario ADD COLUMN prefer_firma_enabled boolean; ALTER TABLE
@@ -622,5 +630,19 @@ public class Usuario implements Serializable {
      */
     public void setMainMenuChangePos(boolean mainMenuChangePos) {
         this.mainMenuChangePos = mainMenuChangePos;
+    }
+
+    /**
+     * @return the tenantId
+     */
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    /**
+     * @param tenantId the tenantId to set
+     */
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

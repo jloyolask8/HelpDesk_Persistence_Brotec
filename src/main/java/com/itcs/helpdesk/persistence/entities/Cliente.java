@@ -43,6 +43,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
             + "OR (CONCAT(LOWER(c.nombres), ' ', LOWER(c.apellidos)) LIKE CONCAT(LOWER(:q), '%')) OR (LOWER(e.emailCliente) LIKE CONCAT(LOWER(:q), '%'))) AND e.cliente = c"),
     @NamedQuery(name = "Cliente.findByIdCliente", query = "SELECT c FROM Cliente c WHERE c.idCliente = :idCliente"),
     @NamedQuery(name = "Cliente.findByRut", query = "SELECT c FROM Cliente c WHERE c.rut = :rut"),
+    @NamedQuery(name = "Cliente.findByEmail", query = "SELECT c FROM Cliente c WHERE c.rut = :rut"),
     @NamedQuery(name = "Cliente.findByNombres", query = "SELECT c FROM Cliente c WHERE c.nombres = :nombres"),
     @NamedQuery(name = "Cliente.findByApellidos", query = "SELECT c FROM Cliente c WHERE c.apellidos = :apellidos")
 })

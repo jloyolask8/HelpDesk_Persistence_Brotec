@@ -99,6 +99,15 @@
                 <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
             </properties>
         </profile>
+        
+         <profile>
+            <id>local-develpment-debug-sql</id>
+            <properties>
+                <jta-data-source>jdbc/helpdesk_dev_ds</jta-data-source>
+                <eclipselink.logging.level.sql>FINE</eclipselink.logging.level.sql>
+                <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
+            </properties>
+        </profile>
     </profiles>
 
     <dependencies>
@@ -113,17 +122,6 @@
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.itcs.jpautils</groupId>
-            <artifactId>JPAUtils</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>eclipselink</artifactId>
-                    <groupId>org.eclipse.persistence</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>

@@ -12,8 +12,8 @@ import com.itcs.helpdesk.persistence.entities.Rol;
  */
 public enum EnumRoles 
 {
-    ADMINISTRADOR(new Rol("ADMINISTRADOR", "Administrador Sistema", null, EnumFunciones.getAll(), EnumUsuariosBase.getAll(), false)),
-    AGENT(new Rol("AGENT", "AGENT", null, EnumFunciones.getAgentDefaultFunctions(), null, true));
+    ADMINISTRADOR(new Rol("Admin", "Administrador", null, EnumFunciones.getAll(), null, false)),
+    AGENT(new Rol("Agent", "Agent", null, EnumFunciones.getAgentDefaultFunctions(), null, true));
     
     private Rol rol;
     

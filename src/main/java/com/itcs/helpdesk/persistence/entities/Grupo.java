@@ -62,7 +62,13 @@ public class Grupo implements Serializable {
     @JoinColumn(name = "id_area", referencedColumnName = "id_area")
     @ManyToOne(optional = true)
     private Area idArea;
-    @ManyToMany(mappedBy = "grupoList", fetch = FetchType.EAGER)
+//    @ManyToMany(mappedBy = "grupoList", fetch = FetchType.EAGER)
+    
+    @ManyToMany
+    @JoinTable(name = "usuario_grupo",
+            joinColumns = {@JoinColumn(name = "id_grupo", referencedColumnName = "id_grupo")},
+            inverseJoinColumns = {@JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")})
+    
     private List<Usuario> usuarioList;
     @NotNull
     private boolean editable;

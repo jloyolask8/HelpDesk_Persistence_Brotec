@@ -34,12 +34,12 @@ public enum EnumUsuariosBase
     
     public static List<Usuario> getAll()
     {
-        ArrayList<Usuario> funciones = new ArrayList<Usuario>(values().length);
+        ArrayList<Usuario> usuarios = new ArrayList<>(values().length);
         for (EnumUsuariosBase enumUsers : values()) {            
             if (enumUsers.isPersistente()) {
-                funciones.add(enumUsers.getUsuario());
+                usuarios.add(enumUsers.getUsuario());
             }
         }
-        return funciones;
+        return usuarios;
     }
 }
