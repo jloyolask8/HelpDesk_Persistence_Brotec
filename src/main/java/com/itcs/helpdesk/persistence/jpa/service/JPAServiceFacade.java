@@ -102,15 +102,16 @@ public class JPAServiceFacade extends AbstractJPAController {
         super(utx, emf, schema);
     }
 
-//    /**
-//     * defaults to public schema in multitenant usage.
-//     *
-//     * @param utx
-//     * @param emf
-//     */
-//    public JPAServiceFacade(UserTransaction utx, EntityManagerFactory emf) {
-//        super(utx, emf, PUBLIC_SCHEMA_NAME);//THIS WILL CREATE A JPA INSTANCE POINTING TO THE PUBLIC SCHEMA.
-//    }
+    /**
+     * defaults to public schema in multitenant usage.
+     * @deprecated 
+     * @param utx
+     * @param emf
+     */
+    public JPAServiceFacade(UserTransaction utx, EntityManagerFactory emf) {
+        super(utx, emf, PUBLIC_SCHEMA_NAME);//THIS WILL CREATE A JPA INSTANCE POINTING TO THE PUBLIC SCHEMA.
+    }
+    
     public String findSchemaByName(String schema) {
         if (!StringUtils.isEmpty(schema)) {
             EntityManager em = null;
