@@ -135,13 +135,17 @@ public class ClienteJpaController implements Serializable {
 
     }
 
-    /**
-     * I think one common way to do this is with transactions. If you begin a
+     /**
+     * I think one better way to do this is with transactions. If you begin a
      * new transaction and then persist a large number of objects, they won't
      * actually be inserted into the DB until you commit the transaction. This
      * can gain you some efficiencies if you have a large number of items to
      * commit.
      *
+     * @param list
+     * @return Integer[] with Integer[] {persistedClients, existingClients,
+     * errorClients}
+     * @throws java.lang.Exception
      */
     public Integer[] persistManyClients(List<Cliente> list) throws Exception {
         int persistedClients = 0;
@@ -154,17 +158,54 @@ public class ClienteJpaController implements Serializable {
                 utx.begin();
                 em = getEntityManager();
                 int count = 0;
-                for (Cliente cliente : list) {
+                for (Cliente clienteVo : list) {
                     try {
-                        if (cliente != null) {
-                            if (cliente.getIdCliente() != null) {
-                                cliente = em.getReference(cliente.getClass(), cliente.getIdCliente());
+                        if (clienteVo != null) {
+                            if (clienteVo.getIdCliente() != null) {
+                                clienteVo = em.find(clienteVo.getClass(), clienteVo.getIdCliente());
+                                existingClients++;
                             } else {
-                                List<Cliente> clienteByRut = em.createNamedQuery("Cliente.findByRut").setParameter("rut", cliente.getRut()).getResultList();
+                                //buscarlo por el rut
+                                List<Cliente> clienteByRut = em.createNamedQuery("Cliente.findByRut").setParameter("rut", clienteVo.getRut()).getResultList();
                                 if (clienteByRut != null && !clienteByRut.isEmpty()) {
-                                    cliente = clienteByRut.get(0);
+                                    Cliente cliente = clienteByRut.get(0);
+                                    cliente.setNombres(clienteVo.getNombres());
+                                    cliente.setApellidos(clienteVo.getApellidos());
+                                    cliente.setDirParticular(clienteVo.getDirParticular());
+                                    cliente.setDirComercial(clienteVo.getDirComercial());
+                                    cliente.setFono1(clienteVo.getFono1());
+                                    cliente.setFono2(clienteVo.getFono2());
+                                    cliente.setSexo(clienteVo.getSexo());
+
+                                    em.merge(cliente);
+
                                     existingClients++;
                                 } else {
+                                    boolean exists = false;
+                                    //not found by rut
+                                    //Buscar por el email.
+                                    for (EmailCliente emailCliente : clienteVo.getEmailClienteList()) {
+                                        EmailCliente email = em.find(EmailCliente.class, emailCliente.getEmailCliente());
+                                        if (email != null) {
+                                            if (email.getCliente() != null) {
+                                                Cliente cliente = email.getCliente();
+                                                cliente.setRut(clienteVo.getRut());
+                                                cliente.setNombres(clienteVo.getNombres());
+                                                cliente.setApellidos(clienteVo.getApellidos());
+                                                cliente.setDirParticular(clienteVo.getDirParticular());
+                                                cliente.setDirComercial(clienteVo.getDirComercial());
+                                                cliente.setFono1(clienteVo.getFono1());
+                                                cliente.setFono2(clienteVo.getFono2());
+                                                cliente.setSexo(clienteVo.getSexo());
+
+                                                em.merge(cliente);
+                                                existingClients++;
+                                                exists = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+
 //                                    List<EmailCliente> attachedEmailClienteList = new ArrayList<>();
 //                                    for (EmailCliente emailClienteListEmailClienteToAttach : cliente.getEmailClienteList()) {
 //                                        if (em.find(EmailCliente.class, emailClienteListEmailClienteToAttach.getEmailCliente()) == null) {
@@ -177,8 +218,11 @@ public class ClienteJpaController implements Serializable {
 //                                        attachedEmailClienteList.add(emailClienteListEmailClienteToAttach);
 //                                    }
 //                                    cliente.setEmailClienteList(attachedEmailClienteList);
-                                    em.persist(cliente);
-                                    persistedClients++;
+                                    if (!exists) {
+                                        em.persist(clienteVo);
+                                        persistedClients++;
+                                    }
+
                                 }
                             }
                         } else {
@@ -187,7 +231,7 @@ public class ClienteJpaController implements Serializable {
                         em.flush();
                     } catch (Exception e) {
                         ConstraintViolationExceptionHelper.handleError(e);
-                        System.out.println("ERORR en " + cliente + " -- " + cliente.getEmailClienteList());
+                        System.out.println("ERORR en " + clienteVo + " -- " + clienteVo.getEmailClienteList());
                         e.printStackTrace();
                         errorClients++;
 //                        break;
