@@ -101,6 +101,15 @@
         </profile>
         
          <profile>
+            <id>local-develpment-nocache</id>
+            <properties>
+                <jta-data-source>jdbc/helpdesk_dev_ds</jta-data-source>
+                <eclipselink.logging.level.sql>SEVERE</eclipselink.logging.level.sql>
+                <shared-cache-mode>NONE</shared-cache-mode>
+            </properties>
+        </profile>
+        
+         <profile>
             <id>local-develpment-debug-sql</id>
             <properties>
                 <jta-data-source>jdbc/helpdesk_dev_ds</jta-data-source>

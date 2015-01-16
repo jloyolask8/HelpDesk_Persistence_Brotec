@@ -92,7 +92,7 @@ public abstract class AbstractJPAController {
         if (!StringUtils.isEmpty(this.schema)) {
             em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, this.schema);
         }else{
-            em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, PUBLIC_SCHEMA_NAME);
+            em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, null);
         }
         return em;
     }
