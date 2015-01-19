@@ -1,4 +1,4 @@
-package com.itcs.helpdesk.persistence.entities.metadata;
+package com.itcs.helpdesk.persistence.entities;
 
 import com.itcs.helpdesk.persistence.entities.Nota;
 import com.itcs.helpdesk.persistence.entities.Nota;

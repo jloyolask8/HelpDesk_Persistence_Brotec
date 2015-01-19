@@ -23,7 +23,7 @@ import com.itcs.helpdesk.persistence.entities.TipoCaso;
 import com.itcs.helpdesk.persistence.entities.TipoComparacion;
 import com.itcs.helpdesk.persistence.entities.TipoNota;
 import com.itcs.helpdesk.persistence.entities.Usuario;
-import com.itcs.helpdesk.persistence.entities.metadata.Cliente_;
+import com.itcs.helpdesk.persistence.entities.Cliente_;
 import com.itcs.helpdesk.persistence.entityenums.EnumCanal;
 import com.itcs.helpdesk.persistence.entityenums.EnumEstadoCaso;
 import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;

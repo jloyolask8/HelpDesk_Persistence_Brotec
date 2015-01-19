@@ -1,4 +1,4 @@
-package com.itcs.helpdesk.persistence.entities.metadata;
+package com.itcs.helpdesk.persistence.entities;
 
 import com.itcs.helpdesk.persistence.entities.Archivo;
 import javax.annotation.Generated;

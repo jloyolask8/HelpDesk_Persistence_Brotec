@@ -5,9 +5,9 @@
 package com.itcs.helpdesk.persistence.jpa;
 
 import com.itcs.helpdesk.persistence.entities.Caso;
-import com.itcs.helpdesk.persistence.entities.metadata.Caso_;
+import com.itcs.helpdesk.persistence.entities.Caso_;
 import com.itcs.helpdesk.persistence.entities.Cliente;
-import com.itcs.helpdesk.persistence.entities.metadata.Cliente_;
+import com.itcs.helpdesk.persistence.entities.Cliente_;
 import com.itcs.helpdesk.persistence.entities.FieldType;
 import com.itcs.helpdesk.persistence.entities.FiltroVista;
 import com.itcs.helpdesk.persistence.entities.ReglaTrigger;
@@ -94,6 +94,7 @@ public abstract class AbstractJPAController {
         }else{
             em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, null);
         }
+        System.out.println("AbstractJPAController.getEntityManager() -> got em from tenant " + this.schema);
         return em;
     }
     

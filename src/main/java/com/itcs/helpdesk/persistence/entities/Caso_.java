@@ -1,20 +1,5 @@
-package com.itcs.helpdesk.persistence.entities.metadata;
+package com.itcs.helpdesk.persistence.entities;
 
-import com.itcs.helpdesk.persistence.entities.Attachment;
-import com.itcs.helpdesk.persistence.entities.Canal;
-import com.itcs.helpdesk.persistence.entities.Caso;
-import com.itcs.helpdesk.persistence.entities.Componente;
-import com.itcs.helpdesk.persistence.entities.Documento;
-import com.itcs.helpdesk.persistence.entities.EmailCliente;
-import com.itcs.helpdesk.persistence.entities.EstadoCaso;
-import com.itcs.helpdesk.persistence.entities.Etiqueta;
-import com.itcs.helpdesk.persistence.entities.Nota;
-import com.itcs.helpdesk.persistence.entities.Prioridad;
-import com.itcs.helpdesk.persistence.entities.Producto;
-import com.itcs.helpdesk.persistence.entities.SubComponente;
-import com.itcs.helpdesk.persistence.entities.SubEstadoCaso;
-import com.itcs.helpdesk.persistence.entities.TipoAlerta;
-import com.itcs.helpdesk.persistence.entities.Usuario;
 import java.util.Date;
 import javax.annotation.Generated;
 import javax.persistence.metamodel.ListAttribute;
