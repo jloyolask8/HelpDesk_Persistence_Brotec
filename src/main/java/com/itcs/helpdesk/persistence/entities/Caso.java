@@ -275,6 +275,9 @@ public class Caso implements Serializable {
     @Column(name = "fecha_customer_evaluation")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCustomerEvaluation;
+    
+    @Transient
+    private boolean selected;
 
     @Transient
     public boolean hasNotas() {
@@ -627,6 +630,7 @@ public class Caso implements Serializable {
      * @param etiquetaList the etiquetaList to set
      */
     public void setEtiquetaList(List<Etiqueta> etiquetaList) {
+        System.out.println("setEtiquetaList " + etiquetaList);
         this.etiquetaList = etiquetaList;
     }
 
@@ -1035,5 +1039,19 @@ public class Caso implements Serializable {
      */
     public void setFechaCustomerEvaluation(Date fechaCustomerEvaluation) {
         this.fechaCustomerEvaluation = fechaCustomerEvaluation;
+    }
+
+    /**
+     * @return the selected
+     */
+    public boolean isSelected() {
+        return selected;
+    }
+
+    /**
+     * @param selected the selected to set
+     */
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

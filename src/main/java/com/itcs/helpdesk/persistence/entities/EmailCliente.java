@@ -19,6 +19,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -140,5 +141,17 @@ public class EmailCliente implements Serializable {
      */
     public void setTipoEmail(String tipoEmail) {
         this.tipoEmail = tipoEmail;
+    }
+    
+    @Transient
+    public String getNombreOEmailCliente() {
+        if (this.getCliente() != null) {
+            if (this.getCliente().getNombres() != null && !this.getCliente().getNombres().isEmpty()) {
+                return this.getCliente().getCapitalName();
+            } else {
+                return this.getEmailCliente();
+            }
+        }
+        return "unknown client email";
     }
 }

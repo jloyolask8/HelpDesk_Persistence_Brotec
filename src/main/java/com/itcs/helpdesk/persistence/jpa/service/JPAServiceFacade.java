@@ -614,38 +614,38 @@ public class JPAServiceFacade extends AbstractJPAController {
         return 0L;
     }
 
-    /**
-     *
-     * @param idUsuario
-     * @return
-     */
-    public List<Etiqueta> findEtiquetasByUsuario(String idUsuario) {
-
-        EntityManager em = getEntityManager();
-
-        try {
-
-            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-            CriteriaQuery<Etiqueta> criteriaQuery = criteriaBuilder.createQuery(Etiqueta.class);
-            Root<Etiqueta> root = criteriaQuery.from(Etiqueta.class);
-            Expression<String> idUsuarioExp = root.get("owner").get("idUsuario");
-            Expression<String> ownerExp = root.get("owner");
-
-            criteriaQuery = criteriaQuery.orderBy(criteriaBuilder.desc(root.get("tagId")));
-            Predicate predicate = criteriaBuilder.equal(idUsuarioExp, idUsuario);
-            Predicate predicate2 = criteriaBuilder.isNull(ownerExp);
-            criteriaQuery.where(criteriaBuilder.or(predicate, predicate2));
-            Query q = em.createQuery(criteriaQuery);
-            return q.getResultList();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Collections.EMPTY_LIST;
-
-        } finally {
-            em.close();
-        }
-    }
+//    /**
+//     *
+//     * @param idUsuario
+//     * @return
+//     */
+//    public List<Etiqueta> findEtiquetasByUsuario(String idUsuario) {
+//
+//        EntityManager em = getEntityManager();
+//
+//        try {
+//
+//            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+//            CriteriaQuery<Etiqueta> criteriaQuery = criteriaBuilder.createQuery(Etiqueta.class);
+//            Root<Etiqueta> root = criteriaQuery.from(Etiqueta.class);
+//            Expression<String> idUsuarioExp = root.get("owner").get("idUsuario");
+//            Expression<String> ownerExp = root.get("owner");
+//
+//            criteriaQuery = criteriaQuery.orderBy(criteriaBuilder.desc(root.get("tagId")));
+//            Predicate predicate = criteriaBuilder.equal(idUsuarioExp, idUsuario);
+//            Predicate predicate2 = criteriaBuilder.isNull(ownerExp);
+//            criteriaQuery.where(criteriaBuilder.or(predicate, predicate2));
+//            Query q = em.createQuery(criteriaQuery);
+//            return q.getResultList();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return Collections.EMPTY_LIST;
+//
+//        } finally {
+//            em.close();
+//        }
+//    }
 
     public List<Etiqueta> findEtiquetasLike(String etiquetaPattern, String idUsuario) {
 

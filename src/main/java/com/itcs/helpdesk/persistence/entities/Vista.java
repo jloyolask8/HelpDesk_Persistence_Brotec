@@ -43,8 +43,8 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 @Table(name = "vista")
 
 @Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, 
-contextProperty="eclipselink.tenant-id")
+@TenantTableDiscriminator(type = TenantTableDiscriminatorType.SCHEMA,
+        contextProperty = "eclipselink.tenant-id")
 @NamedQueries({
     @NamedQuery(name = "Vista.findAll", query = "SELECT v FROM Vista v"),
     @NamedQuery(name = "Vista.findByIdVista", query = "SELECT v FROM Vista v WHERE v.idVista = :idVista"),
@@ -85,7 +85,7 @@ public class Vista implements Serializable {
     @ManyToOne
     private Area idArea;
     @CascadeOnDelete
-    @OneToMany(mappedBy = "idVista", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "idVista", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<FiltroVista> filtrosVistaList;
     @Size(max = 1000)
     @Column(name = "base_entity_type", nullable = false, length = 1000)

@@ -33,7 +33,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 @Entity
 @Table(name = "etiqueta")
 @Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")
+@TenantTableDiscriminator(type = TenantTableDiscriminatorType.SCHEMA, contextProperty = "eclipselink.tenant-id")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Etiqueta.findAll", query = "SELECT e FROM Etiqueta e"),
@@ -49,8 +49,8 @@ public class Etiqueta implements Serializable {
     @Column(name = "descripcion")
     private String descripcion;
     @ManyToMany(mappedBy = "etiquetaList")
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_PLACE_HOLDER, label = "Casos etiquetados", fieldIdFull = "casoList", fieldTypeFull = List.class)
     private List<Caso> casoList;
-
     //
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Agente (Propietario)", fieldIdFull = "owner.idUsuario", fieldTypeFull = String.class)
     @JoinColumn(name = "owner", referencedColumnName = "id_usuario")
@@ -116,7 +116,7 @@ public class Etiqueta implements Serializable {
 
     @Override
     public String toString() {
-        return tagId;
+        return tagId + ((this.casoList != null && !this.casoList.isEmpty()) ? " (" + this.casoList.size() + ")" : "");
     }
 
     /**
