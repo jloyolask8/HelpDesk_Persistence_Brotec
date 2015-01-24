@@ -53,14 +53,23 @@
             </properties>
         </profile>  
         
-          <profile>
+        <profile>
             <id>betterlife</id>
             <properties>
                 <jta-data-source>jdbc/betterlife</jta-data-source>
                 <eclipselink.logging.level.sql>SEVERE</eclipselink.logging.level.sql>
                 <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
             </properties>
-        </profile>  
+        </profile>
+        
+        <profile>
+            <id>monte-elqui</id>
+            <properties>
+                <jta-data-source>jdbc/monte_elqui</jta-data-source>
+                <eclipselink.logging.level.sql>SEVERE</eclipselink.logging.level.sql>
+                <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
+            </properties>
+        </profile>
         
         <profile>
             <id>beltec</id>
