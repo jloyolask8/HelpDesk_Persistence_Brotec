@@ -31,7 +31,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 @Entity
 @Table(name = "tipo_canal")
 @Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")
+@TenantTableDiscriminator(type = TenantTableDiscriminatorType.SCHEMA, contextProperty = "eclipselink.tenant-id")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TipoCanal.findAll", query = "SELECT t FROM TipoCanal t"),
@@ -52,6 +52,10 @@ public class TipoCanal implements Serializable {
     @Column(name = "nombre", length = 2147483647)
     private String nombre;
 
+//    ALTER TABLE lia.tipo_canal ADD COLUMN icon_style_class character varying;
+    @Column(name = "icon_style_class")
+    private String iconStyleClass;
+
     @OneToMany(mappedBy = "idTipoCanal")
     private List<Canal> canalList;
 
@@ -62,10 +66,18 @@ public class TipoCanal implements Serializable {
         this.idTipo = idTipo;
     }
 
-    public TipoCanal(String idTipo, String nombre) {
-        this.nombre = nombre;
+//    public TipoCanal(String idTipo, String nombre) {
+//        this.nombre = nombre;
+//        this.idTipo = idTipo;
+//    }
+
+    public TipoCanal(String idTipo, String nombre, String iconStyleClass) {
         this.idTipo = idTipo;
+        this.nombre = nombre;
+        this.iconStyleClass = iconStyleClass;
     }
+    
+    
 
     public String getNombre() {
         return nombre;
@@ -115,6 +127,20 @@ public class TipoCanal implements Serializable {
     @Override
     public String toString() {
         return "com.itcs.helpdesk.persistence.entities.TipoCanal[ idTipo=" + idTipo + " ]";
+    }
+
+    /**
+     * @return the iconStyleClass
+     */
+    public String getIconStyleClass() {
+        return iconStyleClass;
+    }
+
+    /**
+     * @param iconStyleClass the iconStyleClass to set
+     */
+    public void setIconStyleClass(String iconStyleClass) {
+        this.iconStyleClass = iconStyleClass;
     }
 
 }

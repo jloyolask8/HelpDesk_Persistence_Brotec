@@ -6,6 +6,7 @@ package com.itcs.helpdesk.persistence.entities;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -46,6 +47,9 @@ public class TipoAlerta implements Serializable {
     @Lob
     @Size(max = 2147483647)
     private String descripcion;
+    
+     @Column(name = "style_class")
+    private String styleClass;
 //    @OneToMany(mappedBy = "estadoAlerta")
 //    private List<Caso> casoList;
 
@@ -56,10 +60,11 @@ public class TipoAlerta implements Serializable {
         this.idalerta = idalerta;
     }
 
-    public TipoAlerta(Integer idalerta, String nombre, String descripcion) {
+    public TipoAlerta(Integer idalerta, String nombre, String descripcion, String styleClass) {
         this.idalerta = idalerta;
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.styleClass = styleClass;
     }
 
     public Integer getIdalerta() {
@@ -117,6 +122,20 @@ public class TipoAlerta implements Serializable {
     @Override
     public String toString() {
         return nombre;
+    }
+
+    /**
+     * @return the styleClass
+     */
+    public String getStyleClass() {
+        return styleClass;
+    }
+
+    /**
+     * @param styleClass the styleClass to set
+     */
+    public void setStyleClass(String styleClass) {
+        this.styleClass = styleClass;
     }
 
 }
