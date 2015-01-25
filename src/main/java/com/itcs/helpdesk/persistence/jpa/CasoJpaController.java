@@ -125,7 +125,7 @@ public abstract class CasoJpaController extends AbstractJPAController implements
                 idComponente = em.getReference(idComponente.getClass(), idComponente.getIdComponente());
                 caso.setIdComponente(idComponente);
             }
-        
+
             Caso idCasoPadre = caso.getIdCasoPadre();
             if (idCasoPadre != null) {
                 idCasoPadre = em.getReference(idCasoPadre.getClass(), idCasoPadre.getIdCaso());
@@ -218,6 +218,20 @@ public abstract class CasoJpaController extends AbstractJPAController implements
                 e.printStackTrace();
             }
             em.persist(caso);
+
+            if (caso.getIdCliente() != null) {
+                if (caso.getIdCliente().getCasoList() != null) {
+                    caso.getIdCliente().getCasoList().add(caso);
+                    em.merge(caso.getIdCliente());
+                }
+            }
+
+            if (caso.getEmailCliente() != null) {
+                if (caso.getEmailCliente().getCasoList() != null) {
+                    caso.getEmailCliente().getCasoList().add(caso);
+                    em.merge(caso.getEmailCliente());
+                }
+            }
 
             if (caso.getEtiquetaList() != null) {
                 for (Etiqueta etiquetaListEtiqueta : caso.getEtiquetaList()) {
@@ -318,7 +332,7 @@ public abstract class CasoJpaController extends AbstractJPAController implements
                 idComponente.getCasoList().remove(caso);
                 idComponente = em.merge(idComponente);
             }
-           
+
             Caso idCasoPadre = caso.getIdCasoPadre();
             if (idCasoPadre != null) {
                 idCasoPadre.getCasosRelacionadosList().remove(caso);
