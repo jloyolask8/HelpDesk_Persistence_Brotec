@@ -10,6 +10,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -158,7 +159,7 @@ public class Area implements Serializable {
 //    @ManyToOne
 //    private Producto producto;
     @JoinColumn(name = "id_canal", referencedColumnName = "id_canal")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Canal idCanal;
 
     public Area() {
