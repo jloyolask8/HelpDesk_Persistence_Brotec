@@ -667,8 +667,7 @@ public abstract class AbstractJPAController {
 
     protected abstract boolean isThereSpecialFiltering(FiltroVista filtro);
 
-    //TODO make it available to the filter, simple search, and the advanced search display with a button
-    private List<?> findEntitiesByQuery(Class entityClass, boolean all, int maxResults, String query) {
+    public List<?> findEntitiesByQuery(Class entityClass, boolean all, int maxResults, String query) {
         EntityManager em = getEntityManager();
         try {
             Query q = em.createNamedQuery(entityClass.getSimpleName() + ".findAllByQuery")
