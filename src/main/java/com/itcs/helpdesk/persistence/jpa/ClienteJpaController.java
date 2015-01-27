@@ -70,14 +70,21 @@ public class ClienteJpaController implements Serializable {
         Expression<String> expresionApellido = root.get(Cliente_.apellidos);
         Expression<String> expresionRut = root.get(Cliente_.rut);
         Expression<String> expresionEmail = root.joinList(Cliente_.emailClienteList.getName(), JoinType.LEFT).get("emailCliente");//root.get(Cliente_.emailClienteList).(EmailCliente_.emailCliente);
-        Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT).join("subComponente", JoinType.LEFT).get("direccionMunicipal"); //.get("subComponente").get("direccionMunicipal");
+        Expression<String> expresionDireccionSubComp = root.joinList("productoContratadoList", JoinType.LEFT)
+                .join("subComponente", JoinType.LEFT).get("direccionMunicipal"); //.get("subComponente").get("direccionMunicipal");
+        Expression<String> expresionNombreSubComp = root.joinList("productoContratadoList", JoinType.LEFT)
+                .join("subComponente", JoinType.LEFT).get("nombre");
+        Expression<String> expresionDescSubComp = root.joinList("productoContratadoList", JoinType.LEFT)
+                .join("subComponente", JoinType.LEFT).get("descripcion");
         Predicate predicate = criteriaBuilder.or(
                 criteriaBuilder.like(criteriaBuilder.upper(criteriaBuilder.concat(criteriaBuilder.concat(expresionNombre, " "), expresionApellido)), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(criteriaBuilder.concat(criteriaBuilder.concat(expresionApellido, " "), expresionNombre)), "%" + searchPattern.toUpperCase() + "%"),
                 //                criteriaBuilder.like(criteriaBuilder.upper(), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionRut), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionEmail), "%" + searchPattern.toUpperCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionM), "%" + searchPattern.toUpperCase() + "%"));
+                criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionSubComp), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionNombreSubComp), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionDescSubComp), "%" + searchPattern.toUpperCase() + "%"));
         return predicate;
     }
 

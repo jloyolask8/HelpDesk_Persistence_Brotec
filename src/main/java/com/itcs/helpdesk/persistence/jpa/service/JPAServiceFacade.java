@@ -347,13 +347,17 @@ public class JPAServiceFacade extends AbstractJPAController {
             Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, useNonPersistentFilters, who, query);
 
             if (predicate != null) {
-                criteriaQuery.select(criteriaBuilder.count(root)).where(predicate).distinct(true);
+                System.out.println("predicate != null");
+                criteriaQuery.select(criteriaBuilder.count(root)).distinct(true).where(predicate);
             } else {
-                criteriaQuery.select(criteriaBuilder.count(root));
+                System.out.println("predicate = null");
+                criteriaQuery.select(criteriaBuilder.count(root)).distinct(true);
             }
             Query q = em.createQuery(criteriaQuery);
             q.setHint("eclipselink.query-results-cache", true);
-            return ((Long) q.getSingleResult());
+            final Long count = (Long) q.getSingleResult();
+            System.out.println("count = " + count);
+            return count;
         } catch (ClassNotFoundException e) {
             Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "ClassNotFoundException countEntities by view of class " + vista.getBaseEntityType(), e);
             throw e;

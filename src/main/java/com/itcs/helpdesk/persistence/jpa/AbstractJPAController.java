@@ -137,8 +137,8 @@ public abstract class AbstractJPAController {
 
             if (vista.getFiltrosVistaList() != null) {
                 for (FiltroVista filtro : vista.getFiltrosVistaList()) {
-                    
-                    if(!useNonPersistentFilters && filtro.getIdFiltro()<0){
+
+                    if (!useNonPersistentFilters && filtro.getIdFiltro() < 0) {
                         continue;
                     }
 
@@ -202,6 +202,15 @@ public abstract class AbstractJPAController {
                             localPredicate = criteriaBuilder.greaterThanOrEqualTo(expresion, NumberUtils.createLong(valorAttributo.trim()));
                         } else if (operador.equals(EnumTipoComparacion.GT.getTipoComparacion())) {
                             localPredicate = criteriaBuilder.greaterThan(expresion, NumberUtils.createLong(valorAttributo.trim()));
+                        } else if (operador.equals(EnumTipoComparacion.SC.getTipoComparacion())) {
+                            //One or more values, as list select many.
+                            final List<String> valores = filtro.getValoresList();
+                            List<Long> numbers = new ArrayList<>(valores.size());
+                            for (String valor : valores) {
+                                numbers.add(NumberUtils.createLong(valor.trim()));
+                            }
+
+                            localPredicate = expresion.in(numbers);
                         } else {
                             throw new IllegalStateException("Comparador " + operador.getIdComparador() + " is not supported!!");
                         }
@@ -556,7 +565,6 @@ public abstract class AbstractJPAController {
         Expression<String> expresionNombre = root.get("idCliente").get("nombres");
         Expression<String> expresionApellido = root.get("idCliente").get("apellidos");
 //        Expression<String> expresionEmail = root.joinList("idCliente.emailClienteList", JoinType.LEFT).get("emailCliente");
-               
 
         Expression<String> expresionNotaList = root.joinList(Caso_.notaList.getName(), JoinType.LEFT).get("texto");
 //        Expression<Long> expresionNotaIDCaso = root.joinList(Caso_.notaList.getName(), JoinType.LEFT).get("idCaso").get("idCaso");
@@ -569,8 +577,8 @@ public abstract class AbstractJPAController {
                 criteriaBuilder.like(criteriaBuilder.lower(expresion2), "%" + query.toLowerCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.lower(expresion3), "%" + query.toLowerCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.lower(expresionNotaList), "%" + query.toLowerCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.lower(criteriaBuilder.concat(criteriaBuilder.concat(expresionNombre," "),expresionApellido)), "%" + query.toLowerCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.lower(criteriaBuilder.concat(criteriaBuilder.concat(expresionApellido," "),expresionNombre)), "%" + query.toLowerCase() + "%"));
+                criteriaBuilder.like(criteriaBuilder.lower(criteriaBuilder.concat(criteriaBuilder.concat(expresionNombre, " "), expresionApellido)), "%" + query.toLowerCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.lower(criteriaBuilder.concat(criteriaBuilder.concat(expresionApellido, " "), expresionNombre)), "%" + query.toLowerCase() + "%"));
 
 //        if (NumberUtils.isNumber(query.trim())) {
 //            Predicate localPredicate = criteriaBuilder.equal(expresion1, query);
