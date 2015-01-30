@@ -10,6 +10,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -60,64 +61,6 @@ public class Area implements Serializable {
     @NotNull
     @Column(name = "editable", nullable = false)
     private Boolean editable;
-//    @Size(max = 64)
-//    @Column(name = "mail_smtp_host", length = 64)
-//    private String mailSmtpHost;
-//    @Column(name = "mail_smtp_port")
-//    private Short mailSmtpPort;
-//    @Size(max = 64)
-//    @Column(name = "mail_smtp_user", length = 64)
-//    private String mailSmtpUser;
-//    @Size(max = 2147483647)
-//    @Column(name = "mail_smtp_password", length = 2147483647)
-//    private String mailSmtpPassword;
-//    @Size(max = 64)
-//    @Column(name = "mail_smtp_from", length = 64)
-//    private String mailSmtpFrom;
-//    @Size(max = 64)
-//    @Column(name = "mail_smtp_fromname", length = 64)
-//    private String mailSmtpFromname;
-//    @Column(name = "mail_smtp_auth")
-//    private Boolean mailSmtpAuth;
-//    @Column(name = "mail_smtp_socket_factory_port")
-//    private Short mailSmtpSocketFactoryPort;
-//    @Column(name = "mail_smtp_connectiontimeout")
-//    private Integer mailSmtpConnectiontimeout;
-//    @Column(name = "mail_smtp_timeout")
-//    private Integer mailSmtpTimeout;
-//    @Size(max = 64)
-//    @Column(name = "mail_server_type", length = 64)
-//    private String mailServerType;
-//    @Size(max = 64)
-//    @Column(name = "mail_transport_protocol", length = 64)
-//    private String mailTransportProtocol;
-//    @Size(max = 64)
-//    @Column(name = "mail_store_protocol", length = 64)
-//    private String mailStoreProtocol;
-//    @Column(name = "mail_transport_tls")
-//    private Boolean mailTransportTls;
-//    @Column(name = "mail_use_jndi")
-//    private Boolean mailUseJndi;
-//    @Size(max = 64)
-//    @Column(name = "mail_session_jndiname", length = 64)
-//    private String mailSessionJndiname;
-//    @Size(max = 64)
-//    @Column(name = "mail_inbound_host", length = 64)
-//    private String mailInboundHost;
-//    @Column(name = "mail_inbound_port")
-//    private Short mailInboundPort;
-//    @Size(max = 64)
-//    @Column(name = "mail_inbound_user", length = 64)
-//    private String mailInboundUser;
-//    @Size(max = 2147483647)
-//    @Column(name = "mail_inbound_password", length = 2147483647)
-//    private String mailInboundPassword;
-//    @Column(name = "mail_inbound_ssl_enabled")
-//    private Boolean mailInboundSslEnabled;
-//    @Column(name = "email_enabled")
-//    private boolean emailEnabled;
-//    @Column(name = "email_frecuencia")
-//    private Integer emailFrecuencia;
     @Column(name = "email_acusederecibo")
     private boolean emailAcusederecibo;
     @Size(max = 2147483647)
@@ -164,7 +107,7 @@ public class Area implements Serializable {
 //    @ManyToOne
 //    private Producto producto;
     @JoinColumn(name = "id_canal", referencedColumnName = "id_canal")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Canal idCanal;
 
     public Area() {

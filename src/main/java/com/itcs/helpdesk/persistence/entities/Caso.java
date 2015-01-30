@@ -219,7 +219,7 @@ public class Caso implements Serializable {
     private boolean revisarActualizacion;
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Area", fieldIdFull = "idArea.idArea", fieldTypeFull = String.class)
     @JoinColumn(name = "id_area", referencedColumnName = "id_area")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Area idArea;
     @FilterField(fieldTypeId = EnumFieldType.COMMA_SEPARATED_VALUELIST, label = "Etiquetado como", fieldIdFull = "etiquetaList", fieldTypeFull = List.class)
     @JoinTable(name = "etiqueta_caso", joinColumns = {

@@ -57,8 +57,8 @@ public abstract class AbstractJPAController {
     protected EntityManagerFactory emf = null;
 //    protected EntityManagerFactory nonSharedEmf = null;
     private final String schema;//default is public in case not passed from the user session.
-     public static final String PUBLIC_SCHEMA_NAME = "public";
-     public static final String TENANT_PROP_NAME = "tenant";
+    public static final String PUBLIC_SCHEMA_NAME = "public";
+    public static final String TENANT_PROP_NAME = "tenant";
 
     public static final String PLACE_HOLDER_CURRENT_USER = "{CURRENT_USER}";
     public static final String PLACE_HOLDER_NULL = "{NULL}";
@@ -91,24 +91,23 @@ public abstract class AbstractJPAController {
         EntityManager em = emf.createEntityManager();
         if (!StringUtils.isEmpty(this.schema)) {
             em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, this.schema);
-        }else{
+        } else {
             em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, null);
         }
         System.out.println("AbstractJPAController.getEntityManager() -> got em from tenant " + this.schema);
         return em;
     }
-    
-    protected EntityManager getEntityManager(String schemax) throws IllegalStateException{
+
+    protected EntityManager getEntityManager(String schemax) throws IllegalStateException {
 
         EntityManager em = emf.createEntityManager();
         if (!StringUtils.isEmpty(schemax)) {
             em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, schemax);
-        }else{
+        } else {
             throw new IllegalStateException("Error accessing the schema " + schemax);
         }
         return em;
     }
-
 
     /**
      * @return the schema
@@ -575,14 +574,34 @@ public abstract class AbstractJPAController {
         Expression<String> expresionApellido = root.get(Cliente_.apellidos);
         Expression<String> expresionRut = root.get(Cliente_.rut);
         Expression<String> expresionEmail = root.joinList(Cliente_.emailClienteList.getName(), JoinType.LEFT).get("emailCliente");//root.get(Cliente_.emailClienteList).(EmailCliente_.emailCliente);
-        Expression<String> expresionDireccionM = root.joinList("productoContratadoList", JoinType.LEFT).join("subComponente", JoinType.LEFT).get("direccionMunicipal"); //.get("subComponente").get("direccionMunicipal");
+//        Expression<String> expresionDireccionSubComp = root.joinList("productoContratadoList", JoinType.LEFT)
+//                .join("subComponente", JoinType.LEFT).get("direccionMunicipal"); //.get("subComponente").get("direccionMunicipal");
+
+        Expression<String> expresionIdSubComponente = root.joinList("productoContratadoList", JoinType.LEFT)
+                .join("subComponente", JoinType.LEFT).get("idSubComponente");
+        Expression<String> expresionNombreSubComp = root.joinList("productoContratadoList", JoinType.LEFT)
+                .join("subComponente", JoinType.LEFT).get("nombre");
+        Expression<String> expresionDescSubComp = root.joinList("productoContratadoList", JoinType.LEFT)
+                .join("subComponente", JoinType.LEFT).get("descripcion");
+
+//        Expression<String> expresionIdComponenteNombre = root.joinList("productoContratadoList", JoinType.LEFT)
+//                .join("subComponente", JoinType.LEFT).get("idComponente").get("nombre");
+//
+//        Expression<String> expresionIdProductoNombre = root.joinList("productoContratadoList", JoinType.LEFT)
+//                .join("subComponente", JoinType.LEFT).get("idProducto").get("nombre");
         Predicate predicate = criteriaBuilder.or(
                 criteriaBuilder.like(criteriaBuilder.upper(criteriaBuilder.concat(criteriaBuilder.concat(expresionNombre, " "), expresionApellido)), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(criteriaBuilder.concat(criteriaBuilder.concat(expresionApellido, " "), expresionNombre)), "%" + searchPattern.toUpperCase() + "%"),
                 //                criteriaBuilder.like(criteriaBuilder.upper(), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionRut), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionEmail), "%" + searchPattern.toUpperCase() + "%"),
-                criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionM), "%" + searchPattern.toUpperCase() + "%"));
+//                criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionSubComp), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionIdSubComponente), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionNombreSubComp), "%" + searchPattern.toUpperCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.upper(expresionDescSubComp), "%" + searchPattern.toUpperCase() + "%")
+        //                criteriaBuilder.like(criteriaBuilder.upper(expresionIdComponenteNombre), "%" + searchPattern.toUpperCase() + "%"),
+        //                criteriaBuilder.like(criteriaBuilder.upper(expresionIdProductoNombre), "%" + searchPattern.toUpperCase() + "%")
+        );
         return predicate;
     }
 
@@ -784,7 +803,7 @@ public abstract class AbstractJPAController {
     protected abstract boolean isThereSpecialFiltering(FiltroVista filtro);
 
     //TODO make it available to the filter, simple search, and the advanced search display with a button
-    private List<?> findEntitiesByQuery(Class entityClass, boolean all, int maxResults, String query) {
+    public List<?> findEntitiesByQuery(Class entityClass, boolean all, int maxResults, String query) {
         EntityManager em = getEntityManager();
         try {
             Query q = em.createNamedQuery(entityClass.getSimpleName() + ".findAllByQuery")

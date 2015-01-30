@@ -12,7 +12,6 @@ import com.itcs.helpdesk.persistence.entities.Cliente;
 import com.itcs.helpdesk.persistence.entities.Componente;
 import com.itcs.helpdesk.persistence.entities.Documento;
 import com.itcs.helpdesk.persistence.entities.EmailCliente;
-import com.itcs.helpdesk.persistence.entities.EmailCliente_;
 import com.itcs.helpdesk.persistence.entities.EstadoCaso;
 import com.itcs.helpdesk.persistence.entities.Etiqueta;
 import com.itcs.helpdesk.persistence.entities.FieldType;
