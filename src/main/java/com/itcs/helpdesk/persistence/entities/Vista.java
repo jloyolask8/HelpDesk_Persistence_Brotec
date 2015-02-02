@@ -99,6 +99,14 @@ public class Vista implements Serializable {
     @Column(name = "fecha_modif")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModif;
+    
+    @FilterField(fieldTypeId = EnumFieldType.CHECKBOX, label = "allMustMatch", fieldIdFull = "allMustMatch", fieldTypeFull = Boolean.class)
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "all_must_match", nullable = false)
+    private boolean allMustMatch = true;//false means any can match
+    
+    
 
     public Vista() {
     }
@@ -299,5 +307,19 @@ public class Vista implements Serializable {
      */
     public void setFechaModif(Date fechaModif) {
         this.fechaModif = fechaModif;
+    }
+
+    /**
+     * @return the allMustMatch
+     */
+    public boolean isAllMustMatch() {
+        return allMustMatch;
+    }
+
+    /**
+     * @param allMustMatch the allMustMatch to set
+     */
+    public void setAllMustMatch(boolean allMustMatch) {
+        this.allMustMatch = allMustMatch;
     }
 }

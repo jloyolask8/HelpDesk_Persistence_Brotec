@@ -514,7 +514,12 @@ public abstract class AbstractJPAController {
                         throw new IllegalStateException("fieldType " + fieldType.getFieldTypeId() + " is not supported yet!!");
                     }
 
-                    predicate = CriteriaQueryHelper.addPredicate(predicate, localPredicate, criteriaBuilder);
+                    if(vista.isAllMustMatch()){
+                        predicate = CriteriaQueryHelper.addPredicate(predicate, localPredicate, criteriaBuilder);
+                    }else{
+                        predicate = CriteriaQueryHelper.addOrPredicate(predicate, localPredicate, criteriaBuilder);
+                    }
+                    
                 }
             }
 
@@ -523,7 +528,11 @@ public abstract class AbstractJPAController {
                 final Predicate predicatesForQuery = createCustomPredicatesForQuery(criteriaBuilder, root, query);
                 if (predicatesForQuery != null) {
                     if (predicate != null) {
-                        predicate = CriteriaQueryHelper.addPredicate(predicate, predicatesForQuery, criteriaBuilder);
+                       if(vista.isAllMustMatch()){
+                           predicate = CriteriaQueryHelper.addPredicate(predicate, predicatesForQuery, criteriaBuilder);
+                       }else{
+                           predicate = CriteriaQueryHelper.addOrPredicate(predicate, predicatesForQuery, criteriaBuilder);
+                       }
                     } else {
                         predicate = predicatesForQuery;
                     }

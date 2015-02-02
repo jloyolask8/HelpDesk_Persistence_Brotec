@@ -549,6 +549,157 @@ public class JPAServiceFacade extends AbstractJPAController {
         }
     }
 
+    public Caso findCasoBySubjectAndEmailInClient(String subject, String email) {
+
+        //TODO search for the caso based on the Subject and the email from must be in one of:
+        //the agent, the owner, the owner client, the cc_clients or the cc_agents
+        Vista vista1 = new Vista(Caso.class);
+        vista1.setIdVista(1);
+//        vista1.setAllMustMatch(true);
+
+        FiltroVista f1 = new FiltroVista();
+        f1.setIdFiltro(1);//otherwise i dont know what to remove dude.
+        f1.setIdCampo(Caso_.tema.getName());
+        f1.setIdComparador(EnumTipoComparacion.EQ.getTipoComparacion());
+        f1.setValor(subject);
+        f1.setIdVista(vista1);
+        vista1.getFiltrosVistaList().add(f1);
+
+        EmailCliente c = find(EmailCliente.class, email);
+
+        if (c != null) {
+            FiltroVista f2 = new FiltroVista();
+            f2.setIdFiltro(2);//otherwise i dont know what to remove dude.
+            f2.setIdCampo("emailCliente");
+            f2.setIdComparador(EnumTipoComparacion.EQ.getTipoComparacion());
+            f2.setValor(c.getEmailCliente());
+            f2.setIdVista(vista1);
+            vista1.getFiltrosVistaList().add(f2);
+        } else {
+            return null;
+        }
+
+        try {
+            List<Caso> casos = (List<Caso>) findEntities(vista1, true, true, -1, -1, null, null, null);
+            if (casos != null && !casos.isEmpty()) {
+                System.out.println("Found: " + casos);
+                return casos.get(0);
+            }
+
+        } catch (Exception no) {
+            return null;
+        }
+
+        return null;
+    }
+
+    public Caso findCasoBySubjectAndEmailInOwner(String subject, String email) {
+
+        //TODO search for the caso based on the Subject and the email from must be in one of:
+        //the agent, the owner, the owner client, the cc_clients or the cc_agents
+        Vista vista1 = new Vista(Caso.class);
+        vista1.setIdVista(1);
+//        vista1.setAllMustMatch(true);
+
+        FiltroVista f1 = new FiltroVista();
+        f1.setIdFiltro(1);//otherwise i dont know what to remove dude.
+        f1.setIdCampo(Caso_.tema.getName());
+        f1.setIdComparador(EnumTipoComparacion.EQ.getTipoComparacion());
+        f1.setValor(subject);
+        f1.setIdVista(vista1);
+        vista1.getFiltrosVistaList().add(f1);
+
+        List<Usuario> usuarios = findUsuarioByEmail(email);
+
+        if (usuarios != null && !usuarios.isEmpty()) {
+            for (Usuario usuario : usuarios) {
+                FiltroVista fu = new FiltroVista();
+                fu.setIdFiltro(2);//otherwise i dont know what to remove dude.
+                fu.setIdCampo("owner");
+                fu.setIdComparador(EnumTipoComparacion.EQ.getTipoComparacion());
+                fu.setValor(usuario.getIdUsuario());
+                fu.setIdVista(vista1);
+                vista1.getFiltrosVistaList().add(fu);
+            }
+        } else {
+            return null;
+        }
+
+        try {
+            List<Caso> casos = (List<Caso>) findEntities(vista1, true, true, -1, -1, null, null, null);
+            if (casos != null && !casos.isEmpty()) {
+                System.out.println("Found: " + casos);
+                return casos.get(0);
+            }
+
+        } catch (Exception no) {
+            return null;
+        }
+
+        return null;
+    }
+
+    public Caso findCasoBySubjectAndEmailInCC(String subject, String email) {
+
+        //TODO search for the caso based on the Subject and the email from must be in one of:
+        //the agent, the owner, the owner client, the cc_clients or the cc_agents
+        Vista vista1 = new Vista(Caso.class);
+        vista1.setIdVista(1);
+//        vista1.setAllMustMatch(true);
+
+        FiltroVista f1 = new FiltroVista();
+        f1.setIdFiltro(1);//otherwise i dont know what to remove dude.
+        f1.setIdCampo(Caso_.tema.getName());
+        f1.setIdComparador(EnumTipoComparacion.EQ.getTipoComparacion());
+        f1.setValor(subject);
+        f1.setIdVista(vista1);
+        vista1.getFiltrosVistaList().add(f1);
+
+        EmailCliente c = find(EmailCliente.class, email);
+        List<Usuario> usuarios = findUsuarioByEmail(email);
+
+        if (usuarios != null && !usuarios.isEmpty()) {
+            for (Usuario usuario : usuarios) {
+                FiltroVista fu = new FiltroVista();
+                fu.setIdFiltro(2);//otherwise i dont know what to remove dude.
+                fu.setIdCampo("usuarioCCList");
+                fu.setIdComparador(EnumTipoComparacion.SC.getTipoComparacion());
+                fu.setValor(usuario.getIdUsuario());
+                fu.setIdVista(vista1);
+                vista1.getFiltrosVistaList().add(fu);
+            }
+        } else {
+
+            if (c != null) {
+                FiltroVista f2 = new FiltroVista();
+                f2.setIdFiltro(2);//otherwise i dont know what to remove dude.
+                f2.setIdCampo("emailClienteCCList");
+                f2.setIdComparador(EnumTipoComparacion.SC.getTipoComparacion());
+                f2.setValor(c.getEmailCliente());
+                f2.setIdVista(vista1);
+                vista1.getFiltrosVistaList().add(f2);
+            }
+        }
+
+        if (c == null && (usuarios == null || usuarios.isEmpty())) {
+            //no existe nadie por ende no es posible asumir un caso solo por el subject
+            return null;
+        }
+
+        try {
+            List<Caso> casos = (List<Caso>) findEntities(vista1, true, true, -1, -1, null, null, null);
+            if (casos != null && !casos.isEmpty()) {
+                System.out.println("Found: " + casos);
+                return casos.get(0);
+            }
+
+        } catch (Exception no) {
+            return null;
+        }
+
+        return null;
+    }
+
     public Cliente findClienteByEmail(String email) {
         final EmailCliente find = find(EmailCliente.class, email);
         if (find != null) {
@@ -645,7 +796,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //            em.close();
 //        }
 //    }
-
     public List<Etiqueta> findEtiquetasLike(String etiquetaPattern, String idUsuario) {
 
         EntityManager em = getEntityManager();
@@ -1492,6 +1642,28 @@ public class JPAServiceFacade extends AbstractJPAController {
             if (em != null) {
                 em.close();
             }
+        }
+    }
+
+    public List<Usuario> findUsuarioByEmail(String email) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+            CriteriaQuery<Usuario> criteriaQuery = criteriaBuilder.createQuery(Usuario.class);
+            Root<Usuario> from = criteriaQuery.from(Usuario.class);
+            Expression<String> exp1 = from.get("email");
+
+            Expression<String> literal = criteriaBuilder.lower(criteriaBuilder.literal(email));
+
+            Predicate predicate1 = criteriaBuilder.equal(criteriaBuilder.lower(exp1), literal);
+
+            criteriaQuery.where(criteriaBuilder.or(predicate1));
+
+            TypedQuery<Usuario> typedQuery = em.createQuery(criteriaQuery);
+
+            return typedQuery.getResultList();
+        } finally {
+            em.close();
         }
     }
 

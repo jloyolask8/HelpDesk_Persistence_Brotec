@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -57,7 +58,7 @@ public class Canal implements Serializable {
     private Boolean enabled = Boolean.TRUE;
     private String descripcion;
     @CascadeOnDelete
-    @OneToMany(mappedBy = "canal", orphanRemoval = true, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "canal", orphanRemoval = true, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<CanalSetting> canalSettingList;
     @JoinColumn(name = "id_tipo_canal", referencedColumnName = "id_tipo")
     @ManyToOne

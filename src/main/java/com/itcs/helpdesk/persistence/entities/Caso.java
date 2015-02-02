@@ -54,7 +54,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 @Entity
 @Table(name = "caso")
 @Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")
+@TenantTableDiscriminator(type = TenantTableDiscriminatorType.SCHEMA, contextProperty = "eclipselink.tenant-id")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Caso.findAll", query = "SELECT c FROM Caso c"),
@@ -275,9 +275,23 @@ public class Caso implements Serializable {
     @Column(name = "fecha_customer_evaluation")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCustomerEvaluation;
-    
+
     @Transient
     private boolean selected;
+
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Usuarios CC", fieldIdFull = "usuarioCCList", fieldTypeFull = List.class, listGenericTypeFieldId = "idUsuario")
+    @JoinTable(name = "usuarios_cc_caso", joinColumns = {
+        @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")}, inverseJoinColumns = {
+        @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")})
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private List<Usuario> usuarioCCList;
+
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Email Clientes CC", fieldIdFull = "emailClienteCCList", fieldTypeFull = List.class, listGenericTypeFieldId = "emailCliente")
+    @JoinTable(name = "email_clientes_cc_caso", joinColumns = {
+        @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")}, inverseJoinColumns = {
+        @JoinColumn(name = "EMAIL_CLIENTE", referencedColumnName = "EMAIL_CLIENTE")})
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private List<EmailCliente> emailClienteCCList;
 
     @Transient
     public boolean hasNotas() {
@@ -1053,5 +1067,33 @@ public class Caso implements Serializable {
      */
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    /**
+     * @return the usuarioCCList
+     */
+    public List<Usuario> getUsuarioCCList() {
+        return usuarioCCList;
+    }
+
+    /**
+     * @param usuarioCCList the usuarioCCList to set
+     */
+    public void setUsuarioCCList(List<Usuario> usuarioCCList) {
+        this.usuarioCCList = usuarioCCList;
+    }
+
+    /**
+     * @return the emailClienteCCList
+     */
+    public List<EmailCliente> getEmailClienteCCList() {
+        return emailClienteCCList;
+    }
+
+    /**
+     * @param emailClienteCCList the emailClienteCCList to set
+     */
+    public void setEmailClienteCCList(List<EmailCliente> emailClienteCCList) {
+        this.emailClienteCCList = emailClienteCCList;
     }
 }
