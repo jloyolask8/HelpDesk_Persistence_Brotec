@@ -40,6 +40,7 @@ import com.itcs.helpdesk.persistence.entities.TipoNota;
 import com.itcs.helpdesk.persistence.entities.Usuario;
 import com.itcs.helpdesk.persistence.entities.Vista;
 import com.itcs.helpdesk.persistence.entityenums.EnumEstadoCaso;
+import com.itcs.helpdesk.persistence.entityenums.EnumTipoComparacion;
 import com.itcs.helpdesk.persistence.jpa.AbstractJPAController;
 import com.itcs.helpdesk.persistence.jpa.AccionJpaController;
 import com.itcs.helpdesk.persistence.jpa.AppSettingJpaController;
@@ -101,6 +102,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceProperty;
 import javax.persistence.Query;
@@ -239,7 +241,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //            }
 //        }
 //    }
-
     public void remove(Class clazz, Object o) throws Exception {
         EntityManager em = null;
         try {
@@ -293,7 +294,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //            }
 //        }
 //    }
-
     public void merge(Object o) throws Exception {
         EntityManager em = null;
         try {
@@ -324,7 +324,7 @@ public class JPAServiceFacade extends AbstractJPAController {
     public Long countEntities(Vista vista) throws ClassNotFoundException {
         return countEntities(vista, false, null, null);
     }
-    
+
     public Long countEntities(Vista vista, Usuario who, String query) throws ClassNotFoundException {
         return countEntities(vista, true, who, query);
     }
@@ -380,7 +380,7 @@ public class JPAServiceFacade extends AbstractJPAController {
     public List<?> findEntities(Vista vista, int maxResults, int firstResult, OrderBy orderBy, Usuario who, String query) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
         return findEntities(vista, true, false, maxResults, firstResult, orderBy, query, who);
     }
-    
+
     public List<?> findEntities(Vista vista, boolean useNonPersistentFilters, int maxResults, int firstResult, OrderBy orderBy, Usuario who, String query) throws IllegalStateException, NotSupportedException, ClassNotFoundException {
         return findEntities(vista, useNonPersistentFilters, false, maxResults, firstResult, orderBy, query, who);
     }
@@ -392,7 +392,7 @@ public class JPAServiceFacade extends AbstractJPAController {
 
             final String baseEntityType = vista.getBaseEntityType();
             final Class<?> entityClass = Class.forName(baseEntityType);
-            
+
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
             CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(entityClass);
             Root root = criteriaQuery.from(entityClass);
@@ -437,7 +437,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //
 //        return q.count();
 //    }
-
     public Long countCasosByCreatedBetween(Date from, Date to, Usuario owner) {
         EasyCriteriaQuery q = new EasyCriteriaQuery(emf, Caso.class);
         q.addBetweenPredicate(Caso_.fechaCreacion, from, to);
@@ -452,12 +451,163 @@ public class JPAServiceFacade extends AbstractJPAController {
     public Caso findCasoByIdEmailCliente(String email, Long idCaso) {
         return getCasoJpa().findCasoByIdEmailCliente(email, idCaso);
     }
-    
+
+    public Caso findCasoBySubjectAndEmailInClient(String subject, String email) {
+
+        //TODO search for the caso based on the Subject and the email from must be in one of:
+        //the agent, the owner, the owner client, the cc_clients or the cc_agents
+        Vista vista1 = new Vista(Caso.class);
+        vista1.setIdVista(1);
+//        vista1.setAllMustMatch(true);
+
+        FiltroVista f1 = new FiltroVista();
+        f1.setIdFiltro(1);//otherwise i dont know what to remove dude.
+        f1.setIdCampo(Caso_.tema.getName());
+        f1.setIdComparador(EnumTipoComparacion.EQ.getTipoComparacion());
+        f1.setValor(subject);
+        f1.setIdVista(vista1);
+        vista1.getFiltrosVistaList().add(f1);
+
+        EmailCliente c = find(EmailCliente.class, email);
+
+        if (c != null) {
+            FiltroVista f2 = new FiltroVista();
+            f2.setIdFiltro(2);//otherwise i dont know what to remove dude.
+            f2.setIdCampo("emailCliente");
+            f2.setIdComparador(EnumTipoComparacion.EQ.getTipoComparacion());
+            f2.setValor(c.getEmailCliente());
+            f2.setIdVista(vista1);
+            vista1.getFiltrosVistaList().add(f2);
+        } else {
+            return null;
+        }
+
+        try {
+            List<Caso> casos = (List<Caso>) findEntities(vista1, true, true, -1, -1, null, null, null);
+            if (casos != null && !casos.isEmpty()) {
+                System.out.println("Found: " + casos);
+                return casos.get(0);
+            }
+
+        } catch (Exception no) {
+            return null;
+        }
+
+        return null;
+    }
+
+    public Caso findCasoBySubjectAndEmailInOwner(String subject, String email) {
+
+        //TODO search for the caso based on the Subject and the email from must be in one of:
+        //the agent, the owner, the owner client, the cc_clients or the cc_agents
+        Vista vista1 = new Vista(Caso.class);
+        vista1.setIdVista(1);
+//        vista1.setAllMustMatch(true);
+
+        FiltroVista f1 = new FiltroVista();
+        f1.setIdFiltro(1);//otherwise i dont know what to remove dude.
+        f1.setIdCampo(Caso_.tema.getName());
+        f1.setIdComparador(EnumTipoComparacion.EQ.getTipoComparacion());
+        f1.setValor(subject);
+        f1.setIdVista(vista1);
+        vista1.getFiltrosVistaList().add(f1);
+
+        List<Usuario> usuarios = findUsuarioByEmail(email);
+
+        if (usuarios != null && !usuarios.isEmpty()) {
+            for (Usuario usuario : usuarios) {
+                FiltroVista fu = new FiltroVista();
+                fu.setIdFiltro(2);//otherwise i dont know what to remove dude.
+                fu.setIdCampo("owner");
+                fu.setIdComparador(EnumTipoComparacion.EQ.getTipoComparacion());
+                fu.setValor(usuario.getIdUsuario());
+                fu.setIdVista(vista1);
+                vista1.getFiltrosVistaList().add(fu);
+            }
+        } else {
+            return null;
+        }
+
+        try {
+            List<Caso> casos = (List<Caso>) findEntities(vista1, true, true, -1, -1, null, null, null);
+            if (casos != null && !casos.isEmpty()) {
+                System.out.println("Found: " + casos);
+                return casos.get(0);
+            }
+
+        } catch (Exception no) {
+            return null;
+        }
+
+        return null;
+    }
+
+    public Caso findCasoBySubjectAndEmailInCC(String subject, String email) {
+
+        //TODO search for the caso based on the Subject and the email from must be in one of:
+        //the agent, the owner, the owner client, the cc_clients or the cc_agents
+        Vista vista1 = new Vista(Caso.class);
+        vista1.setIdVista(1);
+//        vista1.setAllMustMatch(true);
+
+        FiltroVista f1 = new FiltroVista();
+        f1.setIdFiltro(1);//otherwise i dont know what to remove dude.
+        f1.setIdCampo(Caso_.tema.getName());
+        f1.setIdComparador(EnumTipoComparacion.EQ.getTipoComparacion());
+        f1.setValor(subject);
+        f1.setIdVista(vista1);
+        vista1.getFiltrosVistaList().add(f1);
+
+        EmailCliente c = find(EmailCliente.class, email);
+        List<Usuario> usuarios = findUsuarioByEmail(email);
+
+        if (usuarios != null && !usuarios.isEmpty()) {
+            for (Usuario usuario : usuarios) {
+                FiltroVista fu = new FiltroVista();
+                fu.setIdFiltro(2);//otherwise i dont know what to remove dude.
+                fu.setIdCampo("usuarioCCList");
+                fu.setIdComparador(EnumTipoComparacion.SC.getTipoComparacion());
+                fu.setValor(usuario.getIdUsuario());
+                fu.setIdVista(vista1);
+                vista1.getFiltrosVistaList().add(fu);
+            }
+        } else {
+
+            if (c != null) {
+                FiltroVista f2 = new FiltroVista();
+                f2.setIdFiltro(2);//otherwise i dont know what to remove dude.
+                f2.setIdCampo("emailClienteCCList");
+                f2.setIdComparador(EnumTipoComparacion.SC.getTipoComparacion());
+                f2.setValor(c.getEmailCliente());
+                f2.setIdVista(vista1);
+                vista1.getFiltrosVistaList().add(f2);
+            }
+        }
+
+        if (c == null && (usuarios == null || usuarios.isEmpty())) {
+            //no existe nadie por ende no es posible asumir un caso solo por el subject
+            return null;
+        }
+
+        try {
+            List<Caso> casos = (List<Caso>) findEntities(vista1, true, true, -1, -1, null, null, null);
+            if (casos != null && !casos.isEmpty()) {
+                System.out.println("Found: " + casos);
+                return casos.get(0);
+            }
+
+        } catch (Exception no) {
+            return null;
+        }
+
+        return null;
+    }
+
     public Cliente findClienteByEmail(String email) {
         final EmailCliente find = find(EmailCliente.class, email);
-        if(find != null){
+        if (find != null) {
             return find.getCliente();
-        }else{
+        } else {
             return null;
         }
     }
@@ -780,8 +930,6 @@ public class JPAServiceFacade extends AbstractJPAController {
     public Caso mergeCasoWithoutNotify(Caso caso, List<AuditLog> changeList) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         return mergeCaso(caso, changeList, false);
     }
-    
-  
 
     public void removeCaso(Caso caso) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         getCasoJpa().destroy(caso.getIdCaso());
@@ -868,12 +1016,10 @@ public class JPAServiceFacade extends AbstractJPAController {
 //    public void persistUsuario(Usuario usuario) throws PreexistingEntityException, RollbackFailureException, Exception {
 //        getUsuarioJpaController().create(usuario);
 //    }
-
 //    public void mergeUsuarioFull(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
 //        getUsuarioJpaController().edit(usuario);
 //    }
-    
-     public void mergeUsuarioFull(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
+    public void mergeUsuarioFull(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
 //        getUsuarioJpaController().edit(usuario);
 
         EntityManager em = null;
@@ -1108,11 +1254,9 @@ public class JPAServiceFacade extends AbstractJPAController {
 //            }
 //        }
 //    }
-
 //    public void removeUsuario(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
 //        getUsuarioJpaController().destroy(usuario.getIdUsuario());
 //    }
-
 //    /**
 //     * <
 //     * code>SELECT u FROM Usuario u</code>
@@ -1129,7 +1273,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //    public Usuario getUsuarioFindByIdUsuario(String idUsuario) {
 //        return getUsuarioJpaController().findUsuario(idUsuario);
 //    }
-
 //    /**
 //     * <
 //     * code>SELECT u FROM Usuario u WHERE u.nombres = :nombres</code>
@@ -1149,8 +1292,9 @@ public class JPAServiceFacade extends AbstractJPAController {
     /**
      * <
      * code>SELECT u FROM Usuario u WHERE u.email = :email</code>
+     *
      * @param email
-     * @return List<Usuario> 
+     * @return List<Usuario>
      */
     public List<Usuario> getUsuarioFindByEmail(String email) {
         if (email == null) {
@@ -1162,8 +1306,9 @@ public class JPAServiceFacade extends AbstractJPAController {
     /**
      * <
      * code>SELECT u FROM Usuario u WHERE u.rut = :rut</code>
+     *
      * @param rut
-     * @return 
+     * @return
      */
     public List<Usuario> getUsuarioFindByRut(String rut) {
         return (List<Usuario>) getEntityManager().createNamedQuery("Usuario.findByRut").setParameter("rut", rut).getResultList();
@@ -1344,7 +1489,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //    public NombreAccion getNombreAccionFindByIdNombreAccion(String idNombreAccion) {
 //        return getNombreAccionJpaController().findNombreAccion(idNombreAccion);
 //    }
-
     public void persistAttachment(Attachment attachment) throws PreexistingEntityException, RollbackFailureException, Exception {
         getAttachmentJpaController().create(attachment);
     }
@@ -2189,7 +2333,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //        }
 //        return usuarioJpaController;
 //    }
-
     /**
      * @return the rolJpaController
      */
@@ -2413,7 +2556,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //        }
 //        return nombreAccionJpaController;
 //    }
-
     /**
      * @return the productoJpaController
      */
@@ -2547,6 +2689,28 @@ public class JPAServiceFacade extends AbstractJPAController {
     @Override
     protected boolean isThereSpecialFiltering(FiltroVista filtro) {
         return false;
+    }
+
+    public List<Usuario> findUsuarioByEmail(String email) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+            CriteriaQuery<Usuario> criteriaQuery = criteriaBuilder.createQuery(Usuario.class);
+            Root<Usuario> from = criteriaQuery.from(Usuario.class);
+            Expression<String> exp1 = from.get("email");
+
+            Expression<String> literal = criteriaBuilder.lower(criteriaBuilder.literal(email));
+
+            Predicate predicate1 = criteriaBuilder.equal(criteriaBuilder.lower(exp1), literal);
+
+            criteriaQuery.where(criteriaBuilder.or(predicate1));
+
+            TypedQuery<Usuario> typedQuery = em.createQuery(criteriaQuery);
+
+            return typedQuery.getResultList();
+        } finally {
+            em.close();
+        }
     }
 
     public List<Usuario> findUsuariosEntitiesLike(String searchPart, boolean all, int maxResults, int firstResult) {

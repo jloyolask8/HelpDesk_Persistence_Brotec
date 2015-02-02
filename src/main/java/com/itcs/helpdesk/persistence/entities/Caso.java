@@ -268,6 +268,20 @@ public class Caso implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCustomerEvaluation;
 
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Usuarios CC", fieldIdFull = "usuarioCCList", fieldTypeFull = List.class, listGenericTypeFieldId = "idUsuario")
+    @JoinTable(name = "usuarios_cc_caso", joinColumns = {
+        @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")}, inverseJoinColumns = {
+        @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")})
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private List<Usuario> usuarioCCList;
+
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Email Clientes CC", fieldIdFull = "emailClienteCCList", fieldTypeFull = List.class, listGenericTypeFieldId = "emailCliente")
+    @JoinTable(name = "email_clientes_cc_caso", joinColumns = {
+        @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")}, inverseJoinColumns = {
+        @JoinColumn(name = "EMAIL_CLIENTE", referencedColumnName = "EMAIL_CLIENTE")})
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private List<EmailCliente> emailClienteCCList;
+
     @Transient
     public boolean hasNotas() {
         return (notaList != null && !notaList.isEmpty());
@@ -1027,5 +1041,33 @@ public class Caso implements Serializable {
      */
     public void setFechaCustomerEvaluation(Date fechaCustomerEvaluation) {
         this.fechaCustomerEvaluation = fechaCustomerEvaluation;
+    }
+
+    /**
+     * @return the usuarioCCList
+     */
+    public List<Usuario> getUsuarioCCList() {
+        return usuarioCCList;
+    }
+
+    /**
+     * @param usuarioCCList the usuarioCCList to set
+     */
+    public void setUsuarioCCList(List<Usuario> usuarioCCList) {
+        this.usuarioCCList = usuarioCCList;
+    }
+
+    /**
+     * @return the emailClienteCCList
+     */
+    public List<EmailCliente> getEmailClienteCCList() {
+        return emailClienteCCList;
+    }
+
+    /**
+     * @param emailClienteCCList the emailClienteCCList to set
+     */
+    public void setEmailClienteCCList(List<EmailCliente> emailClienteCCList) {
+        this.emailClienteCCList = emailClienteCCList;
     }
 }

@@ -19,7 +19,8 @@ public enum EnumTipoNota {
     NOTIFICACION_UPDATE_CASO(new TipoNota(8, "Notificación por email"), "notificacion"),
     REG_ENVIO_CORREO(new TipoNota(9, "Reg. de envío de correo"), "regenviocorreo"),
     RESPUESTA_AUT_CLIENTE(new TipoNota(10, "Respuesta Automática"), "respauttoclient"),
-    SUSCRIPCION_EVENTO(new TipoNota(11, "Suscripción a Evento"), ""),;
+    SUSCRIPCION_EVENTO(new TipoNota(11, "Suscripción a Evento"), ""),
+    COMENTARIO_AGENTE(new TipoNota(12, "Comentario del Agente"), "agentcomment"),;
     private TipoNota tipoNota;
     private String style;
 
