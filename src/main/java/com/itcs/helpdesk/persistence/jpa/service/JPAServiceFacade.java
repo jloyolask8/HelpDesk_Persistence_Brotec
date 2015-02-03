@@ -347,16 +347,16 @@ public class JPAServiceFacade extends AbstractJPAController {
             Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, useNonPersistentFilters, who, query);
 
             if (predicate != null) {
-                System.out.println("predicate != null");
+//                System.out.println("predicate != null");
                 criteriaQuery.select(criteriaBuilder.count(root)).distinct(true).where(predicate);
             } else {
-                System.out.println("predicate = null");
+//                System.out.println("predicate = null");
                 criteriaQuery.select(criteriaBuilder.count(root)).distinct(true);
             }
             Query q = em.createQuery(criteriaQuery);
             q.setHint("eclipselink.query-results-cache", true);
             final Long count = (Long) q.getSingleResult();
-            System.out.println("count = " + count);
+//            System.out.println("count = " + count);
             return count;
         } catch (ClassNotFoundException e) {
             Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, "ClassNotFoundException countEntities by view of class " + vista.getBaseEntityType(), e);
@@ -485,7 +485,7 @@ public class JPAServiceFacade extends AbstractJPAController {
         try {
             List<Caso> casos = (List<Caso>) findEntities(vista1, true, true, -1, -1, null, null, null);
             if (casos != null && !casos.isEmpty()) {
-                System.out.println("Found: " + casos);
+//                System.out.println("Found: " + casos);
                 return casos.get(0);
             }
 
@@ -531,7 +531,7 @@ public class JPAServiceFacade extends AbstractJPAController {
         try {
             List<Caso> casos = (List<Caso>) findEntities(vista1, true, true, -1, -1, null, null, null);
             if (casos != null && !casos.isEmpty()) {
-                System.out.println("Found: " + casos);
+//                System.out.println("Found: " + casos);
                 return casos.get(0);
             }
 
@@ -592,7 +592,7 @@ public class JPAServiceFacade extends AbstractJPAController {
         try {
             List<Caso> casos = (List<Caso>) findEntities(vista1, true, true, -1, -1, null, null, null);
             if (casos != null && !casos.isEmpty()) {
-                System.out.println("Found: " + casos);
+//                System.out.println("Found: " + casos);
                 return casos.get(0);
             }
 
