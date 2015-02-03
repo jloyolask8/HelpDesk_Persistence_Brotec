@@ -85,7 +85,6 @@ public class ClienteJpaController implements Serializable {
 //
 //        Expression<String> expresionIdProductoNombre = root.joinList("productoContratadoList", JoinType.LEFT)
 //                .join("subComponente", JoinType.LEFT).get("idProducto").get("nombre");
-
         Predicate predicate = criteriaBuilder.or(
                 criteriaBuilder.like(criteriaBuilder.upper(criteriaBuilder.concat(criteriaBuilder.concat(expresionNombre, " "), expresionApellido)), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(criteriaBuilder.concat(criteriaBuilder.concat(expresionApellido, " "), expresionNombre)), "%" + searchPattern.toUpperCase() + "%"),
@@ -96,8 +95,8 @@ public class ClienteJpaController implements Serializable {
                 criteriaBuilder.like(criteriaBuilder.upper(expresionIdSubComponente), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionNombreSubComp), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionDescSubComp), "%" + searchPattern.toUpperCase() + "%")
-//                criteriaBuilder.like(criteriaBuilder.upper(expresionIdComponenteNombre), "%" + searchPattern.toUpperCase() + "%"),
-//                criteriaBuilder.like(criteriaBuilder.upper(expresionIdProductoNombre), "%" + searchPattern.toUpperCase() + "%")
+        //                criteriaBuilder.like(criteriaBuilder.upper(expresionIdComponenteNombre), "%" + searchPattern.toUpperCase() + "%"),
+        //                criteriaBuilder.like(criteriaBuilder.upper(expresionIdProductoNombre), "%" + searchPattern.toUpperCase() + "%")
         );
         return predicate;
     }
@@ -295,13 +294,15 @@ public class ClienteJpaController implements Serializable {
             }
             cliente.setEmailClienteList(attachedEmailClienteList);
             em.persist(cliente);
-            for (EmailCliente emailClienteListEmailCliente : cliente.getEmailClienteList()) {
-                Cliente oldIdClienteOfEmailClienteListEmailCliente = emailClienteListEmailCliente.getCliente();
-                emailClienteListEmailCliente.setCliente(cliente);
-                emailClienteListEmailCliente = em.merge(emailClienteListEmailCliente);
-                if (oldIdClienteOfEmailClienteListEmailCliente != null) {
-                    oldIdClienteOfEmailClienteListEmailCliente.getEmailClienteList().remove(emailClienteListEmailCliente);
-                    oldIdClienteOfEmailClienteListEmailCliente = em.merge(oldIdClienteOfEmailClienteListEmailCliente);
+            for (EmailCliente email : cliente.getEmailClienteList()) {
+                Cliente oldClient = email.getCliente();
+                email.setCliente(cliente);
+                email = em.merge(email);
+                if (oldClient != null) {
+                    if (!oldClient.equals(cliente)) {
+                        oldClient.getEmailClienteList().remove(email);
+                        oldClient = em.merge(oldClient);
+                    }
                 }
             }
             utx.commit();
@@ -311,9 +312,9 @@ public class ClienteJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findCliente(cliente.getIdCliente()) != null) {
-                throw new PreexistingEntityException("Cliente " + cliente + " already exists.", ex);
-            }
+//            if (findCliente(cliente.getIdCliente()) != null) {
+//                throw new PreexistingEntityException("Cliente " + cliente + " already exists.", ex);
+//            }
             throw ex;
         } finally {
             if (em != null) {
