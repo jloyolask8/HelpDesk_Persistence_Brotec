@@ -1671,28 +1671,6 @@ public class JPAServiceFacade extends AbstractJPAController {
         }
     }
 
-    public List<Usuario> findUsuarioByEmail(String email) {
-        EntityManager em = getEntityManager();
-        try {
-            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-            CriteriaQuery<Usuario> criteriaQuery = criteriaBuilder.createQuery(Usuario.class);
-            Root<Usuario> from = criteriaQuery.from(Usuario.class);
-            Expression<String> exp1 = from.get("email");
-
-            Expression<String> literal = criteriaBuilder.lower(criteriaBuilder.literal(email));
-
-            Predicate predicate1 = criteriaBuilder.equal(criteriaBuilder.lower(exp1), literal);
-
-            criteriaQuery.where(criteriaBuilder.or(predicate1));
-
-            TypedQuery<Usuario> typedQuery = em.createQuery(criteriaQuery);
-
-            return typedQuery.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
     public List<Usuario> findUsuariosEntitiesLike(String searchPart, boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
 
