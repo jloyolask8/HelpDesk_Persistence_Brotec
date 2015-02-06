@@ -6,6 +6,8 @@
 
 package com.itcs.helpdesk.persistence.entities;
 
+import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
+import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -48,15 +50,19 @@ public class Resource implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_resource")
+    @FilterField(fieldTypeId = EnumFieldType.NUMBER, label = "Código de recurso", fieldIdFull = "idResource", fieldTypeFull = Integer.class)
     private Integer idResource;
     @Size(max = 200)
     @Column(name = "nombre")
+     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Nombre", fieldIdFull = "nombre", fieldTypeFull = String.class)
     private String nombre;
     @Size(max = 2147483647)
     @Column(name = "descripcion")
+     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Descripcion", fieldIdFull = "descripcion", fieldTypeFull = String.class)
     private String descripcion;
     @Size(max = 100)
     @Column(name = "tipo")
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Tipo", fieldIdFull = "tipo", fieldTypeFull = String.class)
     private String tipo;
     
     @ManyToMany(mappedBy = "resourceList", cascade = CascadeType.MERGE)
@@ -64,6 +70,7 @@ public class Resource implements Serializable {
 //        @JoinColumn(name = "id_resource", referencedColumnName = "id_resource")}, inverseJoinColumns = {
 //        @JoinColumn(name = "event_id", referencedColumnName = "event_id")})
 //    @ManyToMany
+    @FilterField(fieldTypeId = EnumFieldType.SELECTONE_PLACE_HOLDER, label = "Eventos Agendados", fieldIdFull = "scheduleEventList", fieldTypeFull = List.class)
     private List<ScheduleEvent> scheduleEventList;
 
     public Resource() {
