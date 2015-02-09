@@ -97,7 +97,7 @@ public class TenantDataPopulator {
 
     }
     
-    public void insertAdminUser(RegistrationVO registrationVO) throws Exception{
+    public Usuario insertAdminUser(RegistrationVO registrationVO) throws Exception{
         try {
             Usuario usuarioSistema = new Usuario(registrationVO.getUsername(), true, getMD5(registrationVO.getPasswordConfirm()), "", registrationVO.getEmail(), true, registrationVO.getFullName(), "");
         
@@ -113,6 +113,8 @@ public class TenantDataPopulator {
             
             this.jpaController.persist(usuarioSistema);
             
+            return usuarioSistema;
+            
         } catch (NoResultException ex) {
             try {
                 Logger.getLogger(this.getClass().getName()).severe("No existe usuario SISTEMA, se creara ahora");
@@ -121,6 +123,7 @@ public class TenantDataPopulator {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
             }
         }
+        return null;
     }
     
     public void populateBaseData() {

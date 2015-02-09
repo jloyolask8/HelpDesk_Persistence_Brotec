@@ -34,7 +34,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 @Entity
 @Table(name = "filtro_vista")
 @Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")
+@TenantTableDiscriminator(type = TenantTableDiscriminatorType.SCHEMA, contextProperty = "eclipselink.tenant-id")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "FiltroVista.findAll", query = "SELECT f FROM FiltroVista f"),
@@ -203,20 +203,20 @@ public class FiltroVista implements Serializable {
             }
         }
     }
-    
+
     /**
      * @return the valoresList
      */
     public List<SelectItem> getValoresAsSelectItemList() {
         final List<SelectItem> result = new ArrayList<>();
-        if (valor != null && valorLabel != null ) {
+        if (valor != null && valorLabel != null) {
             final String[] splitValues = valor.split(",", -1);
             final String[] splitLabels = valorLabel.split(",", -1);
-            
-            for (int i = 0; i< splitValues.length ; i++ ) {
+
+            for (int i = 0; i < splitValues.length; i++) {
                 String value = splitValues[i].trim();
                 String label = splitLabels[i].trim();
-                
+
                 result.add(new SelectItem(value, label));
             }
         }
@@ -255,8 +255,11 @@ public class FiltroVista implements Serializable {
      */
     @Transient
     public void setValorAsSelectItem(SelectItem valorAsSelectItem) {
-        this.valor = valorAsSelectItem.getValue().toString();
-        this.valorLabel = valorAsSelectItem.getLabel();
+        if (valorAsSelectItem != null && valorAsSelectItem.getValue() != null) {
+            this.valor = valorAsSelectItem.getValue().toString();
+            this.valorLabel = valorAsSelectItem.getLabel();
+        }
+
     }
 
     /**
