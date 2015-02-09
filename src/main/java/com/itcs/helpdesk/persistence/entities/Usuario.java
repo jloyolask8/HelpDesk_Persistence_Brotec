@@ -126,18 +126,18 @@ public class Usuario implements Serializable {
 
     //notifications
     @Column(name = "notify_when_ticket_assigned")
-    private boolean notifyWhenTicketAssigned;
+    private boolean notifyWhenTicketAssigned = true;
     @Column(name = "notify_when_new_ticket_in_group")
-    private boolean notifyWhenNewTicketInGroup;
+    private boolean notifyWhenNewTicketInGroup = true;
     @Column(name = "notify_when_ticket_alert")
-    private boolean notifyWhenTicketAlert;
+    private boolean notifyWhenTicketAlert = true;
     @Column(name = "notify_when_ticket_is_updated")
-    private boolean notifyWhenTicketIsUpdated;
+    private boolean notifyWhenTicketIsUpdated = true;
     //---
     @Column(name = "email_notifications_enabled")
-    private boolean emailNotificationsEnabled;
+    private boolean emailNotificationsEnabled = true;
     @Column(name = "desktop_notifications_enabled")
-    private boolean desktopNotificationsEnabled;
+    private boolean desktopNotificationsEnabled = true;
 
     @Column(name = "template_theme")
     @Size(max = 64)
