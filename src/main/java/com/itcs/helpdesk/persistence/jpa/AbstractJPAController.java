@@ -71,7 +71,7 @@ public abstract class AbstractJPAController {
     }
 
 //    protected abstract EntityManager getEntityManager();
-    protected EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
 
 //        if (nonSharedEmf == null) {
 //            // Non shared EMF
