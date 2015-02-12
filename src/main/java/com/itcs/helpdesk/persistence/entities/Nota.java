@@ -76,7 +76,7 @@ public class Nota implements Serializable, Comparable<Nota> {
     private Usuario creadaPor;
     @JoinColumn(name = "ID_TIPO_NOTA", referencedColumnName = "ID_TIPO_NOTA")
     @ManyToOne
-    private TipoNota idTipoNota;
+    private TipoNota tipoNota;
     @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")
     @ManyToOne
     private Caso idCaso;
@@ -164,11 +164,11 @@ public class Nota implements Serializable, Comparable<Nota> {
     }
 
     public TipoNota getTipoNota() {
-        return idTipoNota;
+        return tipoNota;
     }
 
     public void setTipoNota(TipoNota idTipoNota) {
-        this.idTipoNota = idTipoNota;
+        this.tipoNota = idTipoNota;
     }
 
     public Caso getIdCaso() {
@@ -201,7 +201,7 @@ public class Nota implements Serializable, Comparable<Nota> {
 
     @Override
     public String toString() {
-        return "Nota{" + "idNota=" + idNota + ", texto=" + texto + ", fechaCreacion=" + fechaCreacion + ", fechaModificacion=" + fechaModificacion + ", visible=" + visible + ", creadaPor=" + creadaPor + ", idTipoNota=" + idTipoNota + ", idCaso=" + idCaso + ", enviadoPor=" + enviadoPor + ", enviadoA=" + enviadoA + ", fechaEnvio=" + fechaEnvio + ", enviado=" + enviado + ", hasAttachments=" + hasAttachments + '}';
+        return "Nota{" + "idNota=" + idNota + ", texto=" + texto + ", fechaCreacion=" + fechaCreacion + ", fechaModificacion=" + fechaModificacion + ", visible=" + visible + ", creadaPor=" + creadaPor + ", tipoNota=" + tipoNota + ", idCaso=" + idCaso + ", enviadoPor=" + enviadoPor + ", enviadoA=" + enviadoA + ", fechaEnvio=" + fechaEnvio + ", enviado=" + enviado + ", hasAttachments=" + hasAttachments + '}';
     }
 
     @Override

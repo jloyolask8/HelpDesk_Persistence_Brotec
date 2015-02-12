@@ -105,7 +105,7 @@
             <properties>
                 <jta-data-source>jdbc/helpdesk_dev_ds</jta-data-source>
                 <eclipselink.logging.level.sql>SEVERE</eclipselink.logging.level.sql>
-                <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
+                <shared-cache-mode>NONE</shared-cache-mode>
             </properties>
         </profile>
         

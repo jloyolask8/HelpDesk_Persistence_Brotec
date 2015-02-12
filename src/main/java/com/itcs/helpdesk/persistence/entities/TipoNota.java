@@ -27,7 +27,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 @Entity
 @Table(name = "TIPO_NOTA")
 @Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")
+@TenantTableDiscriminator(type = TenantTableDiscriminatorType.SCHEMA, contextProperty = "eclipselink.tenant-id")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TipoNota.findAll", query = "SELECT t FROM TipoNota t"),
@@ -49,9 +49,12 @@ public class TipoNota implements Serializable {
     private String nombre;
     @Size(max = 200)
     private String descripcion;
+
+     @Column(name = "icon")
+    private String styleIcon;
+
 //    @OneToMany(mappedBy = "idTipoNota")
 //    private List<Nota> notaList;
-
     public TipoNota() {
     }
 
@@ -59,9 +62,10 @@ public class TipoNota implements Serializable {
         this.idTipoNota = idTipoNota;
     }
 
-    public TipoNota(Integer idTipoNota, String nombre) {
+    public TipoNota(Integer idTipoNota, String nombre, String styleIcon) {
         this.idTipoNota = idTipoNota;
         this.nombre = nombre;
+        this.styleIcon = styleIcon;
     }
 
     public Integer getIdTipoNota() {
@@ -119,6 +123,20 @@ public class TipoNota implements Serializable {
     @Override
     public String toString() {
         return nombre + "[ id=" + idTipoNota + " ]";
+    }
+
+    /**
+     * @return the styleIcon
+     */
+    public String getStyleIcon() {
+        return styleIcon;
+    }
+
+    /**
+     * @param styleIcon the styleIcon to set
+     */
+    public void setStyleIcon(String styleIcon) {
+        this.styleIcon = styleIcon;
     }
 
 }
