@@ -241,6 +241,25 @@ public class JPAServiceFacade extends AbstractJPAController {
 //            }
 //        }
 //    }
+    
+    public void remove(Object o) throws Exception {
+        EntityManager em = null;
+        try {
+            utx.begin();
+            em = getEntityManager();
+            em.remove(em.merge(o));
+            utx.commit();
+        } catch (Exception ex) {
+            Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+
+    }
+    
     public void remove(Class clazz, Object o) throws Exception {
         EntityManager em = null;
         try {
