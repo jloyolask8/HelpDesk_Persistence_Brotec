@@ -283,14 +283,14 @@ public class Caso implements Serializable {
     @JoinTable(name = "usuarios_cc_caso", joinColumns = {
         @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")}, inverseJoinColumns = {
         @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")})
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     private List<Usuario> usuarioCCList;
 
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_ENTITY, label = "Email Clientes CC", fieldIdFull = "emailClienteCCList", fieldTypeFull = List.class, listGenericTypeFieldId = "emailCliente")
     @JoinTable(name = "email_clientes_cc_caso", joinColumns = {
         @JoinColumn(name = "id_caso", referencedColumnName = "id_caso")}, inverseJoinColumns = {
         @JoinColumn(name = "EMAIL_CLIENTE", referencedColumnName = "EMAIL_CLIENTE")})
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     private List<EmailCliente> emailClienteCCList;
 
     @Transient

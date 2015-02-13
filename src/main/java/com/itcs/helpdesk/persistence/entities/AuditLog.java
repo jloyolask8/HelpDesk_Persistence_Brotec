@@ -55,33 +55,36 @@ public class AuditLog implements Serializable {
     private String tabla;
     @Basic(optional = false)
     @Size(max = 40)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "campo", fieldIdFull = "campo", fieldTypeFull = String.class)
     private String campo;
     @Basic(optional = false)
     @Lob
     @Size(max = 2147483647)
     @Column(name = "old_value")
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Valor antiguo", fieldIdFull = "oldValue", fieldTypeFull = String.class)
     private String oldValue;
     @Basic(optional = false)
     @NotNull
     @Lob
     @Size(max = 2147483647)
     @Column(name = "new_value")
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Nuevo valor", fieldIdFull = "newValue", fieldTypeFull = String.class)
     private String newValue;
     @Basic(optional = false)
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-     @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "fecha", fieldIdFull = "fecha", fieldTypeFull = Date.class)
+     @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "Fecha", fieldIdFull = "fecha", fieldTypeFull = Date.class)
     private Date fecha;
     @NotNull
     @Column(name = "id_user")
-    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "idUser", fieldIdFull = "idUser", fieldTypeFull = String.class)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Realizado por", fieldIdFull = "idUser", fieldTypeFull = String.class)
     private String idUser;
     @NotNull
     @Column(name = "id_caso")
-    @FilterField(fieldTypeId = EnumFieldType.NUMBER, label = "idCaso", fieldIdFull = "idCaso", fieldTypeFull = Long.class)
+    @FilterField(fieldTypeId = EnumFieldType.NUMBER, label = "# Caso", fieldIdFull = "idCaso", fieldTypeFull = Long.class)
     private Long idCaso;
     @Column(name = "owner")
-    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "owner", fieldIdFull = "owner", fieldTypeFull = String.class)
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Propietario", fieldIdFull = "owner", fieldTypeFull = String.class)
     private String owner;
 
     @Transient

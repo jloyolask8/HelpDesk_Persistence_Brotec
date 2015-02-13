@@ -55,7 +55,7 @@ public class Canal implements Serializable {
     private String idCanal;
     private String nombre;
     @Column(name = "enabled")
-    private Boolean enabled = Boolean.TRUE;
+    private boolean enabled = Boolean.TRUE;
     private String descripcion;
     @CascadeOnDelete
     @OneToMany(mappedBy = "canal", orphanRemoval = true, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
@@ -165,14 +165,14 @@ public class Canal implements Serializable {
     /**
      * @return the enabled
      */
-    public Boolean getEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 
     /**
      * @param enabled the enabled to set
      */
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

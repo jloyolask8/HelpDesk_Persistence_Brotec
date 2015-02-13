@@ -94,7 +94,7 @@ public abstract class AbstractJPAController {
         } else {
             em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, null);
         }
-        System.out.println("AbstractJPAController.getEntityManager() -> got em from tenant " + this.schema);
+//        System.out.println("AbstractJPAController.getEntityManager() -> got em from tenant " + this.schema);
         return em;
     }
 

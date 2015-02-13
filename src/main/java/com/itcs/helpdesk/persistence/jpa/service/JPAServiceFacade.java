@@ -260,13 +260,15 @@ public class JPAServiceFacade extends AbstractJPAController {
 
     }
     
-    public void remove(Class clazz, Object o) throws Exception {
+    public void remove(Class clazz, Object pk) throws Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
             //em.remove(emf.getPersistenceUnitUtil().getIdentifier(o));
-            em.remove(em.getReference(clazz, getIdentifier(em, o)));
+//            em.remove(em.getReference(clazz, getIdentifier(em, o)));
+//            em.remove(em.merge(o));
+            em.remove(em.getReference(clazz, pk));
             utx.commit();
         } catch (Exception ex) {
             Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);

@@ -57,6 +57,9 @@ public class Prioridad implements Serializable {
     @FilterField(fieldTypeId = EnumFieldType.NUMBER, label = "SLA Horas", fieldIdFull = "slaHoras", fieldTypeFull = Integer.class)
     @Column(name = "sla_horas")
     private Integer slaHoras;
+    
+    @Column(name = "style_class")
+    private String styleClass;
 
     public Prioridad() {
     }
@@ -65,12 +68,13 @@ public class Prioridad implements Serializable {
         this.idPrioridad = idPrioridad;
     }
 
-    public Prioridad(String idPrioridad, String nombre, String descripcion, Integer slaHoras) {
+    public Prioridad(String idPrioridad, String nombre, String descripcion, Integer slaHoras, String styleClass) {
 //        this.tipoCaso = tipoCaso;
         this.idPrioridad = idPrioridad;
         this.slaHoras = slaHoras;
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.styleClass = styleClass;
     }
 
     public String getIdPrioridad() {
@@ -136,6 +140,20 @@ public class Prioridad implements Serializable {
     @Override
     public String toString() {
         return nombre;
+    }
+
+    /**
+     * @return the styleClass
+     */
+    public String getStyleClass() {
+        return styleClass;
+    }
+
+    /**
+     * @param styleClass the styleClass to set
+     */
+    public void setStyleClass(String styleClass) {
+        this.styleClass = styleClass;
     }
 
 }

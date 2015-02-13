@@ -16,10 +16,10 @@ public enum EnumPrioridad {
 //    INTERNO_MEDIA(new Prioridad(EnumTipoCaso.INTERNO.getTipoCaso(), "INTERNO_MEDIA", "SEVERIDAD MEDIA", "Severidad Media: Necesito una solucion pero puedo esperar en pro de la calidad del servicio.", 48)),
 //    INTERNO_ALTA(new Prioridad(EnumTipoCaso.INTERNO.getTipoCaso(), "INTERNO_ALTA", "SEVERIDAD ALTA", "Severidad alta: El problema es importante pero no de vida o muerte.", 24)),
     //    
-    BAJA(new Prioridad("BAJA", "BAJA", "Prioridad Baja: No tengo apuro por la solucion a mi problema.", 72)),
-    MEDIA(new Prioridad("MEDIA", "MEDIA", "Prioridad Media: Necesito una solucion pero puedo esperar en pro de la calidad del servicio.", 48)),
-    ALTA(new Prioridad("ALTA", "ALTA", "Prioridad alta: El problema es importante pero no de vida o muerte.", 24)),
-    MAXIMA(new Prioridad("MAXIMA", "MAXIMA", "Prioridad Maxima: El problema es crítico.", 4));
+    BAJA(new Prioridad("BAJA", "BAJA", "Prioridad Baja: No tengo apuro por la solucion a mi problema.", 72, "success")),
+    MEDIA(new Prioridad("MEDIA", "MEDIA", "Prioridad Media: Necesito una solucion pero puedo esperar en pro de la calidad del servicio.", 48, "info")),
+    ALTA(new Prioridad("ALTA", "ALTA", "Prioridad alta: El problema es importante pero no de vida o muerte.", 24, "warning")),
+    MAXIMA(new Prioridad("MAXIMA", "MAXIMA", "Prioridad Maxima: El problema es crítico.", 4, "danger"));
     //
 //    POSTVENTA_BAJA(new Prioridad(EnumTipoCaso.POSTVENTA.getTipoCaso(), "POSTVENTA_BAJA", "SEVERIDAD BAJA", "Severidad Baja: No tengo apuro por la solucion a mi problema.", 72)),
 //    POSTVENTA_MEDIA(new Prioridad(EnumTipoCaso.POSTVENTA.getTipoCaso(), "POSTVENTA_MEDIA", "SEVERIDAD MEDIA", "Severidad Media: Necesito una solucion pero puedo esperar en pro de la calidad del servicio.", 48)),

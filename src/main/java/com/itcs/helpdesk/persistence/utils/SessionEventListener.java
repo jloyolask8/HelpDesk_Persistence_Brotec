@@ -22,7 +22,7 @@ public class SessionEventListener extends SessionEventAdapter {
 
     @Override
     public void preReleaseClientSession(SessionEvent event) {
-        System.out.println("-> preReleaseClientSession...");
+//        System.out.println("-> preReleaseClientSession...");
         
         ClientSession session = (ClientSession) event.getSession();
         Map<Class, ClassDescriptor> descriptors = session.getDescriptors();

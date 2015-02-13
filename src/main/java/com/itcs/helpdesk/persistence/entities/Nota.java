@@ -5,6 +5,7 @@
 package com.itcs.helpdesk.persistence.entities;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +26,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.eclipse.persistence.annotations.Multitenant;
@@ -39,7 +41,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 @Entity
 @Table(name = "nota")
 @Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")
+@TenantTableDiscriminator(type = TenantTableDiscriminatorType.SCHEMA, contextProperty = "eclipselink.tenant-id")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Nota.findAll", query = "SELECT n FROM Nota n"),
@@ -58,19 +60,19 @@ public class Nota implements Serializable, Comparable<Nota> {
     @Lob
     @Size(max = 2147483647)
     private String texto;
-    
+
     @Lob
     @Size(max = 2147483647)
     @Column(name = "texto_original")
     private String textoOriginal;
-    
+
     @Column(name = "fecha_creacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
     @Column(name = "fecha_modificacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModificacion;
-    private Boolean visible;
+    private boolean visible;
     @JoinColumn(name = "creada_por", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
     private Usuario creadaPor;
@@ -98,7 +100,7 @@ public class Nota implements Serializable, Comparable<Nota> {
         @JoinColumn(name = "id_nota", referencedColumnName = "id_nota")}, inverseJoinColumns = {
         @JoinColumn(name = "id_attachment", referencedColumnName = "id_attachment")
     })
-    
+
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<Attachment> attachmentList;
 
@@ -109,6 +111,18 @@ public class Nota implements Serializable, Comparable<Nota> {
     private String enviadoPorQuartzJobId;
 
     public Nota() {
+    }
+
+    @Transient
+    public String getTextExtract() {
+        if (texto != null && (texto.length() > 0)) {
+            int endIndex = this.texto.length();
+            endIndex = ((endIndex <= 20) ? endIndex : 20);
+            return texto.substring(0, endIndex) + "...";
+        } else {
+            return "";
+        }
+
     }
 
     public Nota(Integer idNota) {
@@ -147,11 +161,11 @@ public class Nota implements Serializable, Comparable<Nota> {
         this.fechaModificacion = fechaModificacion;
     }
 
-    public Boolean getVisible() {
+    public boolean getVisible() {
         return visible;
     }
 
-    public void setVisible(Boolean visible) {
+    public void setVisible(boolean visible) {
         this.visible = visible;
     }
 
