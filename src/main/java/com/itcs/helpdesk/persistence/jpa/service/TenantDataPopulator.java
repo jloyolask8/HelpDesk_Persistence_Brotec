@@ -7,8 +7,6 @@ package com.itcs.helpdesk.persistence.jpa.service;
 
 import com.itcs.helpdesk.persistence.entities.AppSetting;
 import com.itcs.helpdesk.persistence.entities.Canal;
-import com.itcs.helpdesk.persistence.entities.Caso;
-import com.itcs.helpdesk.persistence.entities.Cliente;
 import com.itcs.helpdesk.persistence.entities.EstadoCaso;
 import com.itcs.helpdesk.persistence.entities.FieldType;
 import com.itcs.helpdesk.persistence.entities.Funcion;
@@ -23,7 +21,6 @@ import com.itcs.helpdesk.persistence.entities.TipoCaso;
 import com.itcs.helpdesk.persistence.entities.TipoComparacion;
 import com.itcs.helpdesk.persistence.entities.TipoNota;
 import com.itcs.helpdesk.persistence.entities.Usuario;
-import com.itcs.helpdesk.persistence.entities.Cliente_;
 import com.itcs.helpdesk.persistence.entityenums.EnumCanal;
 import com.itcs.helpdesk.persistence.entityenums.EnumEstadoCaso;
 import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
@@ -39,18 +36,16 @@ import com.itcs.helpdesk.persistence.entityenums.EnumTipoCanal;
 import com.itcs.helpdesk.persistence.entityenums.EnumTipoCaso;
 import com.itcs.helpdesk.persistence.entityenums.EnumTipoComparacion;
 import com.itcs.helpdesk.persistence.entityenums.EnumTipoNota;
-import com.itcs.helpdesk.persistence.jpa.EasyCriteriaQuery;
+import com.itcs.helpdesk.persistence.entityenums.EnumUsuariosBase;
 import com.itcs.helpdesk.persistence.jpa.exceptions.PreexistingEntityException;
 import com.itcs.helpdesk.persistence.jpa.exceptions.RollbackFailureException;
 import com.itcs.helpdesk.persistence.utils.vo.RegistrationVO;
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.mail.internet.MimeUtility;
 import javax.persistence.NoResultException;
 
 /**
@@ -130,7 +125,7 @@ public class TenantDataPopulator {
         System.out.println("populateBaseData()...");
 
         
-//        verificarUsuarios();
+        verificarUsuarios();
         verificarFunciones();
         verificarRoles();
         verificarTipoCaso();
@@ -157,22 +152,22 @@ public class TenantDataPopulator {
         
     }
     
-//     private void verificarUsuarios() {
-//        try {
-//            Usuario usuarioSistema = this.jpaController.find(Usuario.class, EnumUsuariosBase.SISTEMA.getUsuario().getIdUsuario());
-//            //getUsuarioFindByIdUsuario(EnumUsuariosBase.SISTEMA.getUsuario().getIdUsuario());
-//            if (null == usuarioSistema) {
-//                throw new NoResultException("No existe usuario SISTEMA");
-//            }
-//        } catch (NoResultException ex) {
-//            try {
-//                Logger.getLogger(this.getClass().getName()).severe("No existe usuario SISTEMA, se creara ahora");
-//                this.jpaController.persist(EnumUsuariosBase.SISTEMA.getUsuario());
-//            } catch (Exception e) {
-//                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
-//            }
-//        }
-//    }
+     private void verificarUsuarios() {
+        try {
+            Usuario usuarioSistema = this.jpaController.find(Usuario.class, EnumUsuariosBase.SISTEMA.getUsuario().getIdUsuario());
+            //getUsuarioFindByIdUsuario(EnumUsuariosBase.SISTEMA.getUsuario().getIdUsuario());
+            if (null == usuarioSistema) {
+                throw new NoResultException("No existe usuario SISTEMA");
+            }
+        } catch (NoResultException ex) {
+            try {
+                Logger.getLogger(this.getClass().getName()).severe("No existe usuario SISTEMA, se creara ahora");
+                this.jpaController.persist(EnumUsuariosBase.SISTEMA.getUsuario());
+            } catch (Exception e) {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
+            }
+        }
+    }
 
 //    private void fixClientesCasos() {
 //        EasyCriteriaQuery<Caso> ecq = new EasyCriteriaQuery<>(getJpaController(), Caso.class);

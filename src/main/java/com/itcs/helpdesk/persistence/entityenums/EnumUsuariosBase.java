@@ -10,7 +10,7 @@ import java.util.List;
  */
 public enum EnumUsuariosBase
 {
-    SISTEMA(new Usuario("SISTEMA", true, "40617a8e1f34052a48696d30cd8e47e6", "1-9", "invalid@address.com", false, "SISTEMA",""),true);
+    SISTEMA(new Usuario("SISTEMA", true, "40617a8e1f34052a48696d30cd8e47e6", "", "contacto@godesk.cl", false, "SISTEMA",""),true);
 //    SIN_PROPIETARIO(new Usuario("sinpropietario", "Sin", "Propietario"),false);
 
     private Usuario usuario;

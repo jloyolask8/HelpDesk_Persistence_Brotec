@@ -432,7 +432,7 @@ public class JPAServiceFacade extends AbstractJPAController {
 
     public Long countEntities(Vista vista, boolean useNonPersistentFilters, Usuario who, String query) throws ClassNotFoundException {
         EntityManager em = getEntityManager();
-        em.setProperty("javax.persistence.cache.storeMode", javax.persistence.CacheRetrieveMode.USE);
+//        em.setProperty("javax.persistence.cache.storeMode", javax.persistence.CacheRetrieveMode.USE);
 
         try {
             if (vista == null || vista.getBaseEntityType() == null) {
@@ -448,14 +448,14 @@ public class JPAServiceFacade extends AbstractJPAController {
             Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, useNonPersistentFilters, who, query);
 
             if (predicate != null) {
-//                System.out.println("predicate != null");
-                criteriaQuery.select(criteriaBuilder.count(root)).distinct(true).where(predicate);
+                System.out.println("predicate != null");
+                criteriaQuery.select(criteriaBuilder.count(root)).where(predicate).distinct(true);
             } else {
-//                System.out.println("predicate = null");
+                System.out.println("predicate = null");
                 criteriaQuery.select(criteriaBuilder.count(root)).distinct(true);
             }
             Query q = em.createQuery(criteriaQuery);
-            q.setHint("eclipselink.query-results-cache", true);
+            q.setHint("eclipselink.query-results-cache", false);
             final Long count = (Long) q.getSingleResult();
 //            System.out.println("count = " + count);
             return count;
