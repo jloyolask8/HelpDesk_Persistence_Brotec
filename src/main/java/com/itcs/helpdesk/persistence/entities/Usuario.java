@@ -160,6 +160,11 @@ public class Usuario implements Serializable {
 
     @Column(name = "tenant_id")
     private String tenantId;
+    
+    @Column(name = "verification_code")
+    private String verificationCode;
+    
+    
 
     /**
      * ALTER TABLE usuario ADD COLUMN prefer_firma_enabled boolean; ALTER TABLE
@@ -644,5 +649,19 @@ public class Usuario implements Serializable {
      */
     public void setTenantId(String tenantId) {
         this.tenantId = tenantId;
+    }
+
+    /**
+     * @return the verificationCode
+     */
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    /**
+     * @param verificationCode the verificationCode to set
+     */
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
     }
 }

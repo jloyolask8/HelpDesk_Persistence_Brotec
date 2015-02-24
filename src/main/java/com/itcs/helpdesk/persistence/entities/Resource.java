@@ -21,6 +21,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -72,6 +73,9 @@ public class Resource implements Serializable {
 //    @ManyToMany
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_PLACE_HOLDER, label = "Eventos Agendados", fieldIdFull = "scheduleEventList", fieldTypeFull = List.class)
     private List<ScheduleEvent> scheduleEventList;
+    
+    @Transient
+    private String randomColor;
 
     public Resource() {
     }
@@ -144,6 +148,20 @@ public class Resource implements Serializable {
     @Override
     public String toString() {
         return "Resource{" + "idResource=" + idResource + ", nombre=" + nombre + ", descripcion=" + descripcion + ", tipo=" + tipo + '}';
+    }
+
+    /**
+     * @return the randomColor
+     */
+    public String getRandomColor() {
+        return randomColor;
+    }
+
+    /**
+     * @param randomColor the randomColor to set
+     */
+    public void setRandomColor(String randomColor) {
+        this.randomColor = randomColor;
     }
 
    

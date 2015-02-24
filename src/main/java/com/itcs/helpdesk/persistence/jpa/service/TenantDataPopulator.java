@@ -92,7 +92,7 @@ public class TenantDataPopulator {
 
     }
     
-    public Usuario insertAdminUser(RegistrationVO registrationVO) throws Exception{
+    public Usuario insertAdminUser(String v, RegistrationVO registrationVO) throws Exception{
         try {
             Usuario usuarioSistema = new Usuario(registrationVO.getUsername(), true, getMD5(registrationVO.getPasswordConfirm()), "", registrationVO.getEmail(), true, registrationVO.getFullName(), "");
         
@@ -105,6 +105,8 @@ public class TenantDataPopulator {
             
             usuarioSistema.setTenantId(registrationVO.getCompanyName());
             usuarioSistema.setTelFijo(registrationVO.getPhoneNumber());
+            
+            usuarioSistema.setVerificationCode(v);
             
             this.jpaController.persist(usuarioSistema);
             
