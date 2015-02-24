@@ -4,7 +4,7 @@
 
     <groupId>com.itcs.apps</groupId>
     <artifactId>HelpDesk_Persistence_Brotec</artifactId>
-    <version>2.2</version>
+    <version>3.0</version>
     <packaging>jar</packaging>
 
     <name>HelpDesk_Persistence_Brotec</name>
@@ -29,9 +29,9 @@
         <profile>
             <id>godesk_prod</id>
             <properties>
-                <jta-data-source>jdbc/godesk_db_ds</jta-data-source>
+                <jta-data-source>jdbc/godesk</jta-data-source>
                 <eclipselink.logging.level.sql>SEVERE</eclipselink.logging.level.sql>
-                <shared-cache-mode>NONE</shared-cache-mode>
+                <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
             </properties>
         </profile>  
         

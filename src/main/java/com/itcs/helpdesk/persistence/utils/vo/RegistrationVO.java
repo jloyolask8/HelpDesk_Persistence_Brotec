@@ -5,11 +5,13 @@
  */
 package com.itcs.helpdesk.persistence.utils.vo;
 
+import java.io.Serializable;
+
 /**
  *
  * @author jonathan
  */
-public class RegistrationVO {
+public class RegistrationVO implements Serializable{
 
     private String fullName;
     private String phoneNumber;
