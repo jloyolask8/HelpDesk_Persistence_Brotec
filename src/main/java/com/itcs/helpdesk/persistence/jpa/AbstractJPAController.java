@@ -70,6 +70,22 @@ public abstract class AbstractJPAController {
         this.schema = schema;
     }
 
+//    public EntityManager createAutoFlushEntityManager() {
+//        Map properties = new HashMap();
+//         properties.put("eclipselink.persistence-context.flush-mode", "auto");
+//        EntityManager em = emf.createEntityManager(properties);
+//        em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, schema);
+//        //null will make all fail
+//        return em;
+//    }
+//    
+//    public EntityManager createEntityManager() {
+//        EntityManager em = emf.createEntityManager();
+//        em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, schema);
+//        //null will make all fail
+//        return em;
+//    }
+
 //    protected abstract EntityManager getEntityManager();
     public EntityManager getEntityManager() {
 
@@ -523,12 +539,12 @@ public abstract class AbstractJPAController {
                         throw new IllegalStateException("fieldType " + fieldType.getFieldTypeId() + " is not supported yet!!");
                     }
 
-                    if(vista.isAllMustMatch()){
+                    if (vista.isAllMustMatch()) {
                         predicate = CriteriaQueryHelper.addPredicate(predicate, localPredicate, criteriaBuilder);
-                    }else{
+                    } else {
                         predicate = CriteriaQueryHelper.addOrPredicate(predicate, localPredicate, criteriaBuilder);
                     }
-                    
+
                 }
             }
 
@@ -537,11 +553,11 @@ public abstract class AbstractJPAController {
                 final Predicate predicatesForQuery = createCustomPredicatesForQuery(criteriaBuilder, root, query);
                 if (predicatesForQuery != null) {
                     if (predicate != null) {
-                       if(vista.isAllMustMatch()){
-                           predicate = CriteriaQueryHelper.addPredicate(predicate, predicatesForQuery, criteriaBuilder);
-                       }else{
-                           predicate = CriteriaQueryHelper.addOrPredicate(predicate, predicatesForQuery, criteriaBuilder);
-                       }
+                        if (vista.isAllMustMatch()) {
+                            predicate = CriteriaQueryHelper.addPredicate(predicate, predicatesForQuery, criteriaBuilder);
+                        } else {
+                            predicate = CriteriaQueryHelper.addOrPredicate(predicate, predicatesForQuery, criteriaBuilder);
+                        }
                     } else {
                         predicate = predicatesForQuery;
                     }
@@ -613,7 +629,7 @@ public abstract class AbstractJPAController {
                 //                criteriaBuilder.like(criteriaBuilder.upper(), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionRut), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionEmail), "%" + searchPattern.toUpperCase() + "%"),
-//                criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionSubComp), "%" + searchPattern.toUpperCase() + "%"),
+                //                criteriaBuilder.like(criteriaBuilder.upper(expresionDireccionSubComp), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionIdSubComponente), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionNombreSubComp), "%" + searchPattern.toUpperCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.upper(expresionDescSubComp), "%" + searchPattern.toUpperCase() + "%")

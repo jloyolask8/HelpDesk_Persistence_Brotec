@@ -53,9 +53,15 @@
         <class>com.itcs.helpdesk.persistence.entities.TipoAccion</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <shared-cache-mode>${shared-cache-mode}</shared-cache-mode>
+        
         <properties>
             <property name="eclipselink.session-event-listener" value="com.itcs.helpdesk.persistence.utils.SessionEventListener"/>
-            <property name="eclipselink.query-results-cache" value="false"/>
+            
+            <property name="eclipselink.query-results-cache" value="true"/>
+            <property name="eclipselink.query-results-cache.type" value="SOFT"/>
+            <property name="eclipselink.jdbc.cache-statements" value="true"/>
+            <property name="eclipselink.jdbc.cache-statements.size" value="10"/>           
+            
             <property name="eclipselink.logging.logger" value="JavaLogger"/>
             <property name="eclipselink.logging.level.sql" value="${eclipselink.logging.level.sql}"/>
             <property name="eclipselink.logging.parameters" value="true"/>
@@ -63,14 +69,13 @@
             <!--property name="eclipselink.cache.coordination.protocol" value="rmi"/-->
             <!--property name="eclipselink.cache.coordination.naming-service" value="rmi"/-->
             <!--property name="eclipselink.cache.coordination.rmi.url" value="%%current-server-url%%" /-->
-            <property name="eclipselink.jdbc.cache-statements" value="false"/>
-            <property name="eclipselink.jdbc.cache-statements.size" value="10"/>
+            
             
             <!--  Optimization #10 - batch writing -->
             <property name="eclipselink.jdbc.batch-writing" value="JDBC"/>
             <property name="eclipselink.jdbc.batch-writing.size" value="1000"/>
             <!--  Optimization #12 - turn logging off -->
-            <property name="eclipselink.logging.level" value="${eclipselink.logging.level.sql}"/>
+            <property name="eclipselink.logging.level" value="${eclipselink.logging.level}"/>
             <!--property name="eclipselink.logging.level" value="off"/-->
             <!--  Optimization #13 - close EntityManager on commit, to avoid cost of resume -->
             <property name="eclipselink.persistence-context.close-on-commit" value="true"/>

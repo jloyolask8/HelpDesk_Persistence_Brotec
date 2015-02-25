@@ -31,7 +31,8 @@
             <properties>
                 <jta-data-source>jdbc/godesk</jta-data-source>
                 <eclipselink.logging.level.sql>SEVERE</eclipselink.logging.level.sql>
-                <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+                <eclipselink.logging.level>CONFIG</eclipselink.logging.level>
+                <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
             </properties>
         </profile>  
         
@@ -103,9 +104,10 @@
         <profile>
             <id>local-develpment</id>
             <properties>
-                <jta-data-source>jdbc/helpdesk_dev_ds</jta-data-source>
+                <jta-data-source>jdbc/godesk</jta-data-source>
                 <eclipselink.logging.level.sql>SEVERE</eclipselink.logging.level.sql>
-                <shared-cache-mode>NONE</shared-cache-mode>
+                <eclipselink.logging.level>CONFIG</eclipselink.logging.level>
+                <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
             </properties>
         </profile>
         

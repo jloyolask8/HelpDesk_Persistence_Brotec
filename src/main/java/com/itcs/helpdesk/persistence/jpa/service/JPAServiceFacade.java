@@ -1,5 +1,6 @@
 package com.itcs.helpdesk.persistence.jpa.service;
 
+import com.itcs.helpdesk.persistence.entities.Area;
 import com.itcs.helpdesk.persistence.jpa.EasyCriteriaQuery;
 import com.itcs.helpdesk.persistence.entities.Attachment;
 import com.itcs.helpdesk.persistence.entities.Attachment_;
@@ -16,6 +17,7 @@ import com.itcs.helpdesk.persistence.entities.EstadoCaso;
 import com.itcs.helpdesk.persistence.entities.Etiqueta;
 import com.itcs.helpdesk.persistence.entities.FieldType;
 import com.itcs.helpdesk.persistence.entities.FiltroVista;
+import com.itcs.helpdesk.persistence.entities.Funcion;
 import com.itcs.helpdesk.persistence.entities.Grupo;
 import com.itcs.helpdesk.persistence.entities.Item;
 import com.itcs.helpdesk.persistence.entities.Item_;
@@ -30,9 +32,22 @@ import com.itcs.helpdesk.persistence.entities.TipoAlerta;
 import com.itcs.helpdesk.persistence.entities.TipoCaso;
 import com.itcs.helpdesk.persistence.entities.Usuario;
 import com.itcs.helpdesk.persistence.entities.Vista;
+import com.itcs.helpdesk.persistence.entityenums.EnumCanal;
+import com.itcs.helpdesk.persistence.entityenums.EnumEstadoCaso;
+import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
+import com.itcs.helpdesk.persistence.entityenums.EnumFunciones;
+import com.itcs.helpdesk.persistence.entityenums.EnumPrioridad;
+import com.itcs.helpdesk.persistence.entityenums.EnumResponsables;
+import com.itcs.helpdesk.persistence.entityenums.EnumRoles;
+import com.itcs.helpdesk.persistence.entityenums.EnumSettingsBase;
+import com.itcs.helpdesk.persistence.entityenums.EnumSubEstadoCaso;
+import com.itcs.helpdesk.persistence.entityenums.EnumTipoAccion;
+import com.itcs.helpdesk.persistence.entityenums.EnumTipoAlerta;
 import com.itcs.helpdesk.persistence.entityenums.EnumTipoCanal;
 import com.itcs.helpdesk.persistence.entityenums.EnumTipoCaso;
 import com.itcs.helpdesk.persistence.entityenums.EnumTipoComparacion;
+import com.itcs.helpdesk.persistence.entityenums.EnumTipoNota;
+import com.itcs.helpdesk.persistence.entityenums.EnumUsuariosBase;
 import com.itcs.helpdesk.persistence.jpa.AbstractJPAController;
 import com.itcs.helpdesk.persistence.jpa.custom.CriteriaQueryHelper;
 import com.itcs.helpdesk.persistence.jpa.exceptions.IllegalOrphanException;
@@ -69,6 +84,10 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.resource.NotSupportedException;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -141,13 +160,15 @@ public class JPAServiceFacade extends AbstractJPAController {
      * @return
      */
     public String createTheSchema(RegistrationVO registrationVO) {
+        String schemaName = null;
         if (!StringUtils.isEmpty(registrationVO.getCompanyName())) {
             EntityManager em = null;
+
 //            EntityManager emNew = null;
             try {
                 utx.begin();
                 em = getEntityManager();
-                final String schemaName = registrationVO.getCompanyName().trim().toLowerCase().replace("\u0020", "_");
+                schemaName = registrationVO.getCompanyName().trim().toLowerCase().replace("\u0020", "_");
                 registrationVO.setCompanyName(schemaName);
                 //1. Create the new schema
                 Query query = em.createNativeQuery("SELECT create_new_schema('base_schema', ?)");
@@ -160,10 +181,180 @@ public class JPAServiceFacade extends AbstractJPAController {
                 e.printStackTrace();
             } finally {
                 em.close();
+
             }
         }
+        return schemaName;
+    }
+    
+    public String deleteTheSchema(String schemaName) {
+       
+        if (!StringUtils.isEmpty(schemaName)) {
+            EntityManager em = null;
 
-        return null;
+//            EntityManager emNew = null;
+            try {
+                utx.begin();
+                em = getEntityManager();
+              
+                //1. Create the new schema
+                Query query = em.createNativeQuery("SELECT delete_schema(?)");
+                Object o = query.setParameter(1, schemaName).getSingleResult();
+
+                System.out.println("*** Schema deleted: " + schemaName);
+
+                utx.commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                em.close();
+
+            }
+        }
+        return schemaName;
+    }
+
+//    public void setupTheSchemaStep2() throws TenantSetupFailedException {
+//        EntityManager em = null;
+//        try {
+//            utx.begin();
+//            em = getEntityManager();
+//           
+//            em.flush();//java.sql.BatchUpdateException
+//            for (EnumSubEstadoCaso enumSubEstado : EnumSubEstadoCaso.values()) {
+//                em.persist(enumSubEstado.getSubEstado());
+//            }
+//
+//            em.flush();//java.sql.BatchUpdateException
+//            for (EnumTipoNota enumTipoNota : EnumTipoNota.values()) {
+//                em.persist(enumTipoNota.getTipoNota());
+//            }
+//            
+//
+//            utx.commit();
+//            System.out.println("*** Schema populated ok: " + getSchema());
+//        } catch (javax.transaction.NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException e) {
+//            e.printStackTrace();
+//            try{
+//                utx.rollback();
+//            }catch(Exception exx){
+//                exx.printStackTrace();
+//            }
+//            throw new TenantSetupFailedException(e.getMessage(), e);
+//        } finally {
+//            em.close();
+//        }
+//    }
+    
+    public void setupTheSchema(Usuario ownerUser, List<String> areas) throws TenantSetupFailedException {
+        EntityManager em = null;
+//            EntityManager emNew = null;
+        try {
+            utx.begin();
+            em = getEntityManager();
+            //1. verificarUsuarios
+            em.persist(EnumUsuariosBase.SISTEMA.getUsuario());
+
+            //funciones
+            for (EnumFunciones funcion : EnumFunciones.values()) {
+                em.persist(funcion.getFuncion());
+            }
+            em.flush();
+            //roles
+            for (EnumRoles enumRol : EnumRoles.values()) {
+                em.persist(enumRol.getRol());
+            }
+            em.flush();
+            //tipos de casos
+            for (EnumTipoCaso enumTipoCaso : EnumTipoCaso.values()) {
+                em.persist(enumTipoCaso.getTipoCaso());
+            }
+
+            em.flush();
+
+            //estados de casos
+            for (EnumEstadoCaso enumEstado : EnumEstadoCaso.values()) {
+                em.persist(enumEstado.getEstado());
+            }
+//            em.flush();//java.sql.BatchUpdateException
+//            for (EnumSubEstadoCaso enumSubEstado : EnumSubEstadoCaso.values()) {
+//                em.persist(enumSubEstado.getSubEstado());
+//            }
+
+            em.flush();
+
+            for (EnumTipoCanal enumTipoCanal : EnumTipoCanal.values()) {
+                em.persist(enumTipoCanal.getTipoCanal());
+            }
+            em.flush();
+            for (EnumTipoAlerta tipoAlerta : EnumTipoAlerta.values()) {
+                em.persist(tipoAlerta.getTipoAlerta());
+            }
+//            em.flush();//java.sql.BatchUpdateException
+//            for (EnumTipoNota enumTipoNota : EnumTipoNota.values()) {
+//                em.persist(enumTipoNota.getTipoNota());
+//            }
+            em.flush();
+            for (EnumTipoComparacion enumTipoComparacion : EnumTipoComparacion.values()) {
+                em.persist(enumTipoComparacion.getTipoComparacion());
+            }
+            em.flush();
+            for (EnumPrioridad enumPrioridad : EnumPrioridad.values()) {
+                em.persist(enumPrioridad.getPrioridad());
+            }
+            em.flush();
+            for (EnumFieldType fieldType : EnumFieldType.values()) {
+                em.persist(fieldType.getFieldType());
+            }
+            em.flush();
+            for (EnumTipoAccion enumNombreAccion : EnumTipoAccion.values()) {
+                em.persist(enumNombreAccion.getNombreAccion());
+            }
+            em.flush();
+            for (EnumSettingsBase enumSettingsBase : EnumSettingsBase.values()) {
+                em.persist(enumSettingsBase.getAppSetting());
+            }
+            em.flush();
+            for (EnumCanal enumCanal : EnumCanal.values()) {
+                em.persist(enumCanal.getCanal());
+            }
+
+            em.flush();
+            for (String area : areas) {
+                Area a = new Area(area, area, area, true);
+                em.persist(a);
+            }
+
+            em.flush();
+            List<Rol> roles = new LinkedList<>();
+            List<Usuario> usuarios = new LinkedList<>();
+            final Rol rol = EnumRoles.ADMINISTRADOR.getRol();
+            roles.add(rol);
+            ownerUser.setRolList(roles);
+            rol.setUsuarioList(usuarios);
+
+            ownerUser.setTenantId(this.getSchema());
+
+            em.persist(ownerUser);
+//                for (EnumResponsables enumResponsables : EnumResponsables.values()) {
+//                    em.persist(enumResponsables.getResponsable());
+//                }
+
+            utx.commit();
+            System.out.println("*** Schema populated ok: " + getSchema());
+        } catch (javax.transaction.NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException e) {
+            e.printStackTrace();
+            try{
+                utx.rollback();
+            }catch(Exception exx){
+                exx.printStackTrace();
+            }
+            throw new TenantSetupFailedException(e.getMessage(), e);
+        } finally {
+            em.close();
+        }
+        
+//        setupTheSchemaStep2();
     }
 
 //    /**
@@ -241,7 +432,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //            }
 //        }
 //    }
-    
     public void remove(Object o) throws Exception {
         EntityManager em = null;
         try {
@@ -259,7 +449,7 @@ public class JPAServiceFacade extends AbstractJPAController {
         }
 
     }
-    
+
     public void remove(Class clazz, Object pk) throws Exception {
         EntityManager em = null;
         try {

@@ -6,6 +6,7 @@
 package com.itcs.helpdesk.persistence.utils.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -23,6 +24,7 @@ public class RegistrationVO implements Serializable{
     
     private String accountLanguage;
     private Integer employeeNumber;
+    private List<String> defaultAreas;
 
     /**
      * @return the fullName
@@ -148,6 +150,20 @@ public class RegistrationVO implements Serializable{
      */
     public void setEmployeeNumber(Integer employeeNumber) {
         this.employeeNumber = employeeNumber;
+    }
+
+    /**
+     * @return the defaultAreas
+     */
+    public List<String> getDefaultAreas() {
+        return defaultAreas;
+    }
+
+    /**
+     * @param defaultAreas the defaultAreas to set
+     */
+    public void setDefaultAreas(List<String> defaultAreas) {
+        this.defaultAreas = defaultAreas;
     }
 
 }
