@@ -312,8 +312,12 @@ public abstract class AbstractJPAController {
                                 } else if (operador.equals(EnumTipoComparacion.GT.getTipoComparacion())) {
                                     localPredicate = criteriaBuilder.greaterThan(expresion, fecha1);
                                 } else if (operador.equals(EnumTipoComparacion.BW.getTipoComparacion())) {
-                                    Date fecha2 = sdf.parse(filtro.getValor2());
-                                    localPredicate = criteriaBuilder.between(expresion, fecha1, fecha2);
+                                    String[] splitDates = filtro.getValor().split("-");
+                                    
+                                    Date fechaDesde = sdf.parse(splitDates[0].trim());
+                                    Date fechaHasta = sdf.parse(splitDates[1].trim());
+                                    
+                                    localPredicate = criteriaBuilder.between(expresion, fechaDesde, fechaHasta);
                                 } else {
                                     throw new IllegalStateException("Comparador " + operador.getIdComparador() + " is not supported!!");
                                 }
