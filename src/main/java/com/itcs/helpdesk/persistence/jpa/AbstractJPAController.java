@@ -322,12 +322,12 @@ public abstract class AbstractJPAController {
                                     throw new IllegalStateException("Comparador " + operador.getIdComparador() + " is not supported!!");
                                 }
                             } else {
-                                Logger.getLogger(AbstractJPAController.class.getName()).log(Level.SEVERE, "filtro descartado [CALENDAR] la fecha {0} es null.", valorAttributo);
+                                Logger.getLogger(AbstractJPAController.class.getName()).log(Level.SEVERE, "filtro "+ filtro +" descartado [CALENDAR] la fecha {0} es null.", valorAttributo);
                                 continue;
                             }
-                        } catch (ParseException ex) {
-                            //ignore and do not add this filter to the query
-                            Logger.getLogger(AbstractJPAController.class.getName()).log(Level.SEVERE, "filtro descartado [CALENDAR] No se puede parsear la fecha {0}", valorAttributo);
+                        } catch (ParseException | IllegalStateException | ArrayIndexOutOfBoundsException ex) {
+                            //ignore this filter. and do not add this filter to the query
+                            Logger.getLogger(AbstractJPAController.class.getName()).log(Level.SEVERE, "filtro [CALENDAR]: "+ filtro +" descartado!!. La fecha {0} No se puede parsear o no es valida para el operador aplicado. ", valorAttributo);
                             continue;
                         }
 

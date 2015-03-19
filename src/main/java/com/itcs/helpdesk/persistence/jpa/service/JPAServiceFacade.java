@@ -70,6 +70,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Cache;
 import javax.persistence.CacheStoreMode;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -186,9 +187,9 @@ public class JPAServiceFacade extends AbstractJPAController {
         }
         return schemaName;
     }
-    
+
     public String deleteTheSchema(String schemaName) {
-       
+
         if (!StringUtils.isEmpty(schemaName)) {
             EntityManager em = null;
 
@@ -196,7 +197,7 @@ public class JPAServiceFacade extends AbstractJPAController {
             try {
                 utx.begin();
                 em = getEntityManager();
-              
+
                 //1. Create the new schema
                 Query query = em.createNativeQuery("SELECT delete_schema(?)");
                 Object o = query.setParameter(1, schemaName).getSingleResult();
@@ -245,7 +246,6 @@ public class JPAServiceFacade extends AbstractJPAController {
 //            em.close();
 //        }
 //    }
-    
     public void setupTheSchema(Usuario ownerUser, List<String> areas) throws TenantSetupFailedException {
         EntityManager em = null;
 //            EntityManager emNew = null;
@@ -344,16 +344,16 @@ public class JPAServiceFacade extends AbstractJPAController {
             System.out.println("*** Schema populated ok: " + getSchema());
         } catch (javax.transaction.NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException e) {
             e.printStackTrace();
-            try{
+            try {
                 utx.rollback();
-            }catch(Exception exx){
+            } catch (Exception exx) {
                 exx.printStackTrace();
             }
             throw new TenantSetupFailedException(e.getMessage(), e);
         } finally {
             em.close();
         }
-        
+
 //        setupTheSchemaStep2();
     }
 
@@ -381,14 +381,21 @@ public class JPAServiceFacade extends AbstractJPAController {
      * @return
      */
     public <T extends Object> T find(Class<T> entityClass, Object primaryKey, boolean refresh) {
-        if (refresh) {
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("javax.persistence.cache.storeMode", CacheStoreMode.REFRESH);
-            properties.put(QueryHints.REFRESH, HintValues.TRUE);
-            return getEntityManager().find(entityClass, primaryKey, properties);
-        } else {
-            return getEntityManager().find(entityClass, primaryKey);
+
+        EntityManager em = getEntityManager();
+        try {
+            if (refresh) {
+                Map<String, Object> properties = new HashMap<>();
+                properties.put("javax.persistence.cache.storeMode", CacheStoreMode.REFRESH);
+                properties.put(QueryHints.REFRESH, HintValues.TRUE);
+                return em.find(entityClass, primaryKey, properties);
+            } else {
+                return em.find(entityClass, primaryKey);
+            }
+        } finally {
+            em.close();
         }
+
     }
 
     public <T extends Object> T getReference(Class<T> entityClass, Object id) throws EntityNotFoundException {
