@@ -611,6 +611,10 @@ public class JPAServiceFacade extends AbstractJPAController {
             return null;
         }
     }
+    
+    public List<Cliente> findClientesByRut(String rut) {
+        return (List<Cliente>) getEntityManager().createNamedQuery("Cliente.findByRut").setParameter("rut", rut).getResultList();
+    }
 
 //    public Long countByCreatedBetween(Class entityClass, Date from, Date to, Area idArea, Grupo idGrupo, Usuario owner) {
 //        EasyCriteriaQuery q = new EasyCriteriaQuery(emf, entityClass);
