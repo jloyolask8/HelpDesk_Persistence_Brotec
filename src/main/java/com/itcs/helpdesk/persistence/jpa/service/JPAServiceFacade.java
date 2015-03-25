@@ -22,6 +22,7 @@ import com.itcs.helpdesk.persistence.entities.Grupo;
 import com.itcs.helpdesk.persistence.entities.Item;
 import com.itcs.helpdesk.persistence.entities.Item_;
 import com.itcs.helpdesk.persistence.entities.Nota;
+import com.itcs.helpdesk.persistence.entities.ObjectThatHasFechaCreacion;
 import com.itcs.helpdesk.persistence.entities.Producto;
 import com.itcs.helpdesk.persistence.entities.ReglaTrigger;
 import com.itcs.helpdesk.persistence.entities.Resource;
@@ -411,6 +412,10 @@ public class JPAServiceFacade extends AbstractJPAController {
         try {
             utx.begin();
             em = getEntityManager();
+            if(o instanceof ObjectThatHasFechaCreacion){
+                Date time = Calendar.getInstance().getTime();
+                ((ObjectThatHasFechaCreacion)o).setFechaCreacion(time);
+            }
             em.persist(o);
             utx.commit();
         } catch (Exception ex) {
@@ -929,6 +934,10 @@ public class JPAServiceFacade extends AbstractJPAController {
         } else {
             return null;
         }
+    }
+
+    public List<Cliente> findClientesByRut(String rut) {
+        return (List<Cliente>) getEntityManager().createNamedQuery("Cliente.findByRut").setParameter("rut", rut).getResultList();
     }
 
     public Cliente findClienteByRut(String rut) {

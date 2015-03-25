@@ -7,6 +7,7 @@ package com.itcs.helpdesk.persistence.entities;
 import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
 import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -20,6 +21,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.StringUtils;
@@ -35,7 +38,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 @Entity
 @Table(name = "cliente")
 @Multitenant(MultitenantType.TABLE_PER_TENANT)
-@TenantTableDiscriminator(type=TenantTableDiscriminatorType.SCHEMA, contextProperty="eclipselink.tenant-id")
+@TenantTableDiscriminator(type = TenantTableDiscriminatorType.SCHEMA, contextProperty = "eclipselink.tenant-id")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Cliente.findAll", query = "SELECT c FROM Cliente c"),
@@ -47,7 +50,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
     @NamedQuery(name = "Cliente.findByNombres", query = "SELECT c FROM Cliente c WHERE c.nombres = :nombres"),
     @NamedQuery(name = "Cliente.findByApellidos", query = "SELECT c FROM Cliente c WHERE c.apellidos = :apellidos")
 })
-public class Cliente implements Serializable {
+public class Cliente implements Serializable, ObjectThatHasFechaCreacion {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -87,6 +90,15 @@ public class Cliente implements Serializable {
     private List<ProductoContratado> productoContratadoList;
 
     private String theme;
+
+    @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "fecha Creacion", fieldIdFull = "fechaCreacion", fieldTypeFull = Date.class)
+    @Column(name = "fecha_creacion")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaCreacion;
+    @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "fecha Modificacion", fieldIdFull = "fechaModif", fieldTypeFull = Date.class)
+    @Column(name = "fecha_modif")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaModif;
 
     public Cliente() {
     }
@@ -161,7 +173,7 @@ public class Cliente implements Serializable {
 
     public List<EmailCliente> getEmailClienteList() {
         if (emailClienteList == null) {
-            emailClienteList = new LinkedList<EmailCliente>();
+            emailClienteList = new LinkedList<>();
         }
         return emailClienteList;
     }
@@ -287,5 +299,35 @@ public class Cliente implements Serializable {
      */
     public void setCasoList(List<Caso> casoList) {
         this.casoList = casoList;
+    }
+
+    /**
+     * @return the fechaCreacion
+     */
+    @Override
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    /**
+     * @param fechaCreacion the fechaCreacion to set
+     */
+    @Override
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    /**
+     * @return the fechaModif
+     */
+    public Date getFechaModif() {
+        return fechaModif;
+    }
+
+    /**
+     * @param fechaModif the fechaModif to set
+     */
+    public void setFechaModif(Date fechaModif) {
+        this.fechaModif = fechaModif;
     }
 }

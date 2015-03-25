@@ -4,7 +4,10 @@
  */
 package com.itcs.helpdesk.persistence.entities;
 
+import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
+import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -18,6 +21,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -41,7 +46,7 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
     @NamedQuery(name = "Attachment.findByNombreArchivo", query = "SELECT a FROM Attachment a WHERE a.nombreArchivo = :nombreArchivo"),
     @NamedQuery(name = "Attachment.findByMimeType", query = "SELECT a FROM Attachment a WHERE a.mimeType = :mimeType"),
     @NamedQuery(name = "Attachment.findByEnRespuesta", query = "SELECT a FROM Attachment a WHERE a.enRespuesta = :enRespuesta")})
-public class Attachment implements Serializable {
+public class Attachment implements Serializable, ObjectThatHasFechaCreacion {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -77,6 +82,15 @@ public class Attachment implements Serializable {
 
     @Column(name = "file_size_human")
     private String fileSizeHuman;
+    
+    @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "fecha Creacion", fieldIdFull = "fechaCreacion", fieldTypeFull = Date.class)
+    @Column(name = "fecha_creacion")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaCreacion;
+    @FilterField(fieldTypeId = EnumFieldType.CALENDAR, label = "fecha Modificacion", fieldIdFull = "fechaModif", fieldTypeFull = Date.class)
+    @Column(name = "fecha_modif")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaModif;
 
     public Attachment() {
     }
@@ -265,6 +279,36 @@ public class Attachment implements Serializable {
      */
     public void setNombreArchivoOriginal(String nombreArchivoOriginal) {
         this.nombreArchivoOriginal = nombreArchivoOriginal;
+    }
+
+    /**
+     * @return the fechaCreacion
+     */
+    @Override
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    /**
+     * @param fechaCreacion the fechaCreacion to set
+     */
+    @Override
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    /**
+     * @return the fechaModif
+     */
+    public Date getFechaModif() {
+        return fechaModif;
+    }
+
+    /**
+     * @param fechaModif the fechaModif to set
+     */
+    public void setFechaModif(Date fechaModif) {
+        this.fechaModif = fechaModif;
     }
 
 }
