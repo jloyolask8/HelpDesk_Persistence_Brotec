@@ -4,7 +4,10 @@
  */
 package com.itcs.helpdesk.persistence.entities;
 
+import com.itcs.helpdesk.persistence.entityenums.EnumEstadoCaso;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -17,6 +20,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -57,13 +61,54 @@ public class TipoCaso implements Serializable {
     private String descripcion;
 //    @OneToMany(mappedBy = "tipoCaso")
 //    private List<Caso> casoList;
-    @OneToMany(mappedBy = "tipoCaso")
+    @OneToMany(mappedBy = "tipoCaso", cascade = CascadeType.ALL)
     private List<SubEstadoCaso> subEstadoCasoList;
 //    @OneToMany(mappedBy = "tipoCaso")
 //    private List<Prioridad> prioridadList;
 
     @ManyToMany(mappedBy = "tipoCasoList", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<CustomField> customFieldList;
+    
+    @Transient
+    public SubEstadoCaso getSubEstadoInicial(){
+        if(subEstadoCasoList != null){
+            for (SubEstadoCaso subEstado : subEstadoCasoList) {
+                if(subEstado.isFirst()){
+                    return subEstado;
+                }
+            }
+        }
+        return null;
+    }
+    
+    @Transient
+    public List<SubEstadoCaso> getSubEstadosAbierto(){
+        
+        if(subEstadoCasoList != null){
+            List<SubEstadoCaso> listOpenSubEstados = new LinkedList<>();
+            for (SubEstadoCaso subEstado : subEstadoCasoList) {
+                if(subEstado.getIdEstado().equals(EnumEstadoCaso.ABIERTO.getEstado())){
+                    listOpenSubEstados.add(subEstado);
+                }
+            }
+            return listOpenSubEstados;
+        }
+        return Collections.EMPTY_LIST;
+    }
+    
+    @Transient
+    public List<SubEstadoCaso> getSubEstadosCerrado(){
+         if(subEstadoCasoList != null){
+            List<SubEstadoCaso> listSubEstados = new LinkedList<>();
+            for (SubEstadoCaso subEstado : subEstadoCasoList) {
+                if(subEstado.getIdEstado().equals(EnumEstadoCaso.CERRADO.getEstado())){
+                    listSubEstados.add(subEstado);
+                }
+            }
+            return listSubEstados;
+        }
+        return Collections.EMPTY_LIST;
+    }
 
     public TipoCaso() {
     }

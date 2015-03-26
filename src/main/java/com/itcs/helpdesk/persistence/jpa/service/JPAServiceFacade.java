@@ -650,10 +650,10 @@ public class JPAServiceFacade extends AbstractJPAController {
             Predicate predicate = createPredicate(em, criteriaBuilder, root, vista, useNonPersistentFilters, who, query);
 
             if (predicate != null) {
-                System.out.println("predicate != null");
+//                System.out.println("predicate != null");
                 criteriaQuery.select(criteriaBuilder.count(root)).where(predicate).distinct(true);
             } else {
-                System.out.println("predicate = null");
+//                System.out.println("predicate = null");
                 criteriaQuery.select(criteriaBuilder.count(root)).distinct(true);
             }
             Query q = em.createQuery(criteriaQuery);
