@@ -73,7 +73,7 @@ public class TipoCaso implements Serializable {
     public SubEstadoCaso getSubEstadoInicial(){
         if(subEstadoCasoList != null){
             for (SubEstadoCaso subEstado : subEstadoCasoList) {
-                if(subEstado.isFirst()){
+                if(subEstado.isFirst() && subEstado.getIdEstado().equals(EnumEstadoCaso.ABIERTO.getEstado())){
                     return subEstado;
                 }
             }
