@@ -79,6 +79,7 @@ public class Vista implements Serializable {
     @CascadeOnDelete
     @OneToMany(mappedBy = "idVista", cascade = CascadeType.MERGE)
     private List<FiltroVista> filtrosVistaList;
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Tipo de dato", fieldIdFull = "baseEntityType", fieldTypeFull = String.class)
     @Size(max = 1000)
     @Column(name = "base_entity_type", nullable = false, length = 1000)
     private String baseEntityType;
