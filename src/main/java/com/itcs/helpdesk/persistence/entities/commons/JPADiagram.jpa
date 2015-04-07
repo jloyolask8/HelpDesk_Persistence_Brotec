@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jpa:entity-mappings persistenceUnitName="common" jaxb-support="false" id="_142817941606583" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_2_1.xsd" xmlns:java="http://jcp.org/en/jsr/detail?id=270" xmlns:jpa="http://java.sun.com/xml/ns/persistence/orm" xmlns:ns4="http://nbmodeler.java.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <jpa:package>com.itcs.helpdesk.persistence.entities.commons</jpa:package>
+    <jpa:schema>godesk_common_schema</jpa:schema>
+    <jpa:entity class="Tenant" jaxb-root-element="false" static-metamodel="false" visibile="true" minimized="false" id="_1428179433593">
+        <jpa:attributes>
+            <jpa:id name="tenantUUID" attribute-type="String" visibile="true" id="_142817943989487">
+                <jpa:column unique="false" nullable="true" insertable="true" updatable="true" length="255"/>
+                <jpa:generated-value/>
+            </jpa:id>
+            <jpa:basic name="schemaName" attribute-type="String" visibile="true" id="_142817947127088">
+                <jpa:column unique="true" nullable="false" insertable="true" updatable="false" length="64"/>
+            </jpa:basic>
+            <jpa:basic name="subDomainName" attribute-type="String" visibile="true" id="_142817947419089">
+                <jpa:column unique="true" nullable="false" insertable="true" updatable="true" length="63"/>
+            </jpa:basic>
+            <jpa:basic name="companyName" attribute-type="String" visibile="true" id="_142817947479090">
+                <jpa:column unique="false" nullable="true" insertable="true" updatable="true" length="255"/>
+            </jpa:basic>
+            <jpa:basic name="userFullName" attribute-type="String" visibile="true" id="_142817947548691">
+                <jpa:column unique="false" nullable="true" insertable="true" updatable="true" length="255"/>
+            </jpa:basic>
+            <jpa:basic name="userEmail" attribute-type="String" visibile="true" id="_142817947638292">
+                <jpa:column unique="false" nullable="true" insertable="true" updatable="true" length="255"/>
+            </jpa:basic>
+            <jpa:basic name="userPhone" attribute-type="String" visibile="true" id="_142817947703093">
+                <jpa:column unique="false" nullable="true" insertable="true" updatable="true" length="255"/>
+            </jpa:basic>
+            <jpa:basic name="apiKey" attribute-type="String" visibile="true" id="_142817948242998">
+                <jpa:column unique="true" nullable="true" insertable="true" updatable="true" length="1024"/>
+            </jpa:basic>
+            <jpa:basic name="expirationDate" attribute-type="java.util.Date" visibile="true" id="_142817948261399">
+                <jpa:column unique="false" nullable="true" insertable="true" updatable="true" length="255"/>
+                <jpa:temporal>TIMESTAMP</jpa:temporal>
+            </jpa:basic>
+            <jpa:basic name="creationDate" attribute-type="java.util.Date" visibile="true" id="_1428179483494100">
+                <jpa:column unique="false" nullable="true" insertable="true" updatable="true" length="255"/>
+                <jpa:temporal>TIMESTAMP</jpa:temporal>
+            </jpa:basic>
+            <jpa:basic name="status" attribute-type="String" visibile="true" id="_1428180427505109">
+                <jpa:column unique="false" nullable="true" insertable="true" updatable="true" length="255"/>
+            </jpa:basic>
+            <jpa:basic name="plan" attribute-type="String" visibile="true" id="_1428180437657110">
+                <jpa:column unique="false" nullable="true" insertable="true" updatable="true" length="255"/>
+            </jpa:basic>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:diagram id="_142817941606584">
+        <plane elementRef="_142817941606583" id="_142817941606585_p">
+            <shape elementRef="_1428179433593" id="_1428179433593_gui">
+                <Bounds x="130.0" y="275.0" width="156.0" height="286.0"/>
+            </shape>
+        </plane>
+    </jpa:diagram>
+</jpa:entity-mappings>

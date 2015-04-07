@@ -42,8 +42,9 @@ import org.eclipse.persistence.annotations.TenantTableDiscriminatorType;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Cliente.findAll", query = "SELECT c FROM Cliente c"),
-    @NamedQuery(name = "Cliente.findAllByQuery", query = "SELECT distinct c FROM Cliente c INNER JOIN EmailCliente e WHERE ((LOWER(c.rut) LIKE CONCAT(LOWER(:q), '%')) "
-            + "OR (CONCAT(LOWER(c.nombres), ' ', LOWER(c.apellidos)) LIKE CONCAT(LOWER(:q), '%')) OR (LOWER(e.emailCliente) LIKE CONCAT(LOWER(:q), '%'))) AND e.cliente = c"),
+    @NamedQuery(name = "Cliente.findAllByQuery", query = "SELECT c FROM Cliente c "
+            + " WHERE ((LOWER(c.rut) LIKE CONCAT(LOWER(:q), '%')) "
+            + " OR (CONCAT(LOWER(c.nombres), ' ', LOWER(c.apellidos)) LIKE CONCAT(LOWER(:q), '%')))"),
     @NamedQuery(name = "Cliente.findByIdCliente", query = "SELECT c FROM Cliente c WHERE c.idCliente = :idCliente"),
     @NamedQuery(name = "Cliente.findByRut", query = "SELECT c FROM Cliente c WHERE c.rut = :rut"),
     @NamedQuery(name = "Cliente.findByEmail", query = "SELECT c FROM Cliente c WHERE c.rut = :rut"),

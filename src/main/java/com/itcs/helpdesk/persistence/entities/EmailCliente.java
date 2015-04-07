@@ -50,7 +50,7 @@ public class EmailCliente implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Pattern(regexp = "[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?", message = "Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @Size(min = 1, max = 80)
+    @Size(min = 1, max = 255)
     @Column(name = "EMAIL_CLIENTE")
     @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Email Cliente", fieldIdFull = "emailCliente", fieldTypeFull = String.class)
     private String emailCliente;

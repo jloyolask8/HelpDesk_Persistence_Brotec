@@ -58,6 +58,7 @@ public abstract class AbstractJPAController {
 //    protected EntityManagerFactory nonSharedEmf = null;
     private final String schema;//default is public in case not passed from the user session.
     public static final String PUBLIC_SCHEMA_NAME = "public";
+    public static final String COMMON_SCHEMA_NAME = "godesk_common_schema";
     public static final String TENANT_PROP_NAME = "tenant";
 
     public static final String PLACE_HOLDER_CURRENT_USER = "{CURRENT_USER}";
@@ -107,9 +108,10 @@ public abstract class AbstractJPAController {
         EntityManager em = emf.createEntityManager();
         if (!StringUtils.isEmpty(this.schema)) {
             em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, this.schema);
-        } else {
-            em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, null);
-        }
+        } 
+//        else {
+//            em.setProperty(EntityManagerProperties.MULTITENANT_PROPERTY_DEFAULT, null);
+//        }
 //        System.out.println("AbstractJPAController.getEntityManager() -> got em from tenant " + this.schema);
         return em;
     }
