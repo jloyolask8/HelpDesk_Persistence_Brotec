@@ -212,10 +212,19 @@ public class JPAServiceFacade extends AbstractJPAController {
     public void persist(Object o) throws Exception {
         EntityManager em = null;//
         try {
-            utx.begin();
-            em = getEntityManager();
-            em.persist(o);
-            utx.commit();
+
+            if (utx.getStatus() == Status.STATUS_ACTIVE) {
+
+                em = getEntityManager();
+                em.persist(o);
+
+            } else {
+                utx.begin();
+                em = getEntityManager();
+                em.persist(o);
+                utx.commit();
+            }
+
         } catch (Exception ex) {
             ConstraintViolationExceptionHelper.handleError(ex);
             try {
@@ -245,11 +254,21 @@ public class JPAServiceFacade extends AbstractJPAController {
     public void remove(Class clazz, Object o) throws Exception {
         EntityManager em = null;
         try {
-            utx.begin();
-            em = getEntityManager();
-            //em.remove(emf.getPersistenceUnitUtil().getIdentifier(o));
-            em.remove(em.getReference(clazz, emf.getPersistenceUnitUtil().getIdentifier(o)));
-            utx.commit();
+
+            if (utx.getStatus() == Status.STATUS_ACTIVE) {
+
+                em = getEntityManager();
+                //em.remove(emf.getPersistenceUnitUtil().getIdentifier(o));
+                em.remove(em.getReference(clazz, emf.getPersistenceUnitUtil().getIdentifier(o)));
+
+            } else {
+                utx.begin();
+                em = getEntityManager();
+                //em.remove(emf.getPersistenceUnitUtil().getIdentifier(o));
+                em.remove(em.getReference(clazz, emf.getPersistenceUnitUtil().getIdentifier(o)));
+                utx.commit();
+            }
+
         } catch (Exception ex) {
             Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
@@ -264,11 +283,21 @@ public class JPAServiceFacade extends AbstractJPAController {
     public void removeFromPK(Class clazz, Object pk) throws Exception {
         EntityManager em = null;
         try {
-            utx.begin();
-            em = getEntityManager();
-            //em.remove(emf.getPersistenceUnitUtil().getIdentifier(o));
-            em.remove(em.getReference(clazz, pk));
-            utx.commit();
+
+            if (utx.getStatus() == Status.STATUS_ACTIVE) {
+
+                em = getEntityManager();
+                //em.remove(emf.getPersistenceUnitUtil().getIdentifier(o));
+                em.remove(em.getReference(clazz, pk));
+
+            } else {
+                utx.begin();
+                em = getEntityManager();
+                //em.remove(emf.getPersistenceUnitUtil().getIdentifier(o));
+                em.remove(em.getReference(clazz, pk));
+                utx.commit();
+            }
+
         } catch (Exception ex) {
             Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
@@ -298,7 +327,7 @@ public class JPAServiceFacade extends AbstractJPAController {
     public void merge(Object o) throws Exception {
         EntityManager em = null;
         try {
-            
+
             System.out.println("Calling Merge with UserTransaction.Status: " + utx.getStatus());
 
             if (utx.getStatus() == Status.STATUS_ACTIVE) {
@@ -312,7 +341,7 @@ public class JPAServiceFacade extends AbstractJPAController {
                 em.merge(o);
                 utx.commit();
             }
-            
+
         } catch (Exception ex) {
             ConstraintViolationExceptionHelper.handleError(ex);
             Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);
@@ -623,7 +652,7 @@ public class JPAServiceFacade extends AbstractJPAController {
             return null;
         }
     }
-    
+
     public List<Cliente> findClientesByRut(String rut) {
         return (List<Cliente>) getEntityManager().createNamedQuery("Cliente.findByRut").setParameter("rut", rut).getResultList();
     }
