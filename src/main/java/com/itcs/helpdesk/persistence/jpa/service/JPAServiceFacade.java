@@ -89,6 +89,7 @@ import javax.resource.NotSupportedException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.RollbackException;
+import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import org.apache.commons.lang.WordUtils;
@@ -412,9 +413,9 @@ public class JPAServiceFacade extends AbstractJPAController {
         try {
             utx.begin();
             em = getEntityManager();
-            if(o instanceof ObjectThatHasFechaCreacion){
+            if (o instanceof ObjectThatHasFechaCreacion) {
                 Date time = Calendar.getInstance().getTime();
-                ((ObjectThatHasFechaCreacion)o).setFechaCreacion(time);
+                ((ObjectThatHasFechaCreacion) o).setFechaCreacion(time);
             }
             em.persist(o);
             utx.commit();
@@ -520,10 +521,20 @@ public class JPAServiceFacade extends AbstractJPAController {
     public void merge(Object o) throws Exception {
         EntityManager em = null;
         try {
-            utx.begin();
-            em = getEntityManager();
-            em.merge(o);
-            utx.commit();
+            System.out.println("Calling Merge with UserTransaction.Status: " + utx.getStatus());
+
+            if (utx.getStatus() == Status.STATUS_ACTIVE) {
+
+                em = getEntityManager();
+                em.merge(o);
+
+            } else {
+                utx.begin();
+                em = getEntityManager();
+                em.merge(o);
+                utx.commit();
+            }
+
         } catch (Exception ex) {
             ConstraintViolationExceptionHelper.handleError(ex);
             Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);
