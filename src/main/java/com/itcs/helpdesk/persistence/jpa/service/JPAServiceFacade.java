@@ -113,6 +113,7 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.resource.NotSupportedException;
+import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
@@ -297,10 +298,21 @@ public class JPAServiceFacade extends AbstractJPAController {
     public void merge(Object o) throws Exception {
         EntityManager em = null;
         try {
-            utx.begin();
-            em = getEntityManager();
-            em.merge(o);
-            utx.commit();
+            
+            System.out.println("Calling Merge with UserTransaction.Status: " + utx.getStatus());
+
+            if (utx.getStatus() == Status.STATUS_ACTIVE) {
+
+                em = getEntityManager();
+                em.merge(o);
+
+            } else {
+                utx.begin();
+                em = getEntityManager();
+                em.merge(o);
+                utx.commit();
+            }
+            
         } catch (Exception ex) {
             ConstraintViolationExceptionHelper.handleError(ex);
             Logger.getLogger(JPAServiceFacade.class.getName()).log(Level.SEVERE, null, ex);
