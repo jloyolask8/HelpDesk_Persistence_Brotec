@@ -198,7 +198,7 @@ public class Caso implements Serializable {
     @ManyToOne
     private Canal idCanal;
     @FilterField(fieldTypeId = EnumFieldType.SELECTONE_PLACE_HOLDER, label = "Lista de Actividades", fieldIdFull = "notaList", fieldTypeFull = List.class)
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "idCaso")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "idCaso")
     @CascadeOnDelete
     @OrderBy("fechaCreacion DESC")
     private List<Nota> notaList;
