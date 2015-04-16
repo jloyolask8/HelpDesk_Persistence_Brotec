@@ -4,6 +4,8 @@
  */
 package com.itcs.helpdesk.persistence.entities;
 
+import com.itcs.helpdesk.persistence.entityenums.EnumFieldType;
+import com.itcs.helpdesk.persistence.utils.FilterField;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -35,9 +37,11 @@ public class BlackListEmail implements Serializable {
     @NotNull
     @Size(min = 1, max = 500)
     @Column(name = "email_address")
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "dirección de email", fieldIdFull = "emailAddress", fieldTypeFull = String.class)
     private String emailAddress;
     @Size(max = 2147483647)
     @Column(name = "description")
+    @FilterField(fieldTypeId = EnumFieldType.TEXT, label = "Descripción", fieldIdFull = "description", fieldTypeFull = String.class)
     private String description;
 
     public BlackListEmail() {
