@@ -18,6 +18,8 @@ public enum EnumTipoNota {
     TRANSFERENCIA_CASO(new TipoNota(7, "Transferencia"), "nota"),
     NOTIFICACION_UPDATE_CASO(new TipoNota(8, "Notificación por email"), "notificacion"),
     REG_ENVIO_CORREO(new TipoNota(9, "Reg. de envío de correo"), "regenviocorreo"),
+    NOTIFICACION_PORVENCER_CASO(new TipoNota(13, "Notificación caso por vencer"), "notificacion"),
+    NOTIFICACION_VENCIDO_CASO(new TipoNota(14, "Notificación caso vencido"), "notificacion"),
     RESPUESTA_AUT_CLIENTE(new TipoNota(10, "Respuesta Automática"), "respauttoclient"),
     SUSCRIPCION_EVENTO(new TipoNota(11, "Suscripción a Evento"), ""),
     COMENTARIO_AGENTE(new TipoNota(12, "Comentario del Agente"), "agentcomment"),;

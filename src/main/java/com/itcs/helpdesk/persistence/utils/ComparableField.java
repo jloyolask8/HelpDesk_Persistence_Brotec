@@ -8,7 +8,7 @@ import com.itcs.helpdesk.persistence.entities.FieldType;
 import java.io.Serializable;
 
 /**
- * Belongs to future ITCS JPA Filter API. 
+ * Belongs to future jonathan's JPA Filter builder API. 
  * @author jonathan
  */
 public class ComparableField implements Serializable, Comparable<ComparableField>{
