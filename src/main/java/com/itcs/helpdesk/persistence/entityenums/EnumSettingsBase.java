@@ -161,7 +161,8 @@ public enum EnumSettingsBase {
     DIAGNOSTIC_SCRIPT(new AppSetting("DIAGNOSTIC_SCRIPT", "Script de diagnostico", "", "app", "inputtextarea",
             60, "Ejemplo: new relic script for browser diagnostics & monitoring", true)),
     
-    CREATE_CASO_SUPERVISOR_ENABLED(new AppSetting("CREATE_CASO_SUPERVISOR_ENABLED", "Crear Casos de Supervisor", "false", "app", "booleanchoice", 61, "Habilitar para crear los casos de Supervisor.", false)),
+    CREATE_CASO_SUPERVISOR_ENABLED(new AppSetting("CREATE_CASO_SUPERVISOR_ENABLED", "Supervisores pueden Crear Casos por email", "false", "app", "booleanchoice", 61, "Habilitar para que Todos los supervisores puedan Crear Casos por email.", false)),
+    CREATE_CASO_AGENTS_ENABLED(new AppSetting("CREATE_CASO_AGENTS_ENABLED", "Todos los usuarios pueden Crear Casos por email", "false", "app", "booleanchoice", 62, "Habilitar para que Todos los usuarios puedan Crear Casos por email.", false)),
     
     COMPANY_LOGIN_BACKGROUND_URL(new AppSetting("COMPANY_LOGIN_BACKGROUND_URL", "Background Image (Login)", "", "app", "input", 5, "URL de una imagen de fondo a usar en la pagina de login.", false));
 //    SEND_GROUP_NOTIFICATION_ON_NEW_CASE(new AppSetting("SEND_GROUP_NOTIFICATION_ON_NEW_CASE", "Notificar a el/los Grupo(s)", "true", "app", "booleanchoice", 22, "Notificar a el/los Grupo(s) encargado(s) del producto cuando llegue un nuevo caso", true));
